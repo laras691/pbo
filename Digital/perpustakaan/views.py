@@ -196,10 +196,7 @@ def admin_custom_login(request):
     
 
 def lihat_daftar_buku(request):
-    if not PinjamBuku.objects.filter(buku_id='buku1').exists():
-        PinjamBuku.objects.create(id_buku='buku1', judul='Buku Satu', stok=5)
-    daftar_buku = PinjamBuku.objects.all()
-    return render(request, 'pengunjung/lihatDaftarBuku.html', {'daftar_buku': daftar_buku})
+    return render(request, 'pengunjung/lihatDaftarBuku.html')
 
 def home_pengunjung(request):
     pengunjung_id = request.session.get('pengunjung_id')
@@ -243,4 +240,8 @@ def kembalikan_buku(request):
     return render(request, 'pengunjung/kembalikanBuku.html')
 
 def lihat_riwayat(request):
-    return render(request, 'pengunjung/riwayat.html')
+    return render(request, 'pengunjung/lihatRiwayat.html')
+
+def logout(request):
+    request.session.flush()
+    return redirect('login_pengunjung')

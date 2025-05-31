@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Cari Buku</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(120deg, #e6eef6 0%, #b0c9e4 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 700px;
+            margin: 60px auto 0 auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(176,201,228,0.18);
+            padding: 36px 32px 32px 32px;
+        }
+        h2 {
+            color: #0051a8;
+            text-align: center;
+            margin-bottom: 28px;
+            letter-spacing: 1px;
+        }
+        form {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 28px;
+            justify-content: center;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 2px solid #b0c9e4;
+            font-size: 1rem;
+            background: #e6eef6;
+            color: #0051a8;
+            font-family: inherit;
+        }
+        button {
+            background: #0051a8;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 28px;
+            font-size: 1.1rem;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #3a5fa8;
+        }
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #e6eef6;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px 10px;
+            text-align: left;
+        }
+        th {
+            background: #b0c9e4;
+            color: #0051a8;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background: #f5faff;
+        }
+        tr:nth-child(odd) {
+            background: #e6eef6;
+        }
+        .cover-img {
+            width: 48px;
+            height: 68px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1.5px solid #b0c9e4;
+            background: #fff;
+        }
+        .kosong {
+            text-align: center;
+            color: #888;
+            padding: 32px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Cari Buku</h2>
+        <form method="get" action="">
+            <input type="text" name="q" placeholder="Masukkan judul, penulis, atau kategori..." value="{{ request.GET.q }}">
+            <button type="submit">Cari</button>
+        </form>
+        <table class="result-table">
+            <tr>
+                <th>No</th>
+                <th>Sampul</th>
+                <th>Judul Buku</th>
+                <th>Penulis</th>
+                <th>Kategori</th>
+                <th>Tahun</th>
+            </tr>
+            {% if hasil %}
+                {% for buku in hasil %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                        {% if buku.cover_url %}
+                            <img src="{{ buku.cover_url }}" alt="{{ buku.judul }}" class="cover-img">
+                        {% else %}
+                            <div class="cover-img" style="display:flex;align-items:center;justify-content:center;color:#b0c9e4;">-</div>
+                        {% endif %}
+                    </td>
+                    <td>{{ buku.judul }}</td>
+                    <td>{{ buku.penulis }}</td>
+                    <td>{{ buku.kategori }}</td>
+                    <td>{{ buku.tahun }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6" class="kosong">Tidak ada hasil ditemukan.</td>
+                </tr>
+            {% endif %}
+        </table>
+    </div>
+</body>
+</html>

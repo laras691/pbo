@@ -3,15 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <title>Daftar Buku</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(120deg, #e6eef6 0%, #b0c9e4 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 60px auto 0 auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(176,201,228,0.18);
+            padding: 36px 32px 32px 32px;
+        }
+        h2 {
+            color: #0051a8;
+            text-align: center;
+            margin-bottom: 28px;
+            letter-spacing: 1px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #e6eef6;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px 10px;
+            text-align: left;
+        }
+        th {
+            background: #b0c9e4;
+            color: #0051a8;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background: #f5faff;
+        }
+        tr:nth-child(odd) {
+            background: #e6eef6;
+        }
+        .cover-img {
+            width: 48px;
+            height: 68px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1.5px solid #b0c9e4;
+            background: #fff;
+        }
+        .kosong {
+            text-align: center;
+            color: #888;
+            padding: 32px 0;
+        }
+    </style>
 </head>
 <body>
-    <h1>Daftar Buku</h1>
-    <ul>
-        {% for buku in daftar_buku %}
-            <li>{{ buku.judul }} (Stok: {{ buku.stok }})</li>
-        {% empty %}
-            <li>Tidak ada buku.</li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <h2>Daftar Buku Perpustakaan</h2>
+        <table>
+            <tr>
+                <th>No</th>
+                <th>Sampul</th>
+                <th>Judul Buku</th>
+                <th>Penulis</th>
+                <th>Kategori</th>
+                <th>Tahun</th>
+            </tr>
+            {% if daftar_buku %}
+                {% for buku in daftar_buku %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                        {% if buku.cover_url %}
+                            <img src="{{ buku.cover_url }}" alt="{{ buku.judul }}" class="cover-img">
+                        {% else %}
+                            <div class="cover-img" style="display:flex;align-items:center;justify-content:center;color:#b0c9e4;">-</div>
+                        {% endif %}
+                    </td>
+                    <td>{{ buku.judul }}</td>
+                    <td>{{ buku.penulis }}</td>
+                    <td>{{ buku.kategori }}</td>
+                    <td>{{ buku.tahun }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6" class="kosong">Belum ada buku di perpustakaan.</td>
+                </tr>
+            {% endif %}
+        </table>
+    </div>
 </body>
 </html>

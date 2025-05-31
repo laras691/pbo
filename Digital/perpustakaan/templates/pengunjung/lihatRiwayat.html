@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Riwayat Peminjaman Buku</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(120deg, #e6eef6 0%, #b0c9e4 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 700px;
+            margin: 60px auto 0 auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(176,201,228,0.18);
+            padding: 36px 32px 32px 32px;
+        }
+        h2 {
+            color: #0051a8;
+            text-align: center;
+            margin-bottom: 28px;
+            letter-spacing: 1px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #e6eef6;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px 10px;
+            text-align: left;
+        }
+        th {
+            background: #b0c9e4;
+            color: #0051a8;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background: #f5faff;
+        }
+        tr:nth-child(odd) {
+            background: #e6eef6;
+        }
+        .status-kembali {
+            color: #fff;
+            background: #3a5fa8;
+            border-radius: 8px;
+            padding: 4px 12px;
+            font-size: 0.95rem;
+            display: inline-block;
+        }
+        .status-belum {
+            color: #fff;
+            background: #f39c12;
+            border-radius: 8px;
+            padding: 4px 12px;
+            font-size: 0.95rem;
+            display: inline-block;
+        }
+        .kosong {
+            text-align: center;
+            color: #888;
+            padding: 32px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Riwayat Peminjaman Buku</h2>
+        <table>
+            <tr>
+                <th>No</th>
+                <th>Judul Buku</th>
+                <th>Tanggal Pinjam</th>
+                <th>Tanggal Kembali</th>
+                <th>Status</th>
+            </tr>
+            {% if riwayat %}
+                {% for item in riwayat %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.buku.judul }}</td>
+                    <td>{{ item.tanggal_pinjam|date:"d-m-Y" }}</td>
+                    <td>{{ item.tanggal_kembali|date:"d-m-Y" }}</td>
+                    <td>
+                        {% if item.status == "Kembali" %}
+                            <span class="status-kembali">Kembali</span>
+                        {% else %}
+                            <span class="status-belum">Belum Kembali</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="5" class="kosong">Belum ada riwayat peminjaman.</td>
+                </tr>
+            {% endif %}
+        </table>
+    </div>
+</body>
+</html>

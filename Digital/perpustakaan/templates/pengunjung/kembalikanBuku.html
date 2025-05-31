@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Kembalikan Buku</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(120deg, #e6eef6 0%, #b0c9e4 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 480px;
+            margin: 60px auto 0 auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(176,201,228,0.18);
+            padding: 36px 32px 32px 32px;
+        }
+        h2 {
+            color: #0051a8;
+            text-align: center;
+            margin-bottom: 28px;
+            letter-spacing: 1px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        label {
+            font-weight: 500;
+            color: #3a5fa8;
+            margin-bottom: 6px;
+        }
+        select, input {
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 2px solid #b0c9e4;
+            font-size: 1rem;
+            font-family: inherit;
+            background: #e6eef6;
+            color: #0051a8;
+        }
+        button {
+            background: #0051a8;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 0;
+            font-size: 1.1rem;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #3a5fa8;
+        }
+        .info {
+            background: #e6eef6;
+            color: #0051a8;
+            border-radius: 10px;
+            padding: 10px 16px;
+            margin-bottom: 18px;
+            font-size: 0.98rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Formulir Pengembalian Buku</h2>
+        <div class="info">
+            Pilih buku yang ingin dikembalikan dan isi tanggal pengembalian.
+        </div>
+        <form method="post" action="">
+            {% csrf_token %}
+            <label for="buku">Judul Buku</label>
+            <select id="buku" name="buku" required>
+                <option value="">-- Pilih Buku yang Dipinjam --</option>
+                {% for pinjam in daftar_pinjam %}
+                <option value="{{ pinjam.id }}">{{ pinjam.buku.judul }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="tanggal_kembali">Tanggal Pengembalian</label>
+            <input type="date" id="tanggal_kembali" name="tanggal_kembali" required>
+
+            <button type="submit">Kembalikan Buku</button>
+        </form>
+    </div>
+</body>
+</html>
