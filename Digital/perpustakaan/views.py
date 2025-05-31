@@ -175,18 +175,6 @@ def lupa_password(request):
     return render(request, 'pengunjung/lupaPassword.html')
 
 def admin_custom_login(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        
-        if user is not None and user.is_staff:
-            login(request, user)
-            return redirect('admin:index')
-        else:
-            return render(request, 'admin/login_admin.html', {
-                'error': 'Invalid credentials for staff access'
-            })
     
     return render(request, 'admin/login_admin.html')
     
