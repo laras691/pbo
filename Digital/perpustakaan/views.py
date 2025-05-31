@@ -214,3 +214,15 @@ def beranda_pengunjung(request):
         'kategori': kategori,
     }
     return render(request, 'beranda.html', context)
+
+def cari_buku(request):
+    return render(request, 'cariBuku.html')
+
+def pinjam_buku(request):
+    return render(request, 'pengunjung/pinjamBuku.html')
+
+def kembalikan_buku(request):
+    return render(request, 'pengunjung/kembalikanBuku.html')
+
+def lihat_riwayat(request):
+    return render(request, 'pengunjung/riwayat.html')
