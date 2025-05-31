@@ -7,7 +7,7 @@ from django.db import IntegrityError
 from django.core.mail import send_mail
 import random
 from django.contrib.auth import authenticate, login
-from .models import Buku, Peminjaman, Anggota
+from .models import Buku, Peminjaman,   Pengunjung, Admin, Laporan
 from django.contrib.auth.views import LoginView
 from django.urls import reverse
 
