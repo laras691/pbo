@@ -174,8 +174,22 @@ def lupa_password(request):
             messages.error(request, 'Email tidak terdaftar.')
     return render(request, 'pengunjung/lupaPassword.html')
 
-def admin_custom(request):
-    return render(request, 'admin.html')
+def admin_custom_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None and user.is_staff:
+            login(request, user)
+            return redirect('admin:index')
+        else:
+            return render(request, 'admin/login_admin.html', {
+                'error': 'Invalid credentials for staff access'
+            })
+    
+    return render(request, 'login_admin.html')
+    
 
 def lihat_daftar_buku(request):
     if not PinjamBuku.objects.filter(buku_id='buku1').exists():
