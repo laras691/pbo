@@ -2,6 +2,7 @@ from django.urls import path
 from django.shortcuts import render, redirect
 from . import views
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path('', lambda request: redirect('login_pengunjung'), name='root_redirect'),
@@ -28,4 +29,10 @@ urlpatterns = [
     path('verifikasi/', views.verifikasi_kode, name='verifikasi_kode'),
 
     path('admin-custom/', views.admin_custom, name='admin_custom'),
+    path('cari-buku/', views.cari_buku, name='cari_buku'),
+    path('pinjam-buku/', views.pinjam_buku, name='pinjam_buku'),
+    path('kembalikan-buku/', views.kembalikan_buku, name='kembalikan_buku'),
+    path('riwayat-peminjaman/', views.lihat_riwayat, name='lihat_riwayat'),
+    path('riwayat/', views.lihat_riwayat, name='lihat_riwayat'),
+    path('logout/', LogoutView.as_view(next_page='login_pengunjung'), name='logout'),
 ]
