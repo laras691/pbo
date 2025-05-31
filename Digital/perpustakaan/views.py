@@ -12,6 +12,7 @@ from django.urls import reverse
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 # Halaman utama
 def daftar_buku(request):
@@ -137,13 +138,17 @@ def dashboardAdmin (request):
     context = {'title': 'Admin Dashboard'}
     return render(request, 'admin/dashboardAdmin.html', context)
 
-class AdminLoginView(LoginView):
+class AdminLoginView(UserPassesTestMixin, LoginView):
     template_name = 'admin/login.html'
     
+    def test_func(self):
+        return self.request.user.is_staff
+    
     def get_success_url(self):
-        if self.request.user.is_staff:
-            return reverse_lazy('admin-dashboard')
-        return reverse_lazy('admin:index')
+        return reverse_lazy('admin-dashboard')  # Pastikan nama URL ini sesuai
+    
+    def handle_no_permission(self):
+        return redirect('admin:index') 
     
 # Admin – Kelola Buku
 def kelola_buku(request):
