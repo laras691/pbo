@@ -7,6 +7,8 @@ from django.db import IntegrityError
 from django.core.mail import send_mail
 import random
 from django.contrib.auth import authenticate, login
+from django.contrib import messages
+
 
 # Halaman utama
 def daftar_buku(request):
@@ -110,6 +112,23 @@ def verifikasi_kode(request):
             messages.error(request, 'Kode verifikasi salah.')
     return render(request, 'pengunjung/verifikasi.html', {'email': email})
 
+#Admin - perbaikan ID 
+def admin_custom(request):
+    if request.method == 'POST':
+        admin_id = request.POST.get('admin_id')
+        password = request.POST.get('password')
+        captcha = request.POST.get('captcha')
+
+        # Contoh data admin statis (sebaiknya dari database)
+        if admin_id == 'admin' and password == 'admin123' and captcha == '123456':
+            messages.success(request, 'Login berhasil!')
+            # Redirect ke halaman admin dashboard, misal:
+            return redirect('kelola_buku')
+        else:
+            messages.error(request, 'ID, Password, atau Token salah.')
+
+    return render(request, 'admin/login_admin.html')
+
 # Admin – Kelola Buku
 def kelola_buku(request):
     daftar_buku = PinjamBuku.objects.all()
@@ -155,8 +174,22 @@ def lupa_password(request):
             messages.error(request, 'Email tidak terdaftar.')
     return render(request, 'pengunjung/lupaPassword.html')
 
-def admin_custom(request):
-    return render(request, 'admin.html')
+def admin_custom_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None and user.is_staff:
+            login(request, user)
+            return redirect('admin:index')
+        else:
+            return render(request, 'admin/login_admin.html', {
+                'error': 'Invalid credentials for staff access'
+            })
+    
+    return render(request, 'admin/login_admin.html')
+    
 
 def lihat_daftar_buku(request):
     if not PinjamBuku.objects.filter(buku_id='buku1').exists():
