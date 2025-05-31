@@ -4,13 +4,76 @@
     <meta charset="UTF-8">
     <title>Litera.id - Beranda</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
         body {
-            font-family: 'Poppins', Arial, Helvetica, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #b0c9e4 60%, #e6eef6 100%);
+            background: linear-gradient(120deg, #e6eef6 0%, #b0c9e4 100%);
             min-height: 100vh;
+        }
+
+        .topbar {
+            width: 100vw;
+            background: #0051a8;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 300;
+            box-shadow: 0 2px 12px rgba(0,81,168,0.07);
+        }
+
+        .menu-toggle {
+            margin-left: 24px;
+            width: 44px;
+            height: 44px;
+            background: #0051a8;
+            border: none;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 400;
+            box-shadow: 0 2px 8px rgba(0,81,168,0.10);
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 26px;
+            height: 4px;
+            margin: 4px 0;
+            background: #fff;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        .topbar-title {
+            color: #e6eef6;
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin-left: 12px;
+            user-select: none;
+        }
+
+        .profile-box {
+            margin-right: 32px;
+            background-color: #b0c9e4;
+            padding: 10px 22px;
+            border-radius: 16px;
+            box-shadow: 0 0 12px rgba(176,201,228,0.13);
+            color: #3a5fa8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 1.1rem;
+            border: 2px solid #e6eef6;
+            display: flex;
+            align-items: center;
         }
 
         .sidebar {
@@ -23,15 +86,30 @@
             border-top-right-radius: 40px;
             border-bottom-right-radius: 40px;
             border-right: 3px solid #b0c9e4;
+            top: 0;
+            left: 0;
+            transform: translateX(-260px);
+            transition: transform 0.4s cubic-bezier(.77,0,.18,1);
+            z-index: 200;
+            margin-top: 0;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
         }
 
         .sidebar h2 {
             margin-bottom: 30px;
-            color: #3a5fa8;
-            font-family: 'Poppins', Arial, Helvetica, sans-serif;
+            color: #0051a8;
+            background: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             font-size: 2rem;
             letter-spacing: 1px;
             text-shadow: 1px 2px 0 #b0c9e4;
+            border-radius: 0;
+            padding: 32px 0 0 0;
+            text-align: center;
+            box-shadow: none;
         }
 
         .sidebar ul {
@@ -60,24 +138,33 @@
             text-decoration: none;
             font-weight: bold;
             font-size: 1.05rem;
-            font-family: 'Poppins', Arial, Helvetica, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         .content {
-            margin-left: 250px;
+            margin-top: 80px;
+            margin-left: 0;
             padding: 30px 40px;
-            background: #e6eef6;
+            background: transparent;
             min-height: 100vh;
             border-top-left-radius: 40px;
             border-bottom-left-radius: 40px;
-            box-shadow: -4px 0 12px rgba(176,201,228,0.10);
+            box-shadow: none;
+            transition: margin-left 0.4s cubic-bezier(.77,0,.18,1);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .sidebar.active ~ .content {
+            margin-left: 250px;
         }
 
         .section-title {
             font-size: 22px;
             margin-bottom: 15px;
             color: #3a5fa8;
-            font-family: 'Poppins', Arial, Helvetica, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-shadow: 1px 1px 0 #b0c9e4;
         }
 
@@ -120,14 +207,14 @@
             font-weight: 700;
             margin-top: 10px;
             color: #3a5fa8;
-            font-family: 'Poppins', Arial, Helvetica, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         .book-author {
             font-size: 12px;
             color: #5a7bbd;
             margin-bottom: 4px;
-            font-family: 'Poppins', Arial, Helvetica, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         .category-filters {
@@ -144,7 +231,7 @@
             font-size: 14px;
             cursor: pointer;
             color: #3a5fa8;
-            font-family: 'Poppins', Arial, Helvetica, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             border: 2px solid #e6eef6;
             box-shadow: 0 2px 6px rgba(176,201,228,0.10);
             transition: background 0.2s, color 0.2s;
@@ -154,30 +241,84 @@
             background: #8fc1f7;
             color: #fff;
         }
+        .search-box {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 0 32px 0; /* Hapus auto agar rata kiri */
+            display: flex;
+            background: #0051a8;
+            border-radius: 18px;
+            box-shadow: 0 2px 12px rgba(0,81,168,0.10);
+            padding: 10px 16px;
+            align-items: center;
+            gap: 10px;
+        }
 
-        .profile-box {
-            position: absolute;
-            top: 20px;
-            right: 40px;
-            background-color: #b0c9e4;
-            padding: 12px 24px;
-            border-radius: 16px;
-            box-shadow: 0 0 12px rgba(176,201,228,0.13);
-            color: #3a5fa8;
-            font-family: 'Poppins', Arial, Helvetica, sans-serif;
-            font-size: 1.1rem;
-            border: 2px solid #e6eef6;
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e6eef6;
+            color: #0051a8;
+        }
+
+        .search-btn {
+            background: #e6eef6;
+            color: #0051a8;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 22px;
+            font-size: 1rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .search-btn:hover {
+            background: #b0c9e4;
+            color: #fff;
+        }
+        @media (max-width: 700px) {
+            .sidebar {
+                width: 180px;
+                padding: 20px 8px;
+            }
+            .sidebar.active ~ .content {
+                margin-left: 180px;
+            }
+            .profile-box {
+                margin-right: 10px;
+                padding: 8px 12px;
+            }
+            .content {
+                padding: 20px 8px;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Buka Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <span class="topbar-title">📚 Litera.id</span>
+        <div class="profile-box">
+            👤 {{ user.username }}
+        </div>
+    </div>
 
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <h2>📚 Litera.id</h2>
         <ul>
             <li><a href="{% url 'beranda_pengunjung' %}">Beranda</a></li>
             <li><a href="{% url 'home_pengunjung' %}">Lihat Daftar Buku</a></li>
-            <li><a href="{% url 'cari_buku' %}">Cari Buku</a></li>
             <li><a href="{% url 'pinjam_buku' %}">Pinjam Buku</a></li>
             <li><a href="{% url 'kembalikan_buku' %}">Kembalikan Buku</a></li>
             <li><a href="{% url 'lihat_riwayat' %}">Lihat Riwayat</a></li>
@@ -186,9 +327,10 @@
     </div>
 
     <div class="content">
-        <div class="profile-box">
-            👤 {{ user.username }}
-        </div>
+        <form action="{% url 'cari_buku' %}" method="get" class="search-box">
+            <input type="text" name="q" placeholder="Cari buku..." class="search-input" />
+            <button type="submit" class="search-btn">Cari</button>
+        </form>
 
         <h2 class="section-title">Recommended</h2>
         <div class="book-row">
@@ -220,5 +362,18 @@
             {% endfor %}
         </div>
     </div>
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const content = document.querySelector('.content');
+
+        // Sidebar awalnya hidden
+        sidebar.classList.remove('active');
+
+        menuToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('active');
+            content.classList.toggle('active');
+        });
+    </script>
 </body>
 </html>
