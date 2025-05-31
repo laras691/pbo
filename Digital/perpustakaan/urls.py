@@ -36,5 +36,6 @@ urlpatterns = [
     path('kembalikan-buku/', views.kembalikan_buku, name='kembalikan_buku'),
     path('riwayat-peminjaman/', views.lihat_riwayat, name='lihat_riwayat'),
     path('riwayat/', views.lihat_riwayat, name='lihat_riwayat'),
-    path('logout/', LogoutView.as_view(next_page='login_pengunjung'), name='logout'),
+    path('logout/', views.logout, name='logout'),
+    path('daftar-buku/', views.lihat_daftar_buku, name='lihat_daftar_buku'),
 ]

@@ -65,8 +65,9 @@
         .profile-box {
             margin-right: 32px;
             background-color: #b0c9e4;
-            padding: 10px 22px;
-            border-radius: 16px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
             box-shadow: 0 0 12px rgba(176,201,228,0.13);
             color: #3a5fa8;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -74,6 +75,9 @@
             border: 2px solid #e6eef6;
             display: flex;
             align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 0; /* pastikan padding 0 agar benar-benar bulat */
         }
 
         .sidebar {
@@ -318,11 +322,11 @@
         <h2>📚 Litera.id</h2>
         <ul>
             <li><a href="{% url 'beranda_pengunjung' %}">Beranda</a></li>
-            <li><a href="{% url 'home_pengunjung' %}">Lihat Daftar Buku</a></li>
+            <li><a href="{% url 'lihat_daftar_buku' %}">Lihat Daftar Buku</a></li>
             <li><a href="{% url 'pinjam_buku' %}">Pinjam Buku</a></li>
             <li><a href="{% url 'kembalikan_buku' %}">Kembalikan Buku</a></li>
             <li><a href="{% url 'lihat_riwayat' %}">Lihat Riwayat</a></li>
-            <li><a href="{% url 'logout' %}">Logout</a></li>
+            <li><a href="#" id="logout-link">Logout</a></li>
         </ul>
     </div>
 
@@ -362,6 +366,14 @@
             {% endfor %}
         </div>
     </div>
+    <div id="logout-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.25); z-index:9999; align-items:center; justify-content:center;">
+        <div style="background:#fff; border-radius:16px; padding:32px 28px; box-shadow:0 4px 24px rgba(0,81,168,0.18); text-align:center; min-width:300px;">
+            <h3 style="color:#0051a8; margin-bottom:18px;">Konfirmasi Logout</h3>
+            <p style="margin-bottom:24px;">Apakah Anda yakin ingin keluar?</p>
+            <button id="logout-yes" style="background:#0051a8; color:#fff; border:none; border-radius:8px; padding:10px 28px; font-size:1rem; margin-right:12px; cursor:pointer;">Ya</button>
+            <button id="logout-no" style="background:#b0c9e4; color:#0051a8; border:none; border-radius:8px; padding:10px 28px; font-size:1rem; cursor:pointer;">Tidak</button>
+        </div>
+    </div>
     <script>
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
@@ -373,6 +385,24 @@
         menuToggle.addEventListener('click', function() {
             sidebar.classList.toggle('active');
             content.classList.toggle('active');
+        });
+
+        const logoutLink = document.getElementById('logout-link');
+        const logoutModal = document.getElementById('logout-modal');
+        const logoutYes = document.getElementById('logout-yes');
+        const logoutNo = document.getElementById('logout-no');
+
+        logoutLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            logoutModal.style.display = 'flex';
+        });
+
+        logoutYes.addEventListener('click', function() {
+            window.location.href = "{% url 'logout' %}";
+        });
+
+        logoutNo.addEventListener('click', function() {
+            logoutModal.style.display = 'none';
         });
     </script>
 </body>
