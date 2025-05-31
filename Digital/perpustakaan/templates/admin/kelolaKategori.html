@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Kelola Kategori</title>
+  <style>
+    body {
+        background: url("{% static 'image/image2.png' %}") no-repeat center center fixed;
+        background-size: cover;
+        font-family: 'Segoe UI', Arial, sans-serif;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 5px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .btn-edit {
+      background-color: #2196F3;
+    }
+    .btn-delete {
+      background-color: #f44336;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Kelola Kategori</h1>
+    
+    <!-- Form Tambah/Ubah Kategori -->
+    <div class="form-group">
+      <label for="category-name">Nama Kategori</label>
+      <input type="text" id="category-name" placeholder="Masukkan nama kategori">
+    </div>
+    <button id="save-btn">Simpan Kategori</button>
+    <button id="cancel-btn" style="display: none;">Batal</button>
+    
+    <!-- Tabel Daftar Kategori -->
+    <table id="category-table">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama Kategori</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="category-list">
+        <!-- Data kategori akan dimuat di sini -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // Data kategori (simulasi database)
+    let categories = [
+      { id: 1, name: "Elektronik" },
+      { id: 2, name: "Fashion" },
+      { id: 3, name: "Makanan" }
+    ];
+    
+    let currentEditId = null;
+
+    // DOM Elements
+    const categoryNameInput = document.getElementById('category-name');
+    const saveBtn = document.getElementById('save-btn');
+    const cancelBtn = document.getElementById('cancel-btn');
+    const categoryList = document.getElementById('category-list');
+
+    // Load categories to table
+    function loadCategories() {
+      categoryList.innerHTML = '';
+      categories.forEach((category, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${category.name}</td>
+          <td>
+            <button class="btn-edit" onclick="editCategory(${category.id})">Edit</button>
+            <button class="btn-delete" onclick="deleteCategory(${category.id})">Hapus</button>
+          </td>
+        `;
+        categoryList.appendChild(row);
+      });
+    }
+
+    // Add or Update Category
+    saveBtn.addEventListener('click', () => {
+      const name = categoryNameInput.value.trim();
+      
+      if (!name) {
+        alert('Nama kategori tidak boleh kosong!');
+        return;
+      }
+      
+      if (currentEditId) {
+        // Update existing category
+        const index = categories.findIndex(cat => cat.id === currentEditId);
+        if (index !== -1) {
+          categories[index].name = name;
+        }
+        currentEditId = null;
+        saveBtn.textContent = 'Simpan Kategori';
+        cancelBtn.style.display = 'none';
+      } else {
+        // Add new category
+        const newId = categories.length > 0 ? Math.max(...categories.map(cat => cat.id)) + 1 : 1;
+        categories.push({ id: newId, name });
+      }
+      
+      categoryNameInput.value = '';
+      loadCategories();
+    });
+
+    // Cancel Edit
+    cancelBtn.addEventListener('click', () => {
+      currentEditId = null;
+      categoryNameInput.value = '';
+      saveBtn.textContent = 'Simpan Kategori';
+      cancelBtn.style.display = 'none';
+    });
+
+    // Edit Category
+    window.editCategory = (id) => {
+      const category = categories.find(cat => cat.id === id);
+      if (category) {
+        currentEditId = id;
+        categoryNameInput.value = category.name;
+        saveBtn.textContent = 'Update Kategori';
+        cancelBtn.style.display = 'inline-block';
+        categoryNameInput.focus();
+      }
+    };
+
+    // Delete Category
+    window.deleteCategory = (id) => {
+      if (confirm('Apakah Anda yakin ingin menghapus kategori ini?')) {
+        categories = categories.filter(cat => cat.id !== id);
+        loadCategories();
+      }
+    };
+
+    // Initial load
+    loadCategories();
+  </script>
+</body>
+</html>

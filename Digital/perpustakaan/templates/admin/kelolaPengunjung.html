@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Kelola Pengunjung</title>
+  <style>
+    body {
+      background: url("{% static 'image/image2.png' %}") no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+    .form-container {
+      background: #ecf0f1;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 15px;
+    }
+    .form-group {
+      flex: 1;
+      min-width: 200px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #34495e;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #bdc3c7;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .btn-primary {
+      background-color: #3498db;
+      color: white;
+    }
+    .btn-primary:hover {
+      background-color: #2980b9;
+    }
+    .btn-secondary {
+      background-color: #95a5a6;
+      color: white;
+    }
+    .btn-secondary:hover {
+      background-color: #7f8c8d;
+    }
+    .btn-danger {
+      background-color: #e74c3c;
+      color: white;
+    }
+    .btn-danger:hover {
+      background-color: #c0392b;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #3498db;
+      color: white;
+      font-weight: 600;
+    }
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 5px;
+    }
+    .search-filter {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .search-box {
+      width: 300px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Kelola Data Pengunjung</h1>
+    
+    <!-- Form Tambah/Ubah Pengunjung -->
+    <div class="form-container">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="visitor-name">Nama Lengkap</label>
+          <input type="text" id="visitor-name" placeholder="Masukkan nama lengkap">
+        </div>
+        <div class="form-group">
+          <label for="visitor-email">Email</label>
+          <input type="email" id="visitor-email" placeholder="Masukkan alamat email">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="visitor-phone">No. Telepon</label>
+          <input type="tel" id="visitor-phone" placeholder="Masukkan nomor telepon">
+        </div>
+        <div class="form-group">
+          <label for="visitor-gender">Jenis Kelamin</label>
+          <select id="visitor-gender">
+            <option value="">Pilih Jenis Kelamin</option>
+            <option value="Laki-laki">Laki-laki</option>
+            <option value="Perempuan">Perempuan</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="visitor-address">Alamat</label>
+          <input type="text" id="visitor-address" placeholder="Masukkan alamat lengkap">
+        </div>
+        <div class="form-group">
+          <label for="visitor-purpose">Tujuan Kunjungan</label>
+          <select id="visitor-purpose">
+            <option value="">Pilih Tujuan</option>
+            <option value="Meeting">Meeting</option>
+            <option value="Kunjungan Bisnis">Kunjungan Bisnis</option>
+            <option value="Interview">Interview</option>
+            <option value="Lainnya">Lainnya</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="button-group">
+        <button id="save-btn" class="btn-primary">Simpan Data</button>
+        <button id="cancel-btn" class="btn-secondary" style="display: none;">Batal</button>
+      </div>
+    </div>
+    
+    <!-- Pencarian dan Filter -->
+    <div class="search-filter">
+      <input type="text" id="search-input" class="search-box" placeholder="Cari pengunjung...">
+      <div>
+        <select id="filter-purpose" class="search-box">
+          <option value="">Semua Tujuan</option>
+          <option value="Meeting">Meeting</option>
+          <option value="Kunjungan Bisnis">Kunjungan Bisnis</option>
+          <option value="Interview">Interview</option>
+          <option value="Lainnya">Lainnya</option>
+        </select>
+      </div>
+    </div>
+    
+    <!-- Tabel Daftar Pengunjung -->
+    <table id="visitor-table">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama</th>
+          <th>Email</th>
+          <th>Telepon</th>
+          <th>Jenis Kelamin</th>
+          <th>Tujuan</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="visitor-list">
+        <!-- Data pengunjung akan dimuat di sini -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // Data pengunjung (simulasi database)
+    let visitors = [
+      { 
+        id: 1, 
+        name: "John Doe", 
+        email: "john@example.com", 
+        phone: "08123456789", 
+        gender: "Laki-laki", 
+        address: "Jl. Merdeka No. 123", 
+        purpose: "Meeting" 
+      },
+      { 
+        id: 2, 
+        name: "Jane Smith", 
+        email: "jane@example.com", 
+        phone: "08234567890", 
+        gender: "Perempuan", 
+        address: "Jl. Sudirman No. 456", 
+        purpose: "Kunjungan Bisnis" 
+      }
+    ];
+    
+    let currentEditId = null;
+
+    // DOM Elements
+    const visitorName = document.getElementById('visitor-name');
+    const visitorEmail = document.getElementById('visitor-email');
+    const visitorPhone = document.getElementById('visitor-phone');
+    const visitorGender = document.getElementById('visitor-gender');
+    const visitorAddress = document.getElementById('visitor-address');
+    const visitorPurpose = document.getElementById('visitor-purpose');
+    const saveBtn = document.getElementById('save-btn');
+    const cancelBtn = document.getElementById('cancel-btn');
+    const visitorList = document.getElementById('visitor-list');
+    const searchInput = document.getElementById('search-input');
+    const filterPurpose = document.getElementById('filter-purpose');
+
+    // Load visitors to table
+    function loadVisitors(filteredVisitors = null) {
+      const dataToShow = filteredVisitors || visitors;
+      visitorList.innerHTML = '';
+      
+      dataToShow.forEach((visitor, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${visitor.name}</td>
+          <td>${visitor.email}</td>
+          <td>${visitor.phone}</td>
+          <td>${visitor.gender}</td>
+          <td>${visitor.purpose}</td>
+          <td class="action-buttons">
+            <button class="btn-primary" onclick="editVisitor(${visitor.id})">Edit</button>
+            <button class="btn-danger" onclick="deleteVisitor(${visitor.id})">Hapus</button>
+          </td>
+        `;
+        visitorList.appendChild(row);
+      });
+    }
+
+    // Add or Update Visitor
+    saveBtn.addEventListener('click', () => {
+      const name = visitorName.value.trim();
+      const email = visitorEmail.value.trim();
+      const phone = visitorPhone.value.trim();
+      const gender = visitorGender.value;
+      const address = visitorAddress.value.trim();
+      const purpose = visitorPurpose.value;
+      
+      // Validasi
+      if (!name || !email || !phone || !gender || !address || !purpose) {
+        alert('Semua field harus diisi!');
+        return;
+      }
+      
+      if (currentEditId) {
+        // Update existing visitor
+        const index = visitors.findIndex(v => v.id === currentEditId);
+        if (index !== -1) {
+          visitors[index] = { 
+            id: currentEditId,
+            name, 
+            email, 
+            phone, 
+            gender, 
+            address, 
+            purpose 
+          };
+        }
+        currentEditId = null;
+        saveBtn.textContent = 'Simpan Data';
+        cancelBtn.style.display = 'none';
+      } else {
+        // Add new visitor
+        const newId = visitors.length > 0 ? Math.max(...visitors.map(v => v.id)) + 1 : 1;
+        visitors.push({ 
+          id: newId,
+          name, 
+          email, 
+          phone, 
+          gender, 
+          address, 
+          purpose 
+        });
+      }
+      
+      // Reset form
+      visitorName.value = '';
+      visitorEmail.value = '';
+      visitorPhone.value = '';
+      visitorGender.value = '';
+      visitorAddress.value = '';
+      visitorPurpose.value = '';
+      
+      loadVisitors();
+    });
+
+    // Cancel Edit
+    cancelBtn.addEventListener('click', () => {
+      currentEditId = null;
+      visitorName.value = '';
+      visitorEmail.value = '';
+      visitorPhone.value = '';
+      visitorGender.value = '';
+      visitorAddress.value = '';
+      visitorPurpose.value = '';
+      saveBtn.textContent = 'Simpan Data';
+      cancelBtn.style.display = 'none';
+    });
+
+    // Edit Visitor
+    window.editVisitor = (id) => {
+      const visitor = visitors.find(v => v.id === id);
+      if (visitor) {
+        currentEditId = id;
+        visitorName.value = visitor.name;
+        visitorEmail.value = visitor.email;
+        visitorPhone.value = visitor.phone;
+        visitorGender.value = visitor.gender;
+        visitorAddress.value = visitor.address;
+        visitorPurpose.value = visitor.purpose;
+        saveBtn.textContent = 'Update Data';
+        cancelBtn.style.display = 'inline-block';
+        visitorName.focus();
+      }
+    };
+
+    // Delete Visitor
+    window.deleteVisitor = (id) => {
+      if (confirm('Apakah Anda yakin ingin menghapus data pengunjung ini?')) {
+        visitors = visitors.filter(v => v.id !== id);
+        loadVisitors();
+      }
+    };
+
+    // Search functionality
+    searchInput.addEventListener('input', () => {
+      const searchTerm = searchInput.value.toLowerCase();
+      const filtered = visitors.filter(v => 
+        v.name.toLowerCase().includes(searchTerm) || 
+        v.email.toLowerCase().includes(searchTerm) ||
+        v.phone.includes(searchTerm)
+      );
+      loadVisitors(filtered);
+    });
+
+    // Filter by purpose
+    filterPurpose.addEventListener('change', () => {
+      const purpose = filterPurpose.value;
+      if (!purpose) {
+        loadVisitors();
+        return;
+      }
+      const filtered = visitors.filter(v => v.purpose === purpose);
+      loadVisitors(filtered);
+    });
+
+    // Initial load
+    loadVisitors();
+  </script>
+</body>
+</html>

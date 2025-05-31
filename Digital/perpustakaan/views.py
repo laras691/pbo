@@ -7,6 +7,8 @@ from django.db import IntegrityError
 from django.core.mail import send_mail
 import random
 from django.contrib.auth import authenticate, login
+from django.contrib import messages
+
 
 # Halaman utama
 def daftar_buku(request):
@@ -109,6 +111,23 @@ def verifikasi_kode(request):
         else:
             messages.error(request, 'Kode verifikasi salah.')
     return render(request, 'pengunjung/verifikasi.html', {'email': email})
+
+#Admin - perbaikan ID 
+def admin_custom(request):
+    if request.method == 'POST':
+        admin_id = request.POST.get('admin_id')
+        password = request.POST.get('password')
+        captcha = request.POST.get('captcha')
+
+        # Contoh data admin statis (sebaiknya dari database)
+        if admin_id == 'admin' and password == 'admin123' and captcha == '123456':
+            messages.success(request, 'Login berhasil!')
+            # Redirect ke halaman admin dashboard, misal:
+            return redirect('kelola_buku')
+        else:
+            messages.error(request, 'ID, Password, atau Token salah.')
+
+    return render(request, 'login_admin.html')
 
 # Admin – Kelola Buku
 def kelola_buku(request):
