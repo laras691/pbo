@@ -1,0 +1,235 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Perpustakaan Digital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url("{% static 'image/image2.png' %}") no-repeat center center fixed;
+            background-size: cover;
+            color: #000;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .register-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(0, 81, 168, 0.15);
+            border: 1px solid rgba(176, 201, 228, 0.5);
+        }
+        .register-header {
+            color: #000; /* Judul header hitam */
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .form-control {
+            background: #f8fafc;
+            border: 1px solid #d1e0f0;
+            border-radius: 6px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            color: #000; /* Input teks hitam */
+        }
+        .form-control:focus {
+            border-color: #4e73df;
+            box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+        }
+        .btn-primary {
+            background-color: #0051a8;
+            border-color: #0051a8;
+            padding: 12px;
+            font-weight: 500;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background-color: #003d7a;
+            border-color: #003d7a;
+            color: #fff;
+        }
+        .alert {
+            border-radius: 6px;
+        }
+        .footer-links {
+            text-align: center;
+            margin-top: 20px;
+            color: #6c757d;
+        }
+        .footer-links a {
+            color: #e73733;
+            font-weight: 500;
+            font-size: 1rem;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            text-decoration: underline;
+        }
+        .form-text {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+        .form-check-label {
+            font-size: 0.9rem;
+            color: #000; /* Label checkbox hitam */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="register-container">
+            <h2 class="register-header">Buat Akun Baru</h2>
+            <p class="text-muted text-center" style="margin-top:-12px; margin-bottom:15px;">
+                Lengkapi data untuk membuat akun baru
+            </p>
+            {% if messages %}
+            <div class="mb-3">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="color:#dc3545;">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <form method="post" onsubmit="return validatePassword()">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.nama.id_for_label }}" class="form-label">Nama Lengkap</label>
+                        <input type="text" name="nama" class="form-control" id="{{ form.nama.id_for_label }}" 
+                               value="{{ form.nama.value|default_if_none:'' }}" required
+                               placeholder="Masukkan nama lengkap">
+                        {% if form.nama.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.nama.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" id="{{ form.email.id_for_label }}" 
+                               value="{{ form.email.value|default_if_none:'' }}" required
+                               placeholder="Masukkan email valid">
+                        {% if form.email.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.email.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" id="password" 
+                               required placeholder="Buat password" minlength="8">
+                        {% if form.password.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.password.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div class="form-text">Minimal 8 karakter, mengandung angka</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
+                        <input type="password" name="password_confirmation" class="form-control" 
+                               id="password_confirmation" required placeholder="Ulangi password">
+                        {% if form.password_confirmation.errors %}
+                        <div class="invalid-feedback d-block">
+                            {% for error in form.password_confirmation.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div id="password-match-alert" class="alert alert-danger alert-dismissible fade show mt-2" role="alert" style="display:none;">
+                            Password dan Konfirmasi Password harus sama!
+                            <button type="button" class="btn-close" onclick="this.parentElement.style.display='none';"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="nomor_anggota" class="form-label">Nomor Anggota</label>
+                    <input type="text" name="nomor_anggota" class="form-control" id="nomor_anggota" required placeholder="Masukkan nomor anggota">
+                    {% if form.nomor_anggota.errors %}
+                    <div class="invalid-feedback d-block">
+                        {% for error in form.nomor_anggota.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" id="terms" required>
+                    <label class="form-check-label" for="terms">
+                        Saya menyetujui <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">syarat dan ketentuan</a>
+                    </label>
+                </div>
+
+                <div class="d-grid">
+                    <button class="btn btn-primary" type="submit">Register</button>
+                </div>
+            </form>
+            
+            <div class="footer-links">
+                <p>Sudah punya akun? <a href="{% url 'login_pengunjung' %}">Login disini</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Syarat dan Ketentuan -->
+    <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="termsModalLabel">Syarat dan Ketentuan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Persyaratan Keanggotaan:</h6>
+                    <ol>
+                        <li>Data yang diberikan harus akurat dan valid</li>
+                        <li>Password harus dijaga kerahasiaannya</li>
+                        <li>Setiap anggota bertanggung jawab atas aktivitas yang dilakukan dengan akunnya</li>
+                    </ol>
+                    <h6>Ketentuan Layanan:</h6>
+                    <ol>
+                        <li>Perpustakaan berhak menonaktifkan akun yang melanggar peraturan</li>
+                        <li>Peminjaman buku harus sesuai dengan ketentuan yang berlaku</li>
+                        <li>Denda akan dikenakan untuk pengembalian terlambat</li>
+                    </ol>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    function validatePassword() {
+        var pw = document.getElementById('password').value;
+        var pwc = document.getElementById('password_confirmation').value;
+        var alertDiv = document.getElementById('password-match-alert');
+        if (pw !== pwc) {
+            alertDiv.style.display = 'block';
+            return false;
+        } else {
+            alertDiv.style.display = 'none';
+            return true;
+        }
+    }
+    </script>
+</body>
+</html>

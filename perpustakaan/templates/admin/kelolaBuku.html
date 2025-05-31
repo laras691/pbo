@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Kelola Buku{% endblock %}
+
+{% block content %}
+<h2>Kelola Buku</h2>
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Judul</th>
+        <th>Stok</th>
+        <th>Aksi</th>
+    </tr>
+    {% for buku in daftar_buku %}
+    <tr>
+        <td>{{ buku.judul }}</td>
+        <td>{{ buku.stok }}</td>
+        <td>
+            <a href="{% url 'edit_buku' buku.id_buku %}">Edit</a> |
+            <a href="{% url 'hapus_buku' buku.id_buku %}">Hapus</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<a href="{% url 'tambah_buku' %}">➕ Tambah Buku Baru</a>
+{% endblock %}

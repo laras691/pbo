@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Pengunjung</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url("{% static 'image/image2.png' %}") no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .login-container {
+            max-width: 450px;
+            margin: 50px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(0, 81, 168, 0.15);
+            border: 1px solid rgba(176, 201, 228, 0.5);
+        }
+        .login-header {
+            color: #000;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .login-link {
+            color: #e73733;
+            font-weight: 500;
+            font-size: 1rem;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            text-decoration: underline;
+        }
+        .btn-primary {
+            background-color: #0051a8 !important;
+            border-color: #0051a8 !important;
+        }
+        .btn-primary:hover, .btn-primary:focus {
+            background-color: #003d7a !important;
+            border-color: #003d7a !important;
+        }
+    </style>
+</head>
+<body>
+    <div style="position: fixed; top: 24px; right: 32px; z-index: 999;">
+        <a href="{% url 'admin_custom' %}"
+           class="btn btn-primary btn-sm"
+           style="border-radius: 20px; font-weight: 500; font-size: 0.92rem; padding: 6px 18px; box-shadow: 0 2px 8px rgba(0,81,168,0.10);"
+           data-bs-toggle="tooltip"
+           data-bs-placement="left"
+           title="Hanya untuk petugas/admin">
+            Login Admin
+        </a>
+    </div>
+    <div class="container">
+        <div class="login-container">
+            <div class="login-header">
+                <h2>Selamat Datang Kembali</h2>
+                <p class="text-muted">Masukkan email atau nomor anggota Anda</p>
+            </div>
+
+            {% if messages %}
+            <div class="mb-3">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="identifier" class="form-label">Email atau Nomor Anggota</label>
+                    <input type="text" class="form-control" id="identifier" name="identifier" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+                <div class="mt-3 text-center">
+                    <a href="{% url 'lupa_password' %}">Lupa password?</a>
+                </div>
+            </form>
+
+            <div class="mt-3 text-center">
+                <p>Belum punya akun? <a href="{% url 'register_pengunjung' %}" class="login-link">Daftar disini</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Aktifkan tooltip Bootstrap
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+            new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Detail Buku{% endblock %}
+
+{% block content %}
+<h2>{{ buku.judul }}</h2>
+<p>Stok tersedia: {{ buku.stok }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Pinjam Buku</button>
+</form>
+
+<a href="{% url 'daftar_buku' %}">← Kembali ke Daftar Buku</a>
+{% endblock %}
