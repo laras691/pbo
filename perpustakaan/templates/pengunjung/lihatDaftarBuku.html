@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Daftar Buku</title>
+</head>
+<body>
+    <h1>Daftar Buku</h1>
+    <ul>
+        {% for buku in daftar_buku %}
+            <li>{{ buku.judul }} (Stok: {{ buku.stok }})</li>
+        {% empty %}
+            <li>Tidak ada buku.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

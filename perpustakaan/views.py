@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import PinjamBuku, Pengunjung
 from .forms import LoginForm, RegisterForm
 from django.contrib import messages
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from django.db import IntegrityError
 from django.core.mail import send_mail
 import random
@@ -31,10 +31,11 @@ def detail_buku(request, id_buku):
 # Login
 def login_pengunjung(request):
     if request.method == 'POST':
-        identifier = request.POST['identifier']
-        password = request.POST['password']
+        identifier = request.POST.get('identifier')  # email atau nomor anggota
+        password = request.POST.get('password')
 
-        # Cek apakah identifier adalah email atau nomor anggota
+        # Cari user berdasarkan email atau nomor anggota
+        pengunjung = None
         try:
             pengunjung = Pengunjung.objects.get(email=identifier)
         except Pengunjung.DoesNotExist:
@@ -44,14 +45,15 @@ def login_pengunjung(request):
                 pengunjung = None
 
         if pengunjung is not None:
-            user = authenticate(request, username=pengunjung.user.username, password=password)
-            if user is not None:
-                login(request, user)
+            # Cek password hash
+            if check_password(password, pengunjung.password):
+                # Login berhasil
+                request.session['pengunjung_id'] = pengunjung.id
                 return redirect('home_pengunjung')
             else:
-                messages.error(request, 'Password salah.')
+                messages.error(request, 'Password salah. Silakan coba lagi.')
         else:
-            messages.error(request, 'Email atau Nomor Anggota tidak ditemukan.')
+            messages.error(request, 'Email atau nomor anggota tidak ditemukan.')
 
     return render(request, 'pengunjung/login.html')
 
@@ -159,3 +161,7 @@ if not PinjamBuku.objects.filter(id_buku='buku1').exists():
 
 def admin_custom(request):
     return render(request, 'admin.html')
+
+def lihat_daftar_buku(request):
+    daftar_buku = PinjamBuku.objects.all()
+    return render(request, 'pengunjung/lihatDaftarBuku.html', {'daftar_buku': daftar_buku})
