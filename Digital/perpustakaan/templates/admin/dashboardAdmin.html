@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Perpustakaan Digital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --light: #f8f9fa;
+            --dark: #343a40;
+        }
+        
+        body {
+            background: url("{% static 'image/image2.png' %}") no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            position: fixed;
+            background-color: var(--secondary);
+            color: white;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-header h3 {
+            color: #fff;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar-header h3 i {
+            margin-right: 10px;
+        }
+        
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+        
+        .sidebar-menu ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar-menu li a {
+            color: #ecf0f1;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu li a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-menu li a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-menu .active {
+            background-color: var(--primary);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        /* Header */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        /* Cards */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .card-title {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        /* Content Box */
+        .content-box {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        /* Table */
+        .table th {
+            background-color: var(--light);
+        }
+        
+        .badge-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .badge-success {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success);
+        }
+        
+        .badge-warning {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
+        }
+        
+        .badge-danger {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 80px;
+            }
+            .sidebar-header h3 span, 
+            .sidebar-menu li a span {
+                display: none;
+            }
+            .sidebar-menu li a {
+                justify-content: center;
+            }
+            .sidebar-menu li a i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+            .main-content {
+                margin-left: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-book"></i> <span>Perpustakaan Digital</span></h3>
+        </div>
+        
+        <div class="sidebar-menu">
+            <ul>
+                <li class="active">
+                    <a href="#"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-book"></i> <span>Kelola Buku</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-tags"></i> <span>Kelola Kategori</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-users"></i> <span>Kelola Pengunjung</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-exchange-alt"></i> <span>Transaksi Peminjaman</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-file-alt"></i> <span>Laporan</span></a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-cog"></i> <span>Pengaturan Sistem</span></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="top-header">
+            <h2>Dashboard Admin</h2>
+            <div class="user-info">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=3498db&color=fff" alt="Admin">
+                <span>Admin</span>
+            </div>
+        </div>
+        
+        <!-- Stats Cards -->
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="card-title">Total Buku</div>
+                <div class="card-value">1,245</div>
+            </div>
+            <div class="stat-card">
+                <div class="card-title">Total Pengunjung</div>
+                <div class="card-value">532</div>
+            </div>
+            <div class="stat-card">
+                <div class="card-title">Peminjaman Aktif</div>
+                <div class="card-value">87</div>
+            </div>
+            <div class="stat-card">
+                <div class="card-title">Keterlambatan</div>
+                <div class="card-value">12</div>
+            </div>
+        </div>
+        
+        <!-- Peminjaman Terkini -->
+        <div class="content-box">
+            <div class="content-header">
+                <h4>Peminjaman Terkini</h4>
+                <div class="input-group" style="width: 250px;">
+                    <input type="text" class="form-control" placeholder="Cari...">
+                    <button class="btn btn-outline-secondary" type="button"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID Transaksi</th>
+                            <th>Pengunjung</th>
+                            <th>Buku</th>
+                            <th>Tanggal Pinjam</th>
+                            <th>Tanggal Kembali</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>TRX-001</td>
+                            <td>Andi Wijaya</td>
+                            <td>Pemrograman Web Modern</td>
+                            <td>15 Mei 2023</td>
+                            <td>30 Mei 2023</td>
+                            <td><span class="badge-status badge-success">Aktif</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-primary"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-sm btn-success"><i class="fas fa-check"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>TRX-002</td>
+                            <td>Budi Santoso</td>
+                            <td>Belajar JavaScript</td>
+                            <td>12 Mei 2023</td>
+                            <td>27 Mei 2023</td>
+                            <td><span class="badge-status badge-warning">Akan Jatuh Tempo</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-primary"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-sm btn-success"><i class="fas fa-check"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>TRX-003</td>
+                            <td>Citra Dewi</td>
+                            <td>Desain UI/UX</td>
+                            <td>10 Mei 2023</td>
+                            <td>25 Mei 2023</td>
+                            <td><span class="badge-status badge-danger">Terlambat</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-primary"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-sm btn-warning"><i class="fas fa-envelope"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Kelola Buku -->
+        <div class="content-box">
+            <div class="content-header">
+                <h4>Kelola Buku</h4>
+                <div>
+                    <button class="btn btn-primary"><i class="fas fa-plus"></i> Tambah Buku</button>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Kode Buku</th>
+                            <th>Judul</th>
+                            <th>Pengarang</th>
+                            <th>Kategori</th>
+                            <th>Stok</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>BK-001</td>
+                            <td>Pemrograman Web Modern</td>
+                            <td>John Doe</td>
+                            <td>Teknologi</td>
+                            <td>5</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>BK-002</td>
+                            <td>Belajar JavaScript</td>
+                            <td>Jane Smith</td>
+                            <td>Teknologi</td>
+                            <td>3</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>BK-003</td>
+                            <td>Desain UI/UX</td>
+                            <td>Robert Johnson</td>
+                            <td>Desain</td>
+                            <td>7</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // Implementasi fungsi admin sesuai class diagram
+        class Admin {
+            constructor() {
+                this.IdAdmin = "ADM001";
+            }
+            
+            kelolaBuku(buku, aksi) {
+                console.log(`Admin ${this.IdAdmin} melakukan aksi ${aksi} pada buku ${buku}`);
+                // Implementasi aksi kelola buku
+            }
+            
+            kelolaKategori(kategori) {
+                console.log(`Admin ${this.IdAdmin} mengelola kategori ${kategori}`);
+                // Implementasi kelola kategori
+            }
+            
+            kelolaPengunjung(pengunjung) {
+                console.log(`Admin ${this.IdAdmin} mengelola pengunjung ${pengunjung}`);
+                // Implementasi kelola pengunjung
+            }
+            
+            generaisLaporan(jenis) {
+                console.log(`Admin ${this.IdAdmin} membuat laporan jenis ${jenis}`);
+                // Implementasi generate laporan
+                return new Laporan();
+            }
+        }
+        
+        class Laporan {
+            constructor() {
+                this.idLaporan = "LAP" + Date.now();
+                this.tanggalDibuat = new Date().toISOString();
+                this.jenis = "Harian";
+                this.isi = "Laporan aktivitas sistem";
+            }
+        }
+        
+        // Inisialisasi admin
+        document.addEventListener('DOMContentLoaded', function() {
+            const admin = new Admin();
+            console.log('Dashboard admin perpustakaan digital siap digunakan!');
+            
+            // Contoh penggunaan
+            admin.kelolaBuku("Pemrograman Web Modern", "tambah");
+            admin.generaisLaporan("Harian");
+        });
+    </script>
+</body>
+</html>
