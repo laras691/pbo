@@ -127,7 +127,7 @@ def admin_custom(request):
         else:
             messages.error(request, 'ID, Password, atau Token salah.')
 
-    return render(request, 'login_admin.html')
+    return render(request, 'admin/login_admin.html')
 
 # Admin – Kelola Buku
 def kelola_buku(request):
@@ -188,7 +188,7 @@ def admin_custom_login(request):
                 'error': 'Invalid credentials for staff access'
             })
     
-    return render(request, 'login_admin.html')
+    return render(request, 'admin/login_admin.html')
     
 
 def lihat_daftar_buku(request):
