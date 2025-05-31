@@ -6,6 +6,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('', lambda request: redirect('login_pengunjung'), name='root_redirect'),
     path('home/', views.lihat_daftar_buku, name='home_pengunjung'),
+    path('beranda/', views.beranda_pengunjung, name='beranda_pengunjung'),
     path('buku/<str:id_buku>/', views.detail_buku, name='detail_buku'),
 
     path('pengunjung/register/', views.register_pengunjung, name='register_pengunjung'),

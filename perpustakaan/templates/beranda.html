@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BookBase - Beranda</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+        }
+
+        .sidebar {
+            width: 220px;
+            background-color: #fff;
+            position: fixed;
+            height: 100%;
+            padding: 30px 15px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        .sidebar h2 {
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            padding: 12px 10px;
+            margin: 10px 0;
+            background: #eef1f6;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .content {
+            margin-left: 240px;
+            padding: 20px 40px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #2d2d2d;
+        }
+
+        .book-row {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 12px;
+            width: 160px;
+            padding: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .book-card img {
+            width: 100%;
+            height: 210px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .book-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 8px;
+            color: #333;
+        }
+
+        .book-author {
+            font-size: 12px;
+            color: #777;
+        }
+
+        .category-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background-color: #dee5f2;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .profile-box {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            background-color: #fff;
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>📚 BookBase</h2>
+        <ul>
+            <li>Discover</li>
+            <li>Category</li>
+            <li>My Library</li>
+            <li>Favourite</li>
+            <li>Settings</li>
+            <li>Logout</li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <div class="profile-box">
+            👤 {{ user.username }}
+        </div>
+
+        <h2 class="section-title">Recommended</h2>
+        <div class="book-row">
+            {% for buku in rekomendasi %}
+            <div class="book-card">
+                <img src="{{ buku.cover_url }}" alt="{{ buku.judul }}">
+                <div class="book-title">{{ buku.judul }}</div>
+                <div class="book-author">{{ buku.penulis }}</div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <h2 class="section-title">Categories</h2>
+        <div class="category-filters">
+            <div class="filter-btn">All</div>
+            <div class="filter-btn">Fantasy</div>
+            <div class="filter-btn">Drama</div>
+            <div class="filter-btn">Education</div>
+            <div class="filter-btn">Sci-Fi</div>
+            <div class="filter-btn">Geography</div>
+        </div>
+        <div class="book-row">
+            {% for buku in kategori %}
+            <div class="book-card">
+                <img src="{{ buku.cover_url }}" alt="{{ buku.judul }}">
+                <div class="book-title">{{ buku.judul }}</div>
+                <div class="book-author">{{ buku.penulis }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

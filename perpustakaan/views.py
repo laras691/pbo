@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import PinjamBuku, Pengunjung
+from .models import PinjamBuku, Pengunjung, Buku  # pastikan model Buku sudah ada
 from .forms import LoginForm, RegisterForm
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
@@ -49,7 +49,7 @@ def login_pengunjung(request):
             if check_password(password, pengunjung.password):
                 # Login berhasil
                 request.session['pengunjung_id'] = pengunjung.id
-                return redirect('home_pengunjung')
+                return redirect('beranda_pengunjung')
             else:
                 messages.error(request, 'Password salah. Silakan coba lagi.')
         else:
@@ -155,13 +155,43 @@ def lupa_password(request):
             messages.error(request, 'Email tidak terdaftar.')
     return render(request, 'pengunjung/lupaPassword.html')
 
-from perpustakaan.models import PinjamBuku
-if not PinjamBuku.objects.filter(id_buku='buku1').exists():
-    PinjamBuku.objects.create(id_buku='buku1', judul='Buku Satu', stok=5)
-
 def admin_custom(request):
     return render(request, 'admin.html')
 
 def lihat_daftar_buku(request):
+    if not PinjamBuku.objects.filter(buku_id='buku1').exists():
+        PinjamBuku.objects.create(id_buku='buku1', judul='Buku Satu', stok=5)
     daftar_buku = PinjamBuku.objects.all()
     return render(request, 'pengunjung/lihatDaftarBuku.html', {'daftar_buku': daftar_buku})
+
+def home_pengunjung(request):
+    pengunjung_id = request.session.get('pengunjung_id')
+    if not pengunjung_id:
+        return redirect('login_pengunjung')
+    pengunjung = Pengunjung.objects.get(id=pengunjung_id)
+
+    rekomendasi = Buku.objects.all().order_by('?')[:4]
+    kategori = Buku.objects.all()[:6]
+
+    context = {
+        'user': pengunjung,
+        'rekomendasi': rekomendasi,
+        'kategori': kategori,
+    }
+    return render(request, 'beranda.html', context)
+
+def beranda_pengunjung(request):
+    pengunjung_id = request.session.get('pengunjung_id')
+    if not pengunjung_id:
+        return redirect('login_pengunjung')
+    pengunjung = Pengunjung.objects.get(id=pengunjung_id)
+
+    rekomendasi = Buku.objects.all().order_by('?')[:4]
+    kategori = Buku.objects.all()[:6]
+
+    context = {
+        'user': pengunjung,
+        'rekomendasi': rekomendasi,
+        'kategori': kategori,
+    }
+    return render(request, 'beranda.html', context)
