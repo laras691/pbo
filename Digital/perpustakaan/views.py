@@ -8,9 +8,10 @@ from django.core.mail import send_mail
 import random
 from django.contrib.auth import authenticate, login
 from .models import Buku, Peminjaman,   Pengunjung, Admin, Laporan
-from django.contrib.auth.views import LoginView
 from django.urls import reverse
-
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
 
 # Halaman utama
 def daftar_buku(request):
@@ -129,36 +130,21 @@ def admin_custom(request):
         else:
             messages.error(request, 'ID, Password, atau Token salah.')
 
-    return render(request, 'admin/login_admin.html')
+    return render(request, 'admin/admin_login.html')
 
 #dashboard Admin
-def dashboard_admin(request):
-    # Hitung statistik
-    total_buku = Buku.objects.count()
-    buku_dipinjam = Peminjaman.objects.filter(status='Dipinjam').count()
-    buku_terbaru = Buku.objects.order_by('-tanggal_ditambahkan')[:5]
-    
-    # Data untuk chart
-    buku_labels = [b.judul for b in Buku.objects.all()[:5]]
-    buku_data = [b.dipinjam_count for b in Buku.objects.all()[:5]]
-    
-    context = {
-        'total_buku': total_buku,
-        'buku_dipinjam': buku_dipinjam,
-        'buku_terbaru': buku_terbaru,
-        'buku_labels': buku_labels,
-        'buku_data': buku_data,
-    }
+def dashboardAdmin (request):
+    context = {'title': 'Admin Dashboard'}
     return render(request, 'admin/dashboardAdmin.html', context)
 
 class AdminLoginView(LoginView):
     template_name = 'admin/login.html'
-    redirect_authenticated_user = True  # Redirect user yang sudah login
     
     def get_success_url(self):
-        url = self.get_redirect_url()
-        return url or reverse('admin-dashboard')
-
+        if self.request.user.is_staff:
+            return reverse_lazy('admin-dashboard')
+        return reverse_lazy('admin:index')
+    
 # Admin – Kelola Buku
 def kelola_buku(request):
     daftar_buku = PinjamBuku.objects.all()
@@ -206,7 +192,7 @@ def lupa_password(request):
 
 def admin_custom_login(request):
     
-    return render(request, 'admin/login_admin.html')
+    return render(request, 'admin/admin_login.html')
     
 
 def lihat_daftar_buku(request):

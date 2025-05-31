@@ -4,12 +4,13 @@ from . import views
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LogoutView
 from .views import admin_custom_login
-from .views import dashboard_admin
+from .views import dashboardAdmin
 from .views import AdminLoginView
 from django.views.generic import TemplateView
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.views import LoginView
 from django.contrib import admin
+from perpustakaan.views import dashboardAdmin
 
 urlpatterns = [
     path('', lambda request: redirect('login_pengunjung'), name='root_redirect'),
@@ -36,11 +37,9 @@ urlpatterns = [
     path('verifikasi/', views.verifikasi_kode, name='verifikasi_kode'),
 
     path('admin-custom/', views.admin_custom, name='admin_custom'),
-    path('admin/', admin.site.urls),  
-    path('custom-admin/login/', LoginView.as_view(template_name='admin/login.html'), name='admin-login'),
-    path('custom-admin/dashboard/', staff_member_required(
-        TemplateView.as_view(template_name='admin/dashboard.html')
-    ), name='admin-dashboard'),
+    path('admin/', admin.site.urls),  # Default admin
+    path('custom-admin/login/', AdminLoginView.as_view(), name='admin-login'),
+    path('custom-admin/dashboard/', dashboardAdmin, name='admin-dashboard'),
     path('cari-buku/', views.cari_buku, name='cari_buku'),
     path('pinjam-buku/', views.pinjam_buku, name='pinjam_buku'),
     path('kembalikan-buku/', views.kembalikan_buku, name='kembalikan_buku'),
