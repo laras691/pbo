@@ -12,6 +12,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LOGIN_URL = 'admin-login'  # Nama URL view login Anda
+LOGIN_REDIRECT_URL = 'admin-dashboard'  # Ini bisa menjadi fallbac
+
 # Aplikasi yang digunakan dalam proyek
 INSTALLED_APPS = [
     'django.contrib.admin',

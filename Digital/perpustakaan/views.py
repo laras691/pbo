@@ -7,7 +7,9 @@ from django.db import IntegrityError
 from django.core.mail import send_mail
 import random
 from django.contrib.auth import authenticate, login
-from django.contrib import messages
+from .models import Buku, Peminjaman, Anggota
+from django.contrib.auth.views import LoginView
+from django.urls import reverse
 
 
 # Halaman utama
@@ -128,6 +130,34 @@ def admin_custom(request):
             messages.error(request, 'ID, Password, atau Token salah.')
 
     return render(request, 'admin/login_admin.html')
+
+#dashboard Admin
+def dashboard_admin(request):
+    # Hitung statistik
+    total_buku = Buku.objects.count()
+    buku_dipinjam = Peminjaman.objects.filter(status='Dipinjam').count()
+    buku_terbaru = Buku.objects.order_by('-tanggal_ditambahkan')[:5]
+    
+    # Data untuk chart
+    buku_labels = [b.judul for b in Buku.objects.all()[:5]]
+    buku_data = [b.dipinjam_count for b in Buku.objects.all()[:5]]
+    
+    context = {
+        'total_buku': total_buku,
+        'buku_dipinjam': buku_dipinjam,
+        'buku_terbaru': buku_terbaru,
+        'buku_labels': buku_labels,
+        'buku_data': buku_data,
+    }
+    return render(request, 'admin/dashboardAdmin.html', context)
+
+class AdminLoginView(LoginView):
+    template_name = 'admin/login.html'
+    redirect_authenticated_user = True  # Redirect user yang sudah login
+    
+    def get_success_url(self):
+        url = self.get_redirect_url()
+        return url or reverse('admin-dashboard')
 
 # Admin – Kelola Buku
 def kelola_buku(request):
