@@ -11,9 +11,152 @@
             padding: 0;
             min-height: 100vh;
         }
+        .topbar {
+            width: 100vw;
+            background: #0051a8;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            height: 60px;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1001;
+        }
+        .menu-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 1300;
+        }
+        .menu-icon span {
+            display: block;
+            height: 4px;
+            width: 28px;
+            background: #fff;
+            border-radius: 2px;
+        }
+        .topbar-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .profile-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #e6eef6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0051a8;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -260px;
+            width: 240px;
+            height: 100vh;
+            background: #e6eef6;
+            color: #0051a8;
+            z-index: 1200;
+            transition: left 0.3s;
+            box-shadow: 2px 0 16px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            padding-top: 0;
+            border-top-right-radius: 24px;
+            border-bottom-right-radius: 24px;
+            border-right: 2px solid #b0c9e4;
+        }
+        .sidebar.active {
+            left: 0;
+        }
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 18px 0 32px;
+            height: 60px;
+            border-bottom: 1.5px solid #b0c9e4;
+            background: #e6eef6;
+        }
+        .sidebar h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            letter-spacing: 1px;
+            color: #0051a8;
+            font-weight: bold;
+        }
+        .sidebar .close-btn {
+            font-size: 1.6rem;
+            color: #0051a8;
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+            margin-top: 0;
+            align-self: flex-start;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 18px 0 0 0;
+            margin: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .sidebar ul li {
+            margin: 0;
+        }
+        .sidebar ul li a {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #0051a8;
+            text-decoration: none;
+            padding: 12px 32px 12px 32px;
+            font-size: 1.08rem;
+            transition: background 0.18s, color 0.18s;
+            border-radius: 8px 0 0 8px;
+            font-weight: 500;
+            position: relative;
+        }
+        .sidebar ul li a::after {
+            content: '>';
+            font-size: 1.1em;
+            color: #3a5fa8;
+            margin-left: 12px;
+            font-weight: bold;
+            transition: color 0.18s;
+        }
+        .sidebar ul li a:hover,
+        .sidebar ul li a.active {
+            background: #b0c9e4;
+            color: #fff;
+        }
+        .sidebar ul li a:hover::after,
+        .sidebar ul li a.active::after {
+            color: #fff;
+        }
         .container {
             max-width: 480px;
-            margin: 60px auto 0 auto;
+            margin: 90px auto 0 auto;
             background: #fff;
             border-radius: 18px;
             box-shadow: 0 4px 24px rgba(176,201,228,0.18);
@@ -68,23 +211,87 @@
             margin-bottom: 18px;
             font-size: 0.98rem;
         }
+        @media (max-width: 700px) {
+            .container {
+                padding: 18px 4px 18px 4px;
+            }
+            .topbar {
+                padding: 0 10px;
+            }
+            .sidebar {
+                width: 80vw;
+                min-width: 180px;
+                max-width: 320px;
+            }
+            .sidebar-header {
+                padding: 0 10px 0 18px;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="topbar">
+        <div class="menu-icon" id="menuBtn" title="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="topbar-title">Litera.id</div>
+        <div class="profile">
+            <div class="profile-circle">
+                <span>👤</span>
+            </div>
+        </div>
+    </div>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>📚 Litera.id</h2>
+            <button class="close-btn" id="closeSidebar" title="Tutup">&times;</button>
+        </div>
+        <ul>
+            <li><a href="{% url 'beranda_pengunjung' %}">Beranda</a></li>
+            <li><a href="{% url 'lihat_daftar_buku' %}">Lihat Daftar Buku</a></li>
+            <li><a href="{% url 'pinjam_buku' %}">Pinjam Buku</a></li>
+            <li><a href="{% url 'kembalikan_buku' %}" class="active">Kembalikan Buku</a></li>
+            <li><a href="{% url 'lihat_riwayat' %}">Lihat Riwayat</a></li>
+            <li><a href="#" id="logout-link">Keluar</a></li>
+        </ul>
+    </div>
     <div class="container">
         <h2>Formulir Pengembalian Buku</h2>
         <div class="info">
-            Pilih buku yang ingin dikembalikan dan isi tanggal pengembalian.
+            Pilih buku yang ingin dikembalikan.
         </div>
-        <form method="post" action="">
+        <form id="form-kembali" method="post" action="">
             {% csrf_token %}
             <label for="buku">Judul Buku</label>
             <select id="buku" name="buku" required>
-                <option value="">-- Pilih Buku yang Dipinjam --</option>
-                {% for pinjam in daftar_pinjam %}
-                <option value="{{ pinjam.id }}">{{ pinjam.buku.judul }}</option>
-                {% endfor %}
+                <option value="">-- Pilih Judul Buku --</option>
+                <option value="Bumi Manusia" data-kode="4821">Bumi Manusia</option>
+                <option value="Harimau! Harimau!" data-kode="1937">Harimau! Harimau!</option>
+                <option value="Laut Bercerita" data-kode="7264">Laut Bercerita</option>
+                <option value="Ronggeng Dukuh Paruk" data-kode="3502">Ronggeng Dukuh Paruk</option>
+                <option value="Revolusi: Indonesia and the Birth of the Modern World" data-kode="9158">Revolusi: Indonesia and the Birth of the Modern World</option>
+                <option value="Sejarah Film 1900–1950" data-kode="2740">Sejarah Film 1900–1950</option>
+                <option value="Ayat-Ayat Cinta" data-kode="6381">Ayat-Ayat Cinta</option>
+                <option value="Tafsir al-Mishbah" data-kode="5027">Tafsir al-Mishbah</option>
+                <option value="Sang Pemimpi" data-kode="1845">Sang Pemimpi</option>
+                <option value="Laskar Pelangi" data-kode="7603">Laskar Pelangi</option>
+                <option value="Pendidikan Kewarganegaraan" data-kode="3492">Pendidikan Kewarganegaraan</option>
+                <option value="Dasar-Dasar Akuntansi" data-kode="5276">Dasar-Dasar Akuntansi</option>
+                <option value="Manajemen Pemasaran" data-kode="8034">Manajemen Pemasaran</option>
+                <option value="Pengantar Teknologi Informasi" data-kode="1129">Pengantar Teknologi Informasi</option>
+                <option value="Pengantar Ilmu Ekonomi" data-kode="6750">Pengantar Ilmu Ekonomi</option>
+                <option value="Ekonomi Mikro" data-kode="2417">Ekonomi Mikro</option>
+                <option value="Gen & Kesehatan Anda" data-kode="3905">Gen & Kesehatan Anda</option>
+                <option value="100 Tanya Jawab Mengenai Diabetes" data-kode="8562">100 Tanya Jawab Mengenai Diabetes</option>
+                <option value="Bukan Cinta Monyet" data-kode="4738">Bukan Cinta Monyet</option>
+                <option value="Dongeng Lengkap Kancil" data-kode="2094">Dongeng Lengkap Kancil</option>
             </select>
+
+            <label for="kode_buku">Kode Buku (4 digit sesuai daftar buku)</label>
+            <input type="text" id="kode_buku" name="kode_buku" pattern="\d{4}" maxlength="4" minlength="4" required placeholder="Contoh: 4821">
+            <div id="kode-error" style="color:#d32f2f; font-size:0.97rem; margin-top:4px; display:none;"></div>
 
             <label for="tanggal_kembali">Tanggal Pengembalian</label>
             <input type="date" id="tanggal_kembali" name="tanggal_kembali" required>
@@ -92,5 +299,221 @@
             <button type="submit">Kembalikan Buku</button>
         </form>
     </div>
+    <div id="logout-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.25); z-index:9999; align-items:center; justify-content:center;">
+        <div style="background:#fff; border-radius:16px; padding:32px 28px; box-shadow:0 4px 24px rgba(0,81,168,0.18); text-align:center; min-width:300px;">
+            <h3 style="color:#0051a8; margin-bottom:18px;">Konfirmasi Keluar</h3>
+            <p style="margin-bottom:24px;">Apakah Anda yakin ingin keluar?</p>
+            <button id="logout-yes" style="background:#0051a8; color:#fff; border:none; border-radius:8px; padding:10px 28px; font-size:1rem; margin-right:12px; cursor:pointer;">Ya</button>
+            <button id="logout-no" style="background:#b0c9e4; color:#0051a8; border:none; border-radius:8px; padding:10px 28px; font-size:1rem; cursor:pointer;">Tidak</button>
+        </div>
+    </div>
+
+    <!-- Modal konfirmasi pengembalian -->
+    <div id="modal-konfirmasi" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.25); z-index:9999; align-items:center; justify-content:center;">
+        <div style="background:#fff; border-radius:16px; padding:32px 28px; box-shadow:0 4px 24px rgba(0,81,168,0.18); text-align:center; min-width:300px;">
+            <h3 style="color:#0051a8; margin-bottom:18px;">Konfirmasi Pengembalian</h3>
+            <p style="margin-bottom:24px;">Apakah Anda yakin mengembalikan buku ini?</p>
+            <button id="kembali-yes" style="background:#0051a8; color:#fff; border:none; border-radius:8px; padding:10px 28px; font-size:1rem; margin-right:12px; cursor:pointer;">Ya</button>
+            <button id="kembali-no" style="background:#b0c9e4; color:#0051a8; border:none; border-radius:8px; padding:10px 28px; font-size:1rem; cursor:pointer;">Tidak</button>
+        </div>
+    </div>
+
+    <!-- Modal notifikasi berhasil -->
+    <div id="modal-berhasil" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.25); z-index:9999; align-items:center; justify-content:center;">
+        <div style="background:#fff; border-radius:16px; padding:32px 28px; box-shadow:0 4px 24px rgba(0,81,168,0.18); text-align:center; min-width:300px;">
+            <h3 style="color:#0051a8; margin-bottom:18px;">Pengembalian Berhasil</h3>
+            <p style="margin-bottom:24px;">Buku berhasil dikembalikan. Terima kasih!</p>
+            <button id="berhasil-ok" style="background:#0051a8; color:#fff; border:none; border-radius:8px; padding:10px 28px; font-size:1rem; cursor:pointer;">OK</button>
+        </div>
+    </div>
+
+    {% if notifikasi_error %}
+    <div id="notif-error" style="
+        position: fixed;
+        left: 50%;
+        top: 60px;
+        transform: translate(-50%, 0);
+        min-width: 260px;
+        max-width: 90vw;
+        background: #ffeaea;
+        color: #c00;
+        border: 1.5px solid #c00;
+        padding: 14px 22px 14px 22px;
+        border-radius: 10px;
+        box-shadow: 0 4px 18px rgba(200,0,0,0.08);
+        z-index: 20000;
+        text-align: center;
+        font-size: 1rem;
+        animation: slideDownNotif 0.5s;
+    ">
+        {{ notifikasi_error }}<br>
+        <button onclick="window.location.href='{% url 'kembalikan_buku' %}'"
+            style="margin-top:10px; background:#c00; color:#fff; border:none; border-radius:6px; padding:6px 18px; cursor:pointer;">
+            Kembali
+        </button>
+    </div>
+    <style>
+    @keyframes slideDownNotif {
+        from { top: 0; opacity: 0; }
+        to { top: 60px; opacity: 1; }
+    }
+    </style>
+    {% endif %}
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuBtn = document.getElementById('menuBtn');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
+
+        if (menuBtn && closeSidebar && sidebar) {
+            menuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                sidebar.classList.add('active');
+                sidebar.style.transition = 'left 0.3s';
+            });
+            closeSidebar.addEventListener('click', function(e) {
+                e.stopPropagation();
+                sidebar.classList.remove('active');
+            });
+            document.addEventListener('click', function(e) {
+                if (
+                    sidebar.classList.contains('active') &&
+                    !sidebar.contains(e.target) &&
+                    !menuBtn.contains(e.target)
+                ) {
+                    sidebar.classList.remove('active');
+                }
+            });
+
+            // Fitur geser (swipe) untuk sidebar di perangkat sentuh
+            let startX = null;
+            sidebar.addEventListener('touchstart', function(e) {
+                if (sidebar.classList.contains('active')) {
+                    startX = e.touches[0].clientX;
+                }
+            });
+            sidebar.addEventListener('touchmove', function(e) {
+                if (startX !== null) {
+                    let currentX = e.touches[0].clientX;
+                    if (startX - currentX > 60) { // swipe ke kiri
+                        sidebar.classList.remove('active');
+                        startX = null;
+                    }
+                }
+            });
+            sidebar.addEventListener('touchend', function() {
+                startX = null;
+            });
+        }
+
+        // Logout modal
+        const logoutLink = document.getElementById('logout-link');
+        const logoutModal = document.getElementById('logout-modal');
+        const logoutYes = document.getElementById('logout-yes');
+        const logoutNo = document.getElementById('logout-no');
+
+        if (logoutLink && logoutModal && logoutYes && logoutNo) {
+            logoutLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                logoutModal.style.display = 'flex';
+            });
+
+            logoutYes.addEventListener('click', function() {
+                window.location.href = "{% url 'logout' %}";
+            });
+
+            logoutNo.addEventListener('click', function() {
+                logoutModal.style.display = 'none';
+            });
+        }
+
+        // Validasi pengembalian buku
+        const daftarKodeBuku = {
+            "Bumi Manusia": "4821",
+            "Harimau! Harimau!": "1937",
+            "Laut Bercerita": "7264",
+            "Ronggeng Dukuh Paruk": "3502",
+            "Revolusi: Indonesia and the Birth of the Modern World": "9158",
+            "Sejarah Film 1900–1950": "2740",
+            "Ayat-Ayat Cinta": "6381",
+            "Tafsir al-Mishbah": "5027",
+            "Sang Pemimpi": "1845",
+            "Laskar Pelangi": "7603",
+            "Pendidikan Kewarganegaraan": "3492",
+            "Dasar-Dasar Akuntansi": "5276",
+            "Manajemen Pemasaran": "8034",
+            "Pengantar Teknologi Informasi": "1129",
+            "Pengantar Ilmu Ekonomi": "6750",
+            "Ekonomi Mikro": "2417",
+            "Gen & Kesehatan Anda": "3905",
+            "100 Tanya Jawab Mengenai Diabetes": "8562",
+            "Bukan Cinta Monyet": "4738",
+            "Dongeng Lengkap Kancil": "2094"
+        };
+
+        const formKembali = document.getElementById('form-kembali');
+        const judulBuku = document.getElementById('buku');
+        const kodeBuku = document.getElementById('kode_buku');
+        const kodeError = document.getElementById('kode-error');
+        const modalKonfirmasi = document.getElementById('modal-konfirmasi');
+        const kembaliYes = document.getElementById('kembali-yes');
+        const kembaliNo = document.getElementById('kembali-no');
+        const modalBerhasil = document.getElementById('modal-berhasil');
+        const berhasilOk = document.getElementById('berhasil-ok');
+
+        let submitAllowed = false;
+
+        if (formKembali && judulBuku && kodeBuku && kodeError && modalKonfirmasi && kembaliYes && kembaliNo) {
+            formKembali.addEventListener('submit', function(e) {
+                if (submitAllowed) {
+                    submitAllowed = false;
+                    return;
+                }
+                e.preventDefault();
+                kodeError.style.display = "none";
+                kodeError.textContent = "";
+                const judul = judulBuku.value;
+                const kode = kodeBuku.value;
+                if (!judul || !kode) {
+                    kodeError.textContent = "Silakan pilih judul buku dan masukkan kode buku.";
+                    kodeError.style.display = "block";
+                    return;
+                }
+                if (daftarKodeBuku[judul] !== kode) {
+                    kodeError.textContent = "Kode buku tidak sesuai dengan judul. Silakan masukkan kode buku yang benar.";
+                    kodeError.style.display = "block";
+                    kodeBuku.value = "";
+                    kodeBuku.focus();
+                    return;
+                }
+                // Tampilkan modal konfirmasi
+                modalKonfirmasi.style.display = 'flex';
+            });
+
+            kembaliYes.addEventListener('click', function() {
+                submitAllowed = true;
+                modalKonfirmasi.style.display = 'none';
+                formKembali.submit();
+            });
+
+            kembaliNo.addEventListener('click', function() {
+                modalKonfirmasi.style.display = 'none';
+            });
+
+            if (berhasilOk && modalBerhasil) {
+                berhasilOk.addEventListener('click', function() {
+                    modalBerhasil.style.display = 'none';
+                    // window.location.href = "{% url 'lihat_riwayat' %}";
+                });
+            }
+
+            kodeBuku.addEventListener('input', function() {
+                kodeError.style.display = "none";
+                kodeError.textContent = "";
+            });
+        }
+    });
+    </script>
 </body>
 </html>

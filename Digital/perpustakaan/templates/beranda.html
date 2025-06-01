@@ -15,53 +15,42 @@
         .topbar {
             width: 100vw;
             background: #0051a8;
-            height: 64px;
+            color: #fff;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            padding: 0 32px;
+            height: 60px;
+            box-sizing: border-box;
             position: fixed;
             top: 0;
             left: 0;
-            z-index: 300;
-            box-shadow: 0 2px 12px rgba(0,81,168,0.07);
+            z-index: 1001;
         }
-
-        .menu-toggle {
-            margin-left: 24px;
-            width: 44px;
-            height: 44px;
-            background: #0051a8;
-            border: none;
-            border-radius: 12px;
+        .menu-icon {
+            width: 36px;
+            height: 36px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
+            gap: 6px;
             cursor: pointer;
-            z-index: 400;
-            box-shadow: 0 2px 8px rgba(0,81,168,0.10);
+            background: none;
+            border: none;
+            margin-left: 24px;
         }
-
-        .menu-toggle span {
+        .menu-icon span {
             display: block;
-            width: 26px;
             height: 4px;
-            margin: 4px 0;
+            width: 28px;
             background: #fff;
             border-radius: 2px;
-            transition: all 0.3s;
         }
-
         .topbar-title {
-            color: #e6eef6;
             font-size: 1.5rem;
             font-weight: bold;
             letter-spacing: 1px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin-left: 12px;
-            user-select: none;
         }
-
         .profile-box {
             margin-right: 32px;
             background-color: #b0c9e4;
@@ -70,79 +59,113 @@
             border-radius: 50%;
             box-shadow: 0 0 12px rgba(176,201,228,0.13);
             color: #3a5fa8;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             font-size: 1.1rem;
             border: 2px solid #e6eef6;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            padding: 0; /* pastikan padding 0 agar benar-benar bulat */
+            padding: 0;
         }
 
         .sidebar {
-            width: 220px;
-            background: #e6eef6;
             position: fixed;
-            height: 100%;
-            padding: 30px 15px;
-            box-shadow: 4px 0 12px rgba(176,201,228,0.13);
-            border-top-right-radius: 40px;
-            border-bottom-right-radius: 40px;
-            border-right: 3px solid #b0c9e4;
             top: 0;
-            left: 0;
-            transform: translateX(-260px);
-            transition: transform 0.4s cubic-bezier(.77,0,.18,1);
-            z-index: 200;
-            margin-top: 0;
+            left: -260px;
+            width: 240px;
+            height: 100vh;
+            background: #e6eef6;
+            color: #0051a8;
+            z-index: 1200;
+            transition: left 0.3s;
+            box-shadow: 2px 0 16px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            padding-top: 0;
+            border-top-right-radius: 24px;
+            border-bottom-right-radius: 24px;
+            border-right: 2px solid #b0c9e4;
         }
 
         .sidebar.active {
-            transform: translateX(0);
+            left: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 18px 0 32px;
+            height: 60px;
+            border-bottom: 1.5px solid #b0c9e4;
+            background: #e6eef6;
         }
 
         .sidebar h2 {
-            margin-bottom: 30px;
+            margin: 0;
+            font-size: 1.3rem;
+            letter-spacing: 1px;
+            color: #0051a8;
+            font-weight: bold;
+        }
+
+        .sidebar .close-btn {
+            font-size: 1.6rem;
             color: #0051a8;
             background: none;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 2rem;
-            letter-spacing: 1px;
-            text-shadow: 1px 2px 0 #b0c9e4;
-            border-radius: 0;
-            padding: 32px 0 0 0;
-            text-align: center;
-            box-shadow: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+            margin-top: 0;
+            align-self: flex-start;
         }
 
         .sidebar ul {
             list-style: none;
-            padding: 0;
+            padding: 18px 0 0 0;
+            margin: 0;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
 
         .sidebar ul li {
-            padding: 12px 10px;
-            margin: 10px 0;
-            background: #b0c9e4;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
-            box-shadow: 0 2px 6px rgba(176,201,228,0.10);
-            border: 2px solid #e6eef6;
-        }
-
-        .sidebar ul li:hover {
-            background: #8fc1f7;
-            transform: translateX(8px) scale(1.04) rotate(-2deg);
+            margin: 0;
         }
 
         .sidebar ul li a {
-            color: #3a5fa8;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #0051a8;
             text-decoration: none;
+            padding: 12px 32px 12px 32px;
+            font-size: 1.08rem;
+            transition: background 0.18s, color 0.18s;
+            border-radius: 8px 0 0 8px;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .sidebar ul li a::after {
+            content: '>';
+            font-size: 1.1em;
+            color: #3a5fa8;
+            margin-left: 12px;
             font-weight: bold;
-            font-size: 1.05rem;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: color 0.18s;
+        }
+
+        .sidebar ul li a:hover,
+        .sidebar ul li a.active {
+            background: #b0c9e4;
+            color: #fff;
+        }
+
+        .sidebar ul li a:hover::after,
+        .sidebar ul li a.active::after {
+            color: #fff;
         }
 
         .content {
@@ -154,14 +177,15 @@
             border-top-left-radius: 40px;
             border-bottom-left-radius: 40px;
             box-shadow: none;
-            transition: margin-left 0.4s cubic-bezier(.77,0,.18,1);
+            transition: none;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
         }
 
+        /* Hapus/override efek geser jika sidebar aktif */
         .sidebar.active ~ .content {
-            margin-left: 250px;
+            margin-left: 0 !important;
         }
 
         .section-title {
@@ -289,11 +313,12 @@
         }
         @media (max-width: 700px) {
             .sidebar {
-                width: 180px;
-                padding: 20px 8px;
+                width: 80vw;
+                min-width: 180px;
+                max-width: 320px;
             }
-            .sidebar.active ~ .content {
-                margin-left: 180px;
+            .topbar {
+                padding: 0 10px;
             }
             .profile-box {
                 margin-right: 10px;
@@ -303,15 +328,45 @@
                 padding: 20px 8px;
             }
         }
+
+        .menu-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            margin-left: 24px;
+        }
+        .menu-icon span {
+            display: block;
+            height: 4px;
+            width: 28px;
+            background: #fff;
+            border-radius: 2px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 18px;
+            font-size: 1.6rem;
+            color: #fff;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div class="topbar">
-        <button class="menu-toggle" id="menuToggle" aria-label="Buka Menu">
+        <div class="menu-icon" id="menuBtn" title="Menu">
             <span></span>
             <span></span>
             <span></span>
-        </button>
+        </div>
         <span class="topbar-title">📚 Litera.id</span>
         <div class="profile-box">
             👤 {{ user.username }}
@@ -319,14 +374,17 @@
     </div>
 
     <div class="sidebar" id="sidebar">
-        <h2>📚 Litera.id</h2>
+        <div class="sidebar-header">
+            <h2>📚 Litera.id</h2>
+            <button class="close-btn" id="closeSidebar" title="Tutup">&times;</button>
+        </div>
         <ul>
             <li><a href="{% url 'beranda_pengunjung' %}">Beranda</a></li>
             <li><a href="{% url 'lihat_daftar_buku' %}">Lihat Daftar Buku</a></li>
             <li><a href="{% url 'pinjam_buku' %}">Pinjam Buku</a></li>
             <li><a href="{% url 'kembalikan_buku' %}">Kembalikan Buku</a></li>
             <li><a href="{% url 'lihat_riwayat' %}">Lihat Riwayat</a></li>
-            <li><a href="#" id="logout-link">Logout</a></li>
+            <li><a href="#" id="logout-link">Keluar</a></li>
         </ul>
     </div>
 
@@ -336,7 +394,7 @@
             <button type="submit" class="search-btn">Cari</button>
         </form>
 
-        <h2 class="section-title">Recommended</h2>
+        <h2 class="section-title">Rekomendasi</h2>
         <div class="book-row">
             {% for buku in rekomendasi %}
             <div class="book-card">
@@ -347,14 +405,19 @@
             {% endfor %}
         </div>
 
-        <h2 class="section-title">Categories</h2>
+        <h2 class="section-title">Kategori</h2>
         <div class="category-filters">
-            <div class="filter-btn">All</div>
-            <div class="filter-btn">Fantasy</div>
-            <div class="filter-btn">Drama</div>
-            <div class="filter-btn">Education</div>
-            <div class="filter-btn">Sci-Fi</div>
-            <div class="filter-btn">Geography</div>
+            <div class="filter-btn">Semua</div>
+            <div class="filter-btn">Fiksi</div>
+            <div class="filter-btn">Sosial</div>
+            <div class="filter-btn">Sejarah</div>
+            <div class="filter-btn">Agama</div>
+            <div class="filter-btn">Bahasa</div>
+            <div class="filter-btn">Sains</div>
+            <div class="filter-btn">Teknologi</div>
+            <div class="filter-btn">Ekonomi</div>
+            <div class="filter-btn">Kesehatan</div>
+            <div class="filter-btn">Fiksi</div>
         </div>
         <div class="book-row">
             {% for buku in kategori %}
@@ -368,25 +431,36 @@
     </div>
     <div id="logout-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.25); z-index:9999; align-items:center; justify-content:center;">
         <div style="background:#fff; border-radius:16px; padding:32px 28px; box-shadow:0 4px 24px rgba(0,81,168,0.18); text-align:center; min-width:300px;">
-            <h3 style="color:#0051a8; margin-bottom:18px;">Konfirmasi Logout</h3>
+            <h3 style="color:#0051a8; margin-bottom:18px;">Konfirmasi Keluar</h3>
             <p style="margin-bottom:24px;">Apakah Anda yakin ingin keluar?</p>
             <button id="logout-yes" style="background:#0051a8; color:#fff; border:none; border-radius:8px; padding:10px 28px; font-size:1rem; margin-right:12px; cursor:pointer;">Ya</button>
             <button id="logout-no" style="background:#b0c9e4; color:#0051a8; border:none; border-radius:8px; padding:10px 28px; font-size:1rem; cursor:pointer;">Tidak</button>
         </div>
     </div>
     <script>
-        const menuToggle = document.getElementById('menuToggle');
+        // Sidebar menu logic agar bisa digeser
         const sidebar = document.getElementById('sidebar');
-        const content = document.querySelector('.content');
-
-        // Sidebar awalnya hidden
-        sidebar.classList.remove('active');
-
-        menuToggle.addEventListener('click', function() {
-            sidebar.classList.toggle('active');
-            content.classList.toggle('active');
+        const menuBtn = document.getElementById('menuBtn');
+        const closeSidebar = document.getElementById('closeSidebar');
+        menuBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            sidebar.classList.add('active');
+        });
+        closeSidebar.addEventListener('click', function(e) {
+            e.stopPropagation();
+            sidebar.classList.remove('active');
+        });
+        document.addEventListener('click', function(e) {
+            if (
+                sidebar.classList.contains('active') &&
+                !sidebar.contains(e.target) &&
+                !menuBtn.contains(e.target)
+            ) {
+                sidebar.classList.remove('active');
+            }
         });
 
+        // Logout modal logic tetap
         const logoutLink = document.getElementById('logout-link');
         const logoutModal = document.getElementById('logout-modal');
         const logoutYes = document.getElementById('logout-yes');

@@ -251,10 +251,59 @@ def pinjam_buku(request):
     return render(request, 'pengunjung/pinjamBuku.html')
 
 def kembalikan_buku(request):
-    return render(request, 'pengunjung/kembalikanBuku.html')
+    pengunjung_id = request.session.get('pengunjung_id')
+    if not pengunjung_id:
+        return redirect('login_pengunjung')
+    pengunjung = Pengunjung.objects.get(id=pengunjung_id)
+    daftar_pinjam = Peminjaman.objects.filter(pengunjung=pengunjung, status='Belum Kembali')
+
+    notifikasi_error = None
+
+    if request.method == 'POST':
+        judul_buku = request.POST.get('buku')
+        # Validasi: cek apakah ada riwayat peminjaman buku ini yang belum dikembalikan
+        peminjaman = Peminjaman.objects.filter(
+            pengunjung=pengunjung,
+            buku__judul=judul_buku,
+            status='Belum Kembali'
+        ).first()
+        if peminjaman:
+            # Proses pengembalian (misal update status dan tanggal kembali)
+            peminjaman.status = 'Kembali'
+            from django.utils import timezone
+            peminjaman.tanggal_kembali = timezone.now()
+            peminjaman.save()
+            return render(request, 'pengunjung/kembalikanBuku.html', {
+                'daftar_pinjam': daftar_pinjam,
+                'sukses': True,
+                'judul_buku': judul_buku
+            })
+        else:
+            notifikasi_error = "Anda tidak memiliki riwayat peminjaman buku tersebut."
+
+    return render(request, 'pengunjung/kembalikanBuku.html', {
+        'daftar_pinjam': daftar_pinjam,
+        'notifikasi_error': notifikasi_error
+    })
 
 def lihat_riwayat(request):
-    return render(request, 'pengunjung/lihatRiwayat.html')
+    pengunjung_id = request.session.get('pengunjung_id')
+    if not pengunjung_id:
+        return redirect('login_pengunjung')
+    pengunjung = Pengunjung.objects.get(id=pengunjung_id)
+    daftar_pinjam = Peminjaman.objects.filter(pengunjung=pengunjung)
+
+    # Buat list riwayat: jika tanggal_kembali kosong, tampilkan "-", jika ada tampilkan tanggalnya
+    riwayat = []
+    for pinjam in daftar_pinjam:
+        riwayat.append({
+            'judul': pinjam.buku.judul,
+            'tanggal_pinjam': pinjam.tanggal_pinjam,
+            'tanggal_kembali': pinjam.tanggal_kembali if pinjam.tanggal_kembali else "-",
+            'status': "Kembali" if pinjam.tanggal_kembali else "Belum Kembali"
+        })
+
+    return render(request, 'pengunjung/lihatRiwayat.html', {'riwayat': riwayat})
 
 def logout(request):
     request.session.flush()
