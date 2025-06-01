@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import reverse
 from django.http import HttpResponseRedirect
+from .models import Buku
 from .models import (
     Pengunjung, Admin, PinjamBuku, KembalikanBuku,
     GagalPinjam, NotifikasiBerhasil,
@@ -15,7 +16,10 @@ class CustomAdminSite(admin.AdminSite):
             return HttpResponseRedirect(index_path)
         return super().login(request, extra_context)
 
+class BukuAdmin(admin.ModelAdmin):
+    pass
 admin_site = CustomAdminSite(name='myadmin')
+admin.site.register(Buku)
 admin.site.register(Pengunjung)
 admin.site.register(Admin)
 admin.site.register(PinjamBuku)
