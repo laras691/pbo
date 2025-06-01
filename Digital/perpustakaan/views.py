@@ -9,7 +9,11 @@ import random
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.template.loader import get_template
+<<<<<<< HEAD
+from datetime import date
+=======
 from django.urls import path, reverse
+>>>>>>> 023d0b5be556ede3684863a6690c82e9dfed28db
 
 # Halaman utama
 def daftar_buku(request):
@@ -113,23 +117,67 @@ def verifikasi_kode(request):
             messages.error(request, 'Kode verifikasi salah.')
     return render(request, 'pengunjung/verifikasi.html', {'email': email})
 
+<<<<<<< HEAD
+=======
 #ADmin - custom login
+>>>>>>> 023d0b5be556ede3684863a6690c82e9dfed28db
 def admin_custom(request):
     if request.method == 'POST':
         admin_id = request.POST.get('admin_id')
         password = request.POST.get('password')
         captcha = request.POST.get('captcha')
 
-        # Contoh validasi statis
         if admin_id == 'admin' and password == 'admin123' and captcha == '123456':
             messages.success(request, 'Login berhasil!')
             # Redirect langsung ke halaman admin buku, bukan dashboard
-            return redirect(reverse('admin:perpustakaan_buku_changelist'))
+            return redirect(reverse('kelola_buku'))
         else:
             messages.error(request, 'ID, Password, atau Token salah.')
 
     return render(request, 'admin/admin_login.html')
+<<<<<<< HEAD
 
+def admin_dashboard(request):
+    total_buku = Buku.objects.count()
+    buku_dipinjam = Peminjaman.objects.filter(status='Dipinjam').count()
+    
+    from django.db.models.functions import TruncDay
+    from django.db.models import Count
+    from datetime import datetime, timedelta
+    
+    hari_ini = datetime.now().date()
+    tujuh_hari_lalu = hari_ini - timedelta(days=7)
+    
+    peminjaman_harian = (
+        Peminjaman.objects
+        .filter(tanggal_pinjam__gte=tujuh_hari_lalu)
+        .annotate(hari=TruncDay('tanggal_pinjam'))
+        .values('hari')
+        .annotate(jumlah=Count('id'))
+        .order_by('hari')
+    )
+    
+    buku_labels = [entry['hari'].strftime('%d %b') for entry in peminjaman_harian]
+    buku_data = [entry['jumlah'] for entry in peminjaman_harian]
+    
+    # Data lainnya
+    buku_terbaru = Buku.objects.order_by('-tanggal_ditambahkan')[:5]
+    pengunjung_terakhir = Pengunjung.objects.order_by('-terakhir_login')[:5]
+    
+    context = {
+        'total_buku': total_buku,
+        'buku_dipinjam': buku_dipinjam,
+        'buku_labels': buku_labels,
+        'buku_data': buku_data,
+        'buku_terbaru': buku_terbaru,
+        'pengunjung_terakhir': pengunjung_terakhir,
+        'section': 'dashboard',
+    }
+    return render(request, 'admin/custom_dashboard.html', context)
+
+=======
+        
+>>>>>>> 023d0b5be556ede3684863a6690c82e9dfed28db
 #Admin - Generate Laporan
 def generate_laporan(request):
     # Fitur PDF di-nonaktifkan karena xhtml2pdf dihapus
@@ -160,7 +208,7 @@ def generate_laporan(request):
         return render(request, 'admin/laporan_html.html', context)
     
     context = {'section': 'laporan'}
-    return render(request, 'admin/custom_dashboard.html', context)
+    return render(request, 'admin/kelola_buku.html', context)
     
 # Admin – Kelola Buku
 def kelola_buku(request):
@@ -208,15 +256,11 @@ def lupa_password(request):
     return render(request, 'pengunjung/lupaPassword.html')
 
 def admin_custom_login(request):
-    
     return render(request, 'admin/admin_login.html')
 
-def admin_dashboard(request):
-    print("Dashboard admin dipanggil")
-    ...    
-
 def lihat_daftar_buku(request):
-    return render(request, 'pengunjung/lihatDaftarBuku.html')
+    daftar_buku = Buku.objects.all()
+    return render(request, 'pengunjung/lihatDaftarBuku.html', {'daftar_buku': daftar_buku})
 
 def home_pengunjung(request):
     pengunjung_id = request.session.get('pengunjung_id')
@@ -254,7 +298,27 @@ def cari_buku(request):
     return render(request, 'cariBuku.html')
 
 def pinjam_buku(request):
-    return render(request, 'pengunjung/pinjamBuku.html')
+    if 'pengunjung_id' not in request.session:
+        return redirect('login_pengunjung')
+    daftar_buku = Buku.objects.filter(stok__gt=0)
+    if request.method == 'POST':
+        id_buku = request.POST.get('buku')
+        buku = get_object_or_404(Buku, id=id_buku)
+        pengunjung = get_object_or_404(Pengunjung, id=request.session['pengunjung_id'])
+        if buku.stok > 0:
+            buku.stok -= 1
+            buku.save()
+            Peminjaman.objects.create(
+                buku=buku,
+                pengunjung=pengunjung,
+                tanggal_pinjam=date.today(),
+                status='Belum Kembali' 
+            )
+            messages.success(request, "Peminjaman Berhasil\nBuku berhasil dipinjam. Silakan cek riwayat peminjaman Anda.")
+            return redirect('lihat_riwayat')
+        else:
+            messages.error(request, "Stok buku habis.")
+    return render(request, 'pengunjung/pinjamBuku.html', {'daftar_buku': daftar_buku})
 
 def kembalikan_buku(request):
     pengunjung_id = request.session.get('pengunjung_id')
@@ -267,14 +331,14 @@ def kembalikan_buku(request):
 
     if request.method == 'POST':
         judul_buku = request.POST.get('buku')
-        # Validasi: cek apakah ada riwayat peminjaman buku ini yang belum dikembalikan
+        kode_buku = request.POST.get('kode_buku')
         peminjaman = Peminjaman.objects.filter(
             pengunjung=pengunjung,
             buku__judul=judul_buku,
+            buku__kode_buku=kode_buku,
             status='Belum Kembali'
         ).first()
         if peminjaman:
-            # Proses pengembalian (misal update status dan tanggal kembali)
             peminjaman.status = 'Kembali'
             from django.utils import timezone
             peminjaman.tanggal_kembali = timezone.now()
@@ -299,7 +363,6 @@ def lihat_riwayat(request):
     pengunjung = Pengunjung.objects.get(id=pengunjung_id)
     daftar_pinjam = Peminjaman.objects.filter(pengunjung=pengunjung)
 
-    # Buat list riwayat: jika tanggal_kembali kosong, tampilkan "-", jika ada tampilkan tanggalnya
     riwayat = []
     for pinjam in daftar_pinjam:
         riwayat.append({

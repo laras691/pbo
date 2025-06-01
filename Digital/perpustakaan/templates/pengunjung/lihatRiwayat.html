@@ -258,36 +258,16 @@
         </ul>
     </div>
     <div class="container">
-        <h2>Riwayat Peminjaman Buku</h2>
+        {% if messages %}
+          <div style="margin: 20px auto; max-width: 600px;">
+            {% for message in messages %}
+              <div style="background:#e6f9e6; color:#207520; border:1px solid #b2e2b2; border-radius:8px; padding:12px 18px; margin-bottom:10px; text-align:center;">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
         <table>
-            <tr>
-                <th>No</th>
-                <th>Judul Buku</th>
-                <th>Tanggal Pinjam</th>
-                <th>Tanggal Kembali</th>
-                <th>Status</th>
-            </tr>
-            {% if riwayat %}
-                {% for item in riwayat %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ item.buku.judul }}</td>
-                    <td>{{ item.tanggal_pinjam|date:"d-m-Y" }}</td>
-                    <td>{{ item.tanggal_kembali|date:"d-m-Y" }}</td>
-                    <td>
-                        {% if item.status == "Kembali" %}
-                            <span class="status-kembali">Kembali</span>
-                        {% else %}
-                            <span class="status-belum">Belum Kembali</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            {% else %}
-                <tr>
-                    <td colspan="5" class="kosong">Belum ada riwayat peminjaman.</td>
-                </tr>
-            {% endif %}
         </table>
     </div>
     <div id="logout-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.25); z-index:9999; align-items:center; justify-content:center;">

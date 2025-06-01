@@ -257,6 +257,15 @@
         </ul>
     </div>
     <div class="container">
+        {% if messages %}
+          <div style="margin: 20px auto; max-width: 600px;">
+            {% for message in messages %}
+              <div style="background:#e6f9e6; color:#207520; border:1px solid #b2e2b2; border-radius:8px; padding:12px 18px; margin-bottom:10px; text-align:center;">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
         <h2>Formulir Pinjam Buku</h2>
         <div class="info">
             Silakan isi data berikut untuk meminjam buku dari perpustakaan.
