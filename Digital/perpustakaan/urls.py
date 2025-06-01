@@ -34,7 +34,7 @@ urlpatterns = [
 
     path('verifikasi/', views.verifikasi_kode, name='verifikasi_kode'),
 
-    path('admin/login/', admin_custom, name='admin_custom_login'),
+    path('admin-custom/login/', views.admin_custom, name='admin_custom'),
     path('admin/', admin.site.urls),
     path('admin/laporan/', generate_laporan, name='admin_laporan'),
     path('cari-buku/', views.cari_buku, name='cari_buku'),
