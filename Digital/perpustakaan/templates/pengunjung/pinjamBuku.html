@@ -283,11 +283,24 @@
             <span></span>
             <span></span>
         </div>
-        <span class="topbar-title">📚 Litera.id</span>
-        <div class="profile-container" id="profileMenuBtn">
-            <span class="profile-name">laras</span>
+        <div class="topbar-title" style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); margin:0; padding:0; z-index:1; text-align:center; width:max-content;">
+            📚 Litera.id
+        </div>
+        <div style="flex:1"></div>
+        <div class="profile-container" id="profileMenuBtn" style="margin-right:8px;">
+            <span class="profile-name">Profil</span>
             <div class="profile-box">👤</div>
         </div>
+        <div id="profile-dropdown" style="display:none; position:absolute; right:32px; top:60px; background:#fff; border-radius:10px; box-shadow:0 4px 18px rgba(0,81,168,0.13); min-width:220px; z-index:2000;">
+            <a href="{% url 'lihat_profil' %}" style="display:block; padding:14px 22px; color:#0051a8; text-decoration:none;">Lihat Profil</a>
+            <a href="{% url 'edit_profil' %}" style="display:block; padding:14px 22px; color:#0051a8; text-decoration:none;">Edit Profil</a>
+            <a href="{% url 'ganti_password' %}" style="display:block; padding:14px 22px; color:#0051a8; text-decoration:none;">Ganti Password</a>
+            <a href="{% url 'hapus_akun' %}" style="display:block; padding:14px 22px; color:#c00; text-decoration:none;">Hapus Akun</a>
+            <a href="{% url 'logout' %}" style="display:block; padding:14px 22px; color:#0051a8; text-decoration:none;">Keluar</a>
+        </div>
+    </div>
+
+        <span class="topbar-title">📚 Litera.id</span>
         <div id="profile-dropdown" style="display:none; position:absolute; right:32px; top:60px; background:#fff; border-radius:10px; box-shadow:0 4px 18px rgba(0,81,168,0.13); min-width:220px; z-index:2000;">
             <a href="{% url 'lihat_profil' %}" style="display:block; padding:14px 22px; color:#0051a8; text-decoration:none;">Lihat Profil</a>
             <a href="{% url 'edit_profil' %}" style="display:block; padding:14px 22px; color:#0051a8; text-decoration:none;">Edit Profil</a>

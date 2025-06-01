@@ -333,9 +333,12 @@
             <span></span>
             <span></span>
         </div>
-        <span class="topbar-title">📚 Litera.id</span>
-        <div class="profile-container" id="profileMenuBtn">
-            <span class="profile-name">laras</span>
+        <div class="topbar-title" style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); margin:0; padding:0; z-index:1; text-align:center; width:max-content;">
+            📚 Litera.id
+        </div>
+        <div style="flex:1"></div>
+        <div class="profile-container" id="profileMenuBtn" style="margin-right:8px;">
+            <span class="profile-name">Profil</span>
             <div class="profile-box">👤</div>
         </div>
         <div id="profile-dropdown" style="display:none; position:absolute; right:32px; top:60px; background:#fff; border-radius:10px; box-shadow:0 4px 18px rgba(0,81,168,0.13); min-width:220px; z-index:2000;">
@@ -346,6 +349,7 @@
             <a href="{% url 'logout' %}" style="display:block; padding:14px 22px; color:#0051a8; text-decoration:none;">Keluar</a>
         </div>
     </div>
+
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h2>📚 Litera.id</h2>
@@ -461,7 +465,7 @@
                 img: "{% static 'image/buku4.png' %}",
                 judul: "Ronggeng Dukuh Paruk",
                 penulis: "Ahmad Tohari",
-                kategori: "Fiksi",
+                kategori: "Sosial",
                 tahun: "1982",
                 kode_inventaris: "3502"
             },
@@ -499,42 +503,42 @@
             },
             {
                 img: "{% static 'image/buku9.png' %}",
-                judul: "Kamus Besar Bahasa Indonesia",
+                judul: "Sang Pemimpi",
                 penulis: "Andrea Hirata",
-                kategori: "Bahasa",
-                tahun: "2018",
+                kategori: "Fiksi",
+                tahun: "2006",
                 kode_inventaris: "1845"
             },
             {
                 img: "{% static 'image/buku10.png' %}",
-                judul: "Tata Bahasa Baku Bahasa Indonesia",
-                penulis: "Hasal Alwi, Soenjono Dardjowidjojo, Hans Lapoliwa, dan Anton M. Moeliono",
-                kategori: "Bahasa",
-                tahun: "2003",
+                judul: "Laskar Pelangi",
+                penulis: "Andrea Hirata",
+                kategori: "Fiksi",
+                tahun: "2005",
                 kode_inventaris: "7603"
             },
             {
                 img: "{% static 'image/buku11.png' %}",
-                judul: "Fisika Dasar",
-                penulis: "Halliday, Resnick, dan Walker",
-                kategori: "Sains",
-                tahun: "2013",
+                judul: "Pendidikan Kewarganegaraan",
+                penulis: "Tim Pengajar",
+                kategori: "Pendidikan",
+                tahun: "2018",
                 kode_inventaris: "3492"
             },
             {
                 img: "{% static 'image/buku12.png' %}",
-                judul: "Biologi Campbell",
-                penulis: "Neil Campbell",
-                kategori: "Sains",
+                judul: "Dasar-Dasar Akuntansi",
+                penulis: "Budi Santoso",
+                kategori: "Ekonomi",
                 tahun: "2015",
                 kode_inventaris: "5276"
             },
             {
                 img: "{% static 'image/buku13.png' %}",
-                judul: "Dasar-Dasar Teknik Informatika",
-                penulis: "Novega Pratama Adiputra",
-                kategori: "Teknologi",
-                tahun: "2020",
+                judul: "Manajemen Pemasaran",
+                penulis: "Philip Kotler",
+                kategori: "Ekonomi",
+                tahun: "2016",
                 kode_inventaris: "8034"
             },
             {
