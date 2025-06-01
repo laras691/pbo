@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Daftar Laporan</title>
+</head>
+<body>
+    <h2>Daftar Laporan</h2>
+    <ul>
+        {% for laporan in daftar %}
+            <li>
+                {{ laporan.jenis }} - {{ laporan.tanggal_dibuat }}
+                | <a href="{% url 'cetak_laporan' laporan.id_laporan %}">Cetak</a>
+                | <a href="{% url 'edit-laporan' laporan.id_laporan %}">Edit</a>
+            </li>
+        {% empty %}
+            <li>Tidak ada laporan.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

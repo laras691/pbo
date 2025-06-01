@@ -1,195 +1,441 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Kelola Kategori</title>
-  <style>
-    body {
-        background: url("{% static 'image/bgLogin.png' %}") no-repeat center center fixed;
-        background-size: cover;
-        font-family: 'Segoe UI', Arial, sans-serif;
-    }
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-    .form-group {
-      margin-bottom: 15px;
-    }
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-    input[type="text"] {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-    }
-    button {
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-right: 5px;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    .btn-edit {
-      background-color: #2196F3;
-    }
-    .btn-delete {
-      background-color: #f44336;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background-color: #f2f2f2;
-    }
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Kelola Kategori</title>
+    <style>
+        /* Reset dan Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(120deg, #e6eef6 0%, #b0c9e4 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Topbar Styles */
+        .topbar {
+            background-color: #0051a8;
+            color: white;
+            padding: 0 24px;
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .topbar-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-box {
+            background-color: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .profile-box:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1000px;
+            margin: 80px auto 40px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(176,201,228,0.18);
+            padding: 36px 32px 32px 32px;
+        }
+
+        h1 {
+            color: #0051a8;
+            text-align: center;
+            margin-bottom: 28px;
+            letter-spacing: 1px;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: #f5faff;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 28px;
+            border: 2px solid #d0ddee;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #0051a8;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 32px);
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 2px solid #b0c9e4;
+            font-size: 1rem;
+            background: #fff;
+            color: #333;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #0051a8;
+            box-shadow: 0 0 0 2px rgba(0,81,168,0.2);
+        }
+
+        /* Button Styles */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-save {
+            background: #0051a8;
+        }
+
+        .btn-save:hover {
+            background: #3a5fa8;
+            transform: translateY(-1px);
+        }
+
+        .btn-edit {
+            background: #2196F3;
+        }
+
+        .btn-edit:hover {
+            background: #0b7dda;
+            transform: translateY(-1px);
+        }
+
+        .btn-delete {
+            background: #f44336;
+        }
+
+        .btn-delete:hover {
+            background: #da190b;
+            transform: translateY(-1px);
+        }
+
+        .btn-cancel {
+            background: #888;
+        }
+
+        .btn-cancel:hover {
+            background: #666;
+            transform: translateY(-1px);
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #e6eef6;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 28px;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #d0ddee;
+        }
+
+        th {
+            background: #b0c9e4;
+            color: #0051a8;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background: #f5faff;
+        }
+
+        tr:nth-child(odd) {
+            background: #e6eef6;
+        }
+
+        .kosong {
+            text-align: center;
+            color: #888;
+            padding: 32px 0;
+        }
+
+        .action-cell {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .category-name-cell {
+            max-width: 300px;
+            word-wrap: break-word;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .topbar {
+                padding: 0 16px;
+                height: 50px;
+            }
+            
+            .topbar-title {
+                font-size: 1.2rem;
+            }
+            
+            .profile-box {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+
+            .container {
+                margin: 70px 20px 30px;
+                padding: 24px 16px;
+                max-width: calc(100% - 40px);
+            }
+
+            .form-container {
+                padding: 16px;
+            }
+
+            input[type="text"] {
+                width: calc(100% - 24px);
+                padding: 10px 12px;
+            }
+
+            button {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+
+            th, td {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
+
+            .category-name-cell {
+                max-width: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .topbar-title {
+                font-size: 1rem;
+            }
+            
+            .container {
+                margin: 60px 12px 20px;
+                padding: 16px 12px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+            
+            .action-cell {
+                gap: 4px;
+            }
+            
+            .action-cell button {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Kelola Kategori</h1>
-    
-    <!-- Form Tambah/Ubah Kategori -->
-    <div class="form-group">
-      <label for="category-name">Nama Kategori</label>
-      <input type="text" id="category-name" placeholder="Masukkan nama kategori">
+    <!-- Top Navigation Bar -->
+    <div class="topbar">
+        <span class="topbar-title">📚 Litera.id - Admin</span>
+        <div class="profile-box" id="profileBtn">
+            👤 {{ user.username }}
+        </div>
     </div>
-    <button id="save-btn">Simpan Kategori</button>
-    <button id="cancel-btn" style="display: none;">Batal</button>
-    
-    <!-- Tabel Daftar Kategori -->
-    <table id="category-table">
-      <thead>
-        <tr>
-          <th>No</th>
-          <th>Nama Kategori</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
-      <tbody id="category-list">
-        <!-- Data kategori akan dimuat di sini -->
-      </tbody>
-    </table>
-  </div>
 
-  <script>
-    // Data kategori (simulasi database)
-    let categories = [
-      { id: 1, name: "Elektronik" },
-      { id: 2, name: "Fashion" },
-      { id: 3, name: "Makanan" }
-    ];
-    
-    let currentEditId = null;
+    <!-- Main Content -->
+    <div class="container">
+        <h1>Kelola Kategori</h1>
+        
+        <!-- Form Tambah/Ubah Kategori -->
+        <div class="form-container">
+            <div class="form-group">
+                <label for="category-name">Nama Kategori</label>
+                <input type="text" id="category-name" placeholder="Masukkan nama kategori">
+            </div>
+            <div class="button-group">
+                <button id="save-btn" class="btn-save">Simpan Kategori</button>
+                <button id="cancel-btn" class="btn-cancel" style="display: none;">Batal</button>
+            </div>
+        </div>
+        
+        <!-- Tabel Daftar Kategori -->
+        <table id="category-table">
+            <thead>
+                <tr>
+                    <th style="width: 60px;">No</th>
+                    <th>Nama Kategori</th>
+                    <th style="width: 180px;">Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="category-list">
+                <!-- Data kategori akan dimuat di sini -->
+            </tbody>
+        </table>
+    </div>
 
-    // DOM Elements
-    const categoryNameInput = document.getElementById('category-name');
-    const saveBtn = document.getElementById('save-btn');
-    const cancelBtn = document.getElementById('cancel-btn');
-    const categoryList = document.getElementById('category-list');
+    <script>
+        // Data kategori (simulasi database)
+        let categories = [
+            { id: 1, name: "Elektronik" },
+            { id: 2, name: "Fashion Pria dan Wanita" },
+            { id: 3, name: "Makanan dan Minuman" },
+            { id: 4, name: "Buku dan Alat Tulis" },
+            { id: 5, name: "Perabotan Rumah Tangga" }
+        ];
+        
+        let currentEditId = null;
 
-    // Load categories to table
-    function loadCategories() {
-      categoryList.innerHTML = '';
-      categories.forEach((category, index) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${index + 1}</td>
-          <td>${category.name}</td>
-          <td>
-            <button class="btn-edit" onclick="editCategory(${category.id})">Edit</button>
-            <button class="btn-delete" onclick="deleteCategory(${category.id})">Hapus</button>
-          </td>
-        `;
-        categoryList.appendChild(row);
-      });
-    }
+        // DOM Elements
+        const categoryNameInput = document.getElementById('category-name');
+        const saveBtn = document.getElementById('save-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const categoryList = document.getElementById('category-list');
+        const profileBtn = document.getElementById('profileBtn');
 
-    // Add or Update Category
-    saveBtn.addEventListener('click', () => {
-      const name = categoryNameInput.value.trim();
-      
-      if (!name) {
-        alert('Nama kategori tidak boleh kosong!');
-        return;
-      }
-      
-      if (currentEditId) {
-        // Update existing category
-        const index = categories.findIndex(cat => cat.id === currentEditId);
-        if (index !== -1) {
-          categories[index].name = name;
+        // Load categories to table
+        function loadCategories() {
+            categoryList.innerHTML = '';
+            
+            if (categories.length === 0) {
+                categoryList.innerHTML = `<tr><td colspan="3" class="kosong">Tidak ada kategori tersedia.</td></tr>`;
+                return;
+            }
+            
+            categories.forEach((category, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td class="category-name-cell">${category.name}</td>
+                    <td class="action-cell">
+                        <button class="btn-edit" onclick="editCategory(${category.id})">Edit</button>
+                        <button class="btn-delete" onclick="deleteCategory(${category.id})">Hapus</button>
+                    </td>
+                `;
+                categoryList.appendChild(row);
+            });
         }
-        currentEditId = null;
-        saveBtn.textContent = 'Simpan Kategori';
-        cancelBtn.style.display = 'none';
-      } else {
-        // Add new category
-        const newId = categories.length > 0 ? Math.max(...categories.map(cat => cat.id)) + 1 : 1;
-        categories.push({ id: newId, name });
-      }
-      
-      categoryNameInput.value = '';
-      loadCategories();
-    });
 
-    // Cancel Edit
-    cancelBtn.addEventListener('click', () => {
-      currentEditId = null;
-      categoryNameInput.value = '';
-      saveBtn.textContent = 'Simpan Kategori';
-      cancelBtn.style.display = 'none';
-    });
+        // Add or Update Category
+        saveBtn.addEventListener('click', () => {
+            const name = categoryNameInput.value.trim();
+            
+            if (!name) {
+                alert('Nama kategori tidak boleh kosong!');
+                return;
+            }
+            
+            if (currentEditId) {
+                // Update existing category
+                const index = categories.findIndex(cat => cat.id === currentEditId);
+                if (index !== -1) {
+                    categories[index].name = name;
+                }
+                currentEditId = null;
+                saveBtn.textContent = 'Simpan Kategori';
+                cancelBtn.style.display = 'none';
+            } else {
+                // Add new category
+                const newId = categories.length > 0 ? Math.max(...categories.map(cat => cat.id)) + 1 : 1;
+                categories.push({ id: newId, name });
+            }
+            
+            categoryNameInput.value = '';
+            loadCategories();
+        });
 
-    // Edit Category
-    window.editCategory = (id) => {
-      const category = categories.find(cat => cat.id === id);
-      if (category) {
-        currentEditId = id;
-        categoryNameInput.value = category.name;
-        saveBtn.textContent = 'Update Kategori';
-        cancelBtn.style.display = 'inline-block';
-        categoryNameInput.focus();
-      }
-    };
+        // Cancel Edit
+        cancelBtn.addEventListener('click', () => {
+            currentEditId = null;
+            categoryNameInput.value = '';
+            saveBtn.textContent = 'Simpan Kategori';
+            cancelBtn.style.display = 'none';
+        });
 
-    // Delete Category
-    window.deleteCategory = (id) => {
-      if (confirm('Apakah Anda yakin ingin menghapus kategori ini?')) {
-        categories = categories.filter(cat => cat.id !== id);
+        // Edit Category
+        window.editCategory = (id) => {
+            const category = categories.find(cat => cat.id === id);
+            if (category) {
+                currentEditId = id;
+                categoryNameInput.value = category.name;
+                saveBtn.textContent = 'Update Kategori';
+                cancelBtn.style.display = 'inline-block';
+                categoryNameInput.focus();
+            }
+        };
+
+        // Delete Category
+        window.deleteCategory = (id) => {
+            if (confirm('Apakah Anda yakin ingin menghapus kategori ini?')) {
+                categories = categories.filter(cat => cat.id !== id);
+                loadCategories();
+            }
+        };
+
+        // Profile Button Click
+        profileBtn.addEventListener('click', () => {
+            // Tambahkan fungsi untuk menangani klik profil
+            alert('Menu profil akan ditampilkan di sini');
+        });
+
+        // Initial load
         loadCategories();
-      }
-    };
-
-    // Initial load
-    loadCategories();
-  </script>
+    </script>
 </body>
 </html>

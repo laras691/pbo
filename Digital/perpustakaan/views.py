@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Buku, Peminjaman, Pengunjung, Admin, Laporan, PinjamBuku, Kategori
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm, LaporanForm
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 from django.db import IntegrityError
@@ -113,20 +113,21 @@ def verifikasi_kode(request):
             messages.error(request, 'Kode verifikasi salah.')
     return render(request, 'pengunjung/verifikasi.html', {'email': email})
 
-#ADmin - custom login
+#Admin custom login
 def admin_custom(request):
     if request.method == 'POST':
         admin_id = request.POST.get('admin_id')
         password = request.POST.get('password')
         captcha = request.POST.get('captcha')
 
-    if admin_id == 'admin' and password == 'admin123' and captcha == '123456':
-        messages.success(request, 'Login berhasil!')
-        # Redirect langsung ke halaman dashboard admin
-        return redirect(reverse('dashboard_admin'))
-    else:
-        messages.error(request, 'ID, Password, atau Token salah.')
+        if admin_id == 'admin' and password == 'admin123' and captcha == '123456':
+            messages.success(request, 'Login berhasil!')
+            # Redirect langsung ke halaman admin buku, bukan dashboard
+            return redirect(reverse('dashboard_admin'))
+        else:
+            messages.error(request, 'ID, Password, atau Token salah.')
     return render(request, 'admin/admin.html')
+
 #Admin- dashboard
 def dashboard_admin(request):
     return render(request, 'admin/dashboard_admin.html') 
@@ -168,7 +169,7 @@ def kelola_pengunjung(request):
     # Sementara hanya tampilkan halaman kosong
     return render(request, 'admin/kelola_pengunjung.html')
 
-# return render(request, 'admin/admin_login.html')  # Removed because it was outside any function
+    return render(request, 'admin/admin_login.html')
 
 #Admin dashboard
 def admin_dashboard(request):
@@ -208,14 +209,51 @@ def admin_dashboard(request):
         'section': 'dashboard',
     }
     return render(request, 'admin/custom_dashboard.html', context)
+#Admin daftar-Laporan
+def daftar_laporan(request):
+    daftar = Laporan.objects.all()
+    return render(request, 'admin/daftar_laporan.html', {'daftar': daftar})
+#admin - tambah laporan
+def tambah_laporan(request):
+    if request.method == 'POST':
+        form = LaporanForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('daftar-laporan')
+    else:
+        form = LaporanForm()
+    return render(request, 'admin/tambah_laporan.html', {'form': form})
+
+#admin- cetak Laporan
+from django.shortcuts import get_object_or_404, render
+
+def cetak_laporan(request, id_laporan):
+    laporan = get_object_or_404(Laporan, id_laporan=id_laporan)
+    return render(request, 'admin/laporan_pdf.html', {'laporan': laporan})
+
+# admin edit laporan
+from django.shortcuts import get_object_or_404, render, redirect
+
+def edit_laporan(request, id_laporan):
+    laporan = get_object_or_404(Laporan, id_laporan=id_laporan)
+    if request.method == 'POST':
+        form = LaporanForm(request.POST, instance=laporan)
+        if form.is_valid():
+            form.save()
+            return redirect('daftar-laporan')
+    else:
+        form = LaporanForm(instance=laporan)
+    return render(request, 'admin/edit_laporan.html', {'form': form, 'laporan': laporan})
 
 #Admin - Generate Laporan
 def generate_laporan(request):
+    # Fitur PDF di-nonaktifkan karena xhtml2pdf dihapus
     if request.method == 'POST':
         jenis_laporan = request.POST.get('jenis_laporan')
         tanggal_mulai = request.POST.get('tanggal_mulai')
         tanggal_selesai = request.POST.get('tanggal_selesai')
-    
+        
+        # Sesuaikan dengan model Anda
         if jenis_laporan == 'peminjaman':
             data = Peminjaman.objects.filter(
                 tanggal_pinjam__gte=tanggal_mulai,
@@ -234,10 +272,10 @@ def generate_laporan(request):
             'section': 'laporan',
         }
         # Render ke halaman HTML biasa, bukan PDF
-        return render(request, 'admin/laporan_html.html', context)
+        return render(request, 'admin/laporan_pdf.html', context)
     
     context = {'section': 'laporan'}
-    return render(request, 'admin/kelola_buku.html', context)
+    return render(request, 'admin/laporan_pdf.html', context)
 
 def lupa_password(request):
     if request.method == 'POST':
@@ -256,6 +294,50 @@ def lupa_password(request):
             messages.error(request, 'Email tidak terdaftar.')
     return render(request, 'pengunjung/lupaPassword.html')
 
+#lihat Profil
+def lihat_profil(request):
+    # Jika ingin menampilkan data admin, ambil dari session atau model Admin
+    # admin = get_object_or_404(Admin, id_admin=request.session.get('admin_id'))
+    # return render(request, 'admin/profil.html', {'admin': admin})
+    return render(request, 'admin/profil.html')
+
+def edit_profil(request):
+    # Contoh sederhana, silakan sesuaikan dengan model Admin Anda
+    # admin = get_object_or_404(Admin, id_admin=request.session.get('admin_id'))
+    if request.method == 'POST':
+        # Proses update profil di sini
+        # admin.nama = request.POST.get('nama')
+        # admin.save()
+        return redirect('lihat-profil')
+    # return render(request, 'admin/edit_profil.html', {'admin': admin})
+    return render(request, 'admin/edit_profil.html')
+
+# filepath: [views.py](http://_vscodecontentref_/0)
+def ganti_password(request):
+    # Contoh sederhana, silakan sesuaikan dengan model Admin atau User Anda
+    if request.method == 'POST':
+        # Ambil password lama dan baru dari form
+        password_lama = request.POST.get('password_lama')
+        password_baru = request.POST.get('password_baru')
+        # Contoh: ambil admin dari session
+        # admin = get_object_or_404(Admin, id_admin=request.session.get('admin_id'))
+        # if check_password(password_lama, admin.password):
+        #     admin.password = make_password(password_baru)
+        #     admin.save()
+        #     messages.success(request, "Password berhasil diganti.")
+        # else:
+        #     messages.error(request, "Password lama salah.")
+        return redirect('lihat-profil')
+    return render(request, 'admin/ganti_password.html')
+
+# filepath: [views.py](http://_vscodecontentref_/0)
+from django.shortcuts import redirect, get_object_or_404
+
+def hapus_akun(request, id_admin):
+    # Contoh: hapus akun admin berdasarkan id_admin
+    admin = get_object_or_404(Admin, id_admin=id_admin)
+    admin.delete()
+    return redirect('lihat-profil')  # Atau redirect ke halaman login/admin lain
 
 #Admin custom login
 def admin_custom_login(request):
@@ -360,54 +442,23 @@ def kembalikan_buku(request):
     })
 
 def lihat_riwayat(request):
-    if 'pengunjung_id' not in request.session:
+    pengunjung_id = request.session.get('pengunjung_id')
+    if not pengunjung_id:
         return redirect('login_pengunjung')
-    pengunjung = Pengunjung.objects.get(id=request.session['pengunjung_id'])
-    riwayat = Peminjaman.objects.filter(pengunjung=pengunjung).order_by('-tanggal_pinjam')
+    pengunjung = Pengunjung.objects.get(id=pengunjung_id)
+    daftar_pinjam = Peminjaman.objects.filter(pengunjung=pengunjung)
+
+    riwayat = []
+    for pinjam in daftar_pinjam:
+        riwayat.append({
+            'judul': pinjam.buku.judul,
+            'tanggal_pinjam': pinjam.tanggal_pinjam,
+            'tanggal_kembali': pinjam.tanggal_kembali if pinjam.tanggal_kembali else "-",
+            'status': "Kembali" if pinjam.tanggal_kembali else "Belum Kembali"
+        })
+
     return render(request, 'pengunjung/lihatRiwayat.html', {'riwayat': riwayat})
 
 def logout(request):
     request.session.flush()
     return redirect('login_pengunjung')
-
-# Lihat Profil
-def lihat_profil(request):
-    # ...kode untuk menampilkan profil...
-    pass
-
-# Edit Profil
-def edit_profil(request):
-    pengunjung = Pengunjung.objects.get(id=request.session['pengunjung_id'])
-    if request.method == 'POST':
-        nama = request.POST.get('nama')
-        email = request.POST.get('email')
-        pengunjung.nama = nama
-        pengunjung.email = email
-        pengunjung.save()
-        messages.success(request, "Profil berhasil diubah.")
-        return redirect('lihat_profil')
-    return render(request, 'pengunjung/editProfil.html', {'pengunjung': pengunjung})
-
-# Ganti Password
-def ganti_password(request):
-    pengunjung = Pengunjung.objects.get(id=request.session['pengunjung_id'])
-    if request.method == 'POST':
-        pass_lama = request.POST.get('pass_lama')
-        pass_baru = request.POST.get('pass_baru')
-        if check_password(pass_lama, pengunjung.password):
-            pengunjung.password = make_password(pass_baru)
-            pengunjung.save()
-            messages.success(request, "Password berhasil diganti.")
-            return redirect('lihat_profil')
-        else:
-            messages.error(request, "Password lama salah.")
-    return render(request, 'pengunjung/gantiPassword.html')
-
-# Hapus Akun
-def hapus_akun(request):
-    pengunjung = Pengunjung.objects.get(id=request.session['pengunjung_id'])
-    if request.method == 'POST':
-        pengunjung.delete()
-        messages.success(request, "Akun berhasil dihapus.")
-        return redirect('login_pengunjung')
-    return render(request, 'pengunjung/hapusAkun.html')

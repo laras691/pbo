@@ -2,39 +2,286 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Kelola Buku</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Buku - Admin</title>
     <style>
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #888; padding: 8px; text-align: left; }
-        th { background: #f0f0f0; }
-        .btn { padding: 4px 10px; background: #007bff; color: #fff; text-decoration: none; border-radius: 3px; }
-        .btn-danger { background: #dc3545; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(120deg, #e6eef6 0%, #b0c9e4 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .topbar {
+            background-color: #0051a8;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        .topbar-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .profile-box {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .profile-box:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 100px auto 60px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(176,201,228,0.18);
+            padding: 36px 32px 32px 32px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #b0c9e4;
+        }
+        h1 {
+            color: #0051a8;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        .button-group {
+            display: flex;
+            gap: 12px;
+        }
+        button, a.btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-primary {
+            background: #0051a8;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #3a5fa8;
+        }
+        .btn-secondary {
+            background: #888;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #666;
+        }
+        .btn-warning {
+            background: #ff9800;
+            color: white;
+        }
+        .btn-warning:hover {
+            background: #e68a00;
+        }
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #da190b;
+        }
+        .btn-info {
+            background: #2196F3;
+            color: white;
+        }
+        .btn-info:hover {
+            background: #0b7dda;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #e6eef6;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 28px;
+        }
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #d0ddee;
+        }
+        th {
+            background: #b0c9e4;
+            color: #0051a8;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background: #f5faff;
+        }
+        tr:nth-child(odd) {
+            background: #e6eef6;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .kosong {
+            text-align: center;
+            color: #888;
+            padding: 32px 0;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 28px;
+            gap: 8px;
+        }
+        .page-item {
+            list-style: none;
+        }
+        .page-link {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 2px solid #b0c9e4;
+            background: #f5faff;
+            color: #0051a8;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .page-link:hover {
+            background: #d0ddee;
+        }
+        .page-item.active .page-link {
+            background: #0051a8;
+            color: white;
+            border-color: #0051a8;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                margin: 100px auto 20px;
+                padding: 20px 16px;
+            }
+            .header {
+                flex-direction: column;
+                gap: 16px;
+                align-items: flex-start;
+            }
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+            .table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
     </style>
 </head>
 <body>
-    <h2>Kelola Buku</h2>
-    <a href="{% url 'tambah_buku' %}" class="btn">Tambah Buku</a>
-    <br><br>
-    <table>
-        <tr>
-            <th>Judul</th>
-            <th>Stok</th>
-            <th>Aksi</th>
-        </tr>
-        {% for buku in daftar_buku %}
-        <tr>
-            <td>{{ buku.judul }}</td>
-            <td>{{ buku.stok }}</td>
-            <td>
-                <a href="{% url 'edit_buku' buku.id_buku %}" class="btn">Edit</a>
-                <a href="{% url 'hapus_buku' buku.id_buku %}" class="btn btn-danger">Hapus</a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="3">Tidak ada buku.</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div class="topbar">
+        <span class="topbar-title">📚 Litera.id - Admin</span>
+        <div class="profile-box" id="profileBtn">
+            👤 {{ user.username }}
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>Kelola Buku</h1>
+            <div class="button-group">
+                <a href="{% url 'tambah_buku' %}" class="btn btn-primary">Tambah Buku</a>
+                <a href="{% url 'dashboard_admin' %}" class="btn btn-secondary">Kembali ke Dashboard</a>
+            </div>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id_buku</th>
+                    <th>Judul</th>
+                    <th>Stok</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for buku in buku_list %}
+                <tr>
+                    <td>{{ buku.id_buku }}</td>
+                    <td>{{ buku.judul }}</td>
+                    <td>{{ buku.stok }}</td>
+                    <td class="action-buttons">
+                        <a href="{% url 'edit-buku' buku.id %}" class="btn btn-warning">Edit</a>
+                        <a href="{% url 'hapus-buku' buku.id %}" class="btn btn-danger">Hapus</a>
+                        <a href="{% url 'detail-buku' buku.id %}" class="btn btn-info">Detail</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="kosong">Tidak ada data buku</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        {% if is_paginated %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+                {% endif %}
+                
+                {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endfor %}
+                
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+
+    <script>
+        // Konfirmasi sebelum menghapus
+        document.querySelectorAll('.btn-danger').forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (!confirm('Apakah Anda yakin ingin menghapus buku ini?')) {
+                    e.preventDefault();
+                }
+            });
+        });
+
+        // Profile button functionality
+        document.getElementById('profileBtn').addEventListener('click', function() {
+            // Add your profile dropdown or logout functionality here
+            console.log('Profile clicked');
+        });
+    </script>
 </body>
 </html>

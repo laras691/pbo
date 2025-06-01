@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Laporan - {{ laporan.jenis }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .laporan-header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .laporan-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            white-space: pre-line; /* Untuk menjaga format line breaks */
+        }
+        .badge-jenis {
+            font-size: 1rem;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="laporan-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="mb-0">Detail Laporan</h1>
+                <span class="badge bg-light text-dark badge-jenis">{{ laporan.jenis }}</span>
+            </div>
+            <div class="mt-2">
+                <p>ID Laporan: {{ laporan.id_laporan }}</p>
+                <span class="text-light">Tanggal: {{ laporan.tanggal_dibuat|date:"d F Y" }}</span>
+            </div>
+        </div>
+
+        <div class="laporan-content">
+            <h3>Isi Laporan</h3>
+            <div class="mt-3 p-3 border rounded bg-light">
+                {{ laporan.isi }}
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-between">
+            <a href="{% url 'daftar-laporan' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Kembali ke Daftar
+            </a>
+            <div>
+               <button onclick="window.print()" class="btn btn-primary">
+                <i class="fas fa-print"></i> Cetak Laporan
+              </button>
+            <div>
+    {% if laporan.id_laporan %}
+      <a href="{% url 'edit-laporan' laporan.id_laporan %}" class="btn btn-warning">
+        <i class="fas fa-edit"></i> Edit Laporan
+      </a>
+    {% else %}
+      <span class="text-danger">ID Laporan tidak ditemukan</span>
+    {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Font Awesome untuk icon -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
