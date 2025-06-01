@@ -43,7 +43,7 @@
                 <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <input type="hidden" name="next" value="{% url 'admin-dashboard' %}" />
+                <input type="hidden" name="next" value="{% url 'custom_dashboard' %}" />
             <button type="submit" class="btn btn-primary w-100">Login</button>
             </form>
             {% if messages %}
