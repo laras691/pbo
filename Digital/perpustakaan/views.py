@@ -9,11 +9,8 @@ import random
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.template.loader import get_template
-<<<<<<< HEAD
 from datetime import date
-=======
 from django.urls import path, reverse
->>>>>>> 023d0b5be556ede3684863a6690c82e9dfed28db
 
 # Halaman utama
 def daftar_buku(request):
@@ -117,10 +114,7 @@ def verifikasi_kode(request):
             messages.error(request, 'Kode verifikasi salah.')
     return render(request, 'pengunjung/verifikasi.html', {'email': email})
 
-<<<<<<< HEAD
-=======
 #ADmin - custom login
->>>>>>> 023d0b5be556ede3684863a6690c82e9dfed28db
 def admin_custom(request):
     if request.method == 'POST':
         admin_id = request.POST.get('admin_id')
@@ -135,7 +129,6 @@ def admin_custom(request):
             messages.error(request, 'ID, Password, atau Token salah.')
 
     return render(request, 'admin/admin_login.html')
-<<<<<<< HEAD
 
 def admin_dashboard(request):
     total_buku = Buku.objects.count()
@@ -175,9 +168,6 @@ def admin_dashboard(request):
     }
     return render(request, 'admin/custom_dashboard.html', context)
 
-=======
-        
->>>>>>> 023d0b5be556ede3684863a6690c82e9dfed28db
 #Admin - Generate Laporan
 def generate_laporan(request):
     # Fitur PDF di-nonaktifkan karena xhtml2pdf dihapus
