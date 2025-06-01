@@ -123,35 +123,15 @@ def admin_custom(request):
         password = request.POST.get('password')
         captcha = request.POST.get('captcha')
 
-        # 1. Validasi Captcha/Token (contoh sederhana)
-        if captcha != '123456':  # Ganti dengan validasi captcha yang sesungguhnya
-            messages.error(request, 'Token salah!')
-            return render(request, 'admin/admin_login.html')
+        # Contoh data admin statis (sebaiknya dari database)
+        if admin_id == 'admin' and password == 'admin123' and captcha == '123456':
+            messages.success(request, 'Login berhasil!')
+            # Redirect ke halaman admin dashboard, misal:
+            return redirect('admin_dashboard')   
+        else:
+            messages.error(request, 'ID, Password, atau Token salah.')
 
-        # 2. Autentikasi dengan database
-        try:
-            admin_user = Admin.objects.get(admin_id=admin_id)
-            user = authenticate(
-                request,
-                username=admin_user.user.username,  # Asumsi Admin terkait dengan User
-                password=password
-            )
-            
-            if user is not None:
-                login(request, user)
-                messages.success(request, 'Login berhasil!')
-                # 3. Redirect ke dashboard
-                next_url = request.POST.get('next', reverse('admin_dashboard'))
-                return redirect(next_url)
-            else:
-                messages.error(request, 'Password salah!')
-        except Admin.DoesNotExist:
-            messages.error(request, 'ID Admin tidak ditemukan!')
-
-    # 4. Handle GET request atau login gagal
-    return render(request, 'admin/admin_login.html', {
-        'next': request.GET.get('next', '')
-    })
+    return render(request, 'admin/admin_login.html')
 
 # Admin - Dashboard
 def admin_dashboard(request):
