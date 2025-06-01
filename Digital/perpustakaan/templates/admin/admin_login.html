@@ -40,11 +40,8 @@
                     <label>Captcha/Token</label>
                     <input type="text" name="captcha" class="form-control" required>
                 </div>
-                <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <input type="hidden" name="next" value="{% url 'custom_dashboard' %}" />
-            <button type="submit" class="btn btn-primary w-100">Login</button>
+                <input type="hidden" name="next" value="{% url 'admin:index' %}" />
+                <button type="submit" class="btn btn-primary w-100">Login</button>
             </form>
             {% if messages %}
             <div class="mt-3">
