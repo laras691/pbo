@@ -1,15 +1,12 @@
-from django.urls import path, include
+from django.urls import path
 from django.shortcuts import render, redirect
 from . import views
 from django.contrib.auth import views as auth_views
-from django.contrib.auth.views import LogoutView
-from .views import admin_custom_login
-from .views import dashboard_admin
-from .views import AdminLoginView
+from django.contrib.auth.views import LogoutView, LoginView
 from django.views.generic import TemplateView
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth.views import LoginView
 from django.contrib import admin
+from .views import admin_dashboard, generate_laporan
 
 urlpatterns = [
     path('', lambda request: redirect('login_pengunjung'), name='root_redirect'),
@@ -35,11 +32,17 @@ urlpatterns = [
 
     path('verifikasi/', views.verifikasi_kode, name='verifikasi_kode'),
 
+    # Custom admin (jika memang ingin dipakai, pastikan tidak bentrok dengan admin bawaan)
     path('admin-custom/', views.admin_custom, name='admin_custom'),
     path('custom-admin/login/', LoginView.as_view(template_name='admin/login.html'), name='admin-login'),
     path('custom-admin/dashboard/', staff_member_required(
         TemplateView.as_view(template_name='admin/dashboard.html')
     ), name='admin-dashboard'),
+
+    # Admin Django bawaan
+    path('admin/', admin.site.urls),
+
+    # Fitur buku dan peminjaman
     path('cari-buku/', views.cari_buku, name='cari_buku'),
     path('pinjam-buku/', views.pinjam_buku, name='pinjam_buku'),
     path('kembalikan-buku/', views.kembalikan_buku, name='kembalikan_buku'),
@@ -47,5 +50,4 @@ urlpatterns = [
     path('riwayat/', views.lihat_riwayat, name='lihat_riwayat'),
     path('logout/', views.logout, name='logout'),
     path('daftar-buku/', views.lihat_daftar_buku, name='lihat_daftar_buku'),
-    path('admin/', admin.site.urls),
 ]

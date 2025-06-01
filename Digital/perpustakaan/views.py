@@ -7,10 +7,10 @@ from django.db import IntegrityError
 from django.core.mail import send_mail
 import random
 from django.contrib.auth import authenticate, login
-from .models import Buku, Peminjaman,   Pengunjung, Admin, Laporan
-from django.contrib.auth.views import LoginView
+from .models import Buku, Peminjaman, Pengunjung, Admin, Laporan
 from django.urls import reverse
-
+from django.http import HttpResponse
+from django.template.loader import get_template
 
 # Halaman utama
 def daftar_buku(request):
@@ -125,40 +125,98 @@ def admin_custom(request):
         if admin_id == 'admin' and password == 'admin123' and captcha == '123456':
             messages.success(request, 'Login berhasil!')
             # Redirect ke halaman admin dashboard, misal:
-            return redirect('kelola_buku')
+            return redirect('/admin/dashboard/')
         else:
             messages.error(request, 'ID, Password, atau Token salah.')
 
-    return render(request, 'admin/login_admin.html')
+    return render(request, 'admin/admin_login.html')
 
-#dashboard Admin
-def dashboard_admin(request):
+# Admin - Dashboard
+def admin_dashboard(request):
     # Hitung statistik
     total_buku = Buku.objects.count()
     buku_dipinjam = Peminjaman.objects.filter(status='Dipinjam').count()
-    buku_terbaru = Buku.objects.order_by('-tanggal_ditambahkan')[:5]
     
-    # Data untuk chart
-    buku_labels = [b.judul for b in Buku.objects.all()[:5]]
-    buku_data = [b.dipinjam_count for b in Buku.objects.all()[:5]]
+    # Data untuk chart (contoh: peminjaman 7 hari terakhir)
+    from django.db.models.functions import TruncDay
+    from django.db.models import Count
+    from datetime import datetime, timedelta
+    
+    hari_ini = datetime.now().date()
+    tujuh_hari_lalu = hari_ini - timedelta(days=7)
+    
+    peminjaman_harian = (
+        Peminjaman.objects
+        .filter(tanggal_pinjam__gte=tujuh_hari_lalu)
+        .annotate(hari=TruncDay('tanggal_pinjam'))
+        .values('hari')
+        .annotate(jumlah=Count('id'))
+        .order_by('hari')
+    )
+    
+    buku_labels = [entry['hari'].strftime('%d %b') for entry in peminjaman_harian]
+    buku_data = [entry['jumlah'] for entry in peminjaman_harian]
+    
+    # Data lainnya
+    buku_terbaru = Buku.objects.order_by('-tanggal_ditambahkan')[:5]
+    pengunjung_terakhir = Pengunjung.objects.order_by('-terakhir_login')[:5]
     
     context = {
         'total_buku': total_buku,
         'buku_dipinjam': buku_dipinjam,
-        'buku_terbaru': buku_terbaru,
         'buku_labels': buku_labels,
         'buku_data': buku_data,
+        'buku_terbaru': buku_terbaru,
+        'pengunjung_terakhir': pengunjung_terakhir,
+        'section': 'dashboard',
     }
-    return render(request, 'admin/dashboardAdmin.html', context)
+    return render(request, 'admin/custom_dashboard.html', context)
 
-class AdminLoginView(LoginView):
-    template_name = 'admin/login.html'
-    redirect_authenticated_user = True  # Redirect user yang sudah login
+#Admin - Generate Laporan
+def generate_laporan(request):
+    try:
+        from xhtml2pdf import pisa
+    except ImportError:
+        return HttpResponse('xhtml2pdf belum terinstall. Jalankan: pip install xhtml2pdf')
+
+    if request.method == 'POST':
+        jenis_laporan = request.POST.get('jenis_laporan')
+        tanggal_mulai = request.POST.get('tanggal_mulai')
+        tanggal_selesai = request.POST.get('tanggal_selesai')
+        
+        # Sesuaikan dengan model Anda
+        if jenis_laporan == 'peminjaman':
+            data = Peminjaman.objects.filter(
+                tanggal_pinjam__gte=tanggal_mulai,
+                tanggal_pinjam__lte=tanggal_selesai
+            )
+        elif jenis_laporan == 'buku':
+            data = Buku.objects.all()
+        else:  # pengunjung
+            data = Pengunjung.objects.all()
+        
+        context = {
+            'data': data,
+            'jenis_laporan': jenis_laporan,
+            'tanggal_mulai': tanggal_mulai,
+            'tanggal_selesai': tanggal_selesai,
+            'section': 'laporan',
+        }
+        
+        template = get_template('admin/laporan_pdf.html')
+        html = template.render(context)
+        
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="laporan_{jenis_laporan}.pdf"'
+        
+        pisa_status = pisa.CreatePDF(html, dest=response)
+        if pisa_status.err:
+            return HttpResponse('Error generating PDF')
+        return response
     
-    def get_success_url(self):
-        url = self.get_redirect_url()
-        return url or reverse('admin-dashboard')
-
+    context = {'section': 'laporan'}
+    return render(request, 'admin/custom_dashboard.html', context)
+    
 # Admin – Kelola Buku
 def kelola_buku(request):
     daftar_buku = PinjamBuku.objects.all()
@@ -206,7 +264,7 @@ def lupa_password(request):
 
 def admin_custom_login(request):
     
-    return render(request, 'admin/login_admin.html')
+    return render(request, 'admin/admin_login.html')
     
 
 def lihat_daftar_buku(request):

@@ -362,6 +362,7 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Sidebar hamburger menu (garis 3) dan swipe
         const menuBtn = document.getElementById('menuBtn');
         const closeSidebar = document.getElementById('closeSidebar');
         const sidebar = document.getElementById('sidebar');
@@ -386,7 +387,7 @@
                 }
             });
 
-            // Fitur geser (swipe) untuk sidebar di perangkat sentuh
+            // Swipe sidebar
             let startX = null;
             sidebar.addEventListener('touchstart', function(e) {
                 if (sidebar.classList.contains('active')) {
@@ -396,7 +397,7 @@
             sidebar.addEventListener('touchmove', function(e) {
                 if (startX !== null) {
                     let currentX = e.touches[0].clientX;
-                    if (startX - currentX > 60) { // swipe ke kiri
+                    if (startX - currentX > 60) {
                         sidebar.classList.remove('active');
                         startX = null;
                     }
@@ -428,7 +429,7 @@
             });
         }
 
-        // Validasi pengembalian buku
+        // Validasi kode buku harus sesuai judul
         const daftarKodeBuku = {
             "Bumi Manusia": "4821",
             "Harimau! Harimau!": "1937",

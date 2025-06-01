@@ -1,0 +1,10 @@
+{% extends "admin/base.html" %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">Administrasi Perpustakaan</a></h1>
+{% endblock %}
+
+{% block userlinks %}
+<a href="{% url 'admin_dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a> /
+{{ block.super }}
+{% endblock %}

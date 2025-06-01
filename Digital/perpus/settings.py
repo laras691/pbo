@@ -14,6 +14,12 @@ ALLOWED_HOSTS = []
 
 LOGIN_URL = 'admin-login'  # Nama URL view login Anda
 LOGIN_REDIRECT_URL = 'admin-dashboard'  # Ini bisa menjadi fallbac
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+# Hanya untuk development!
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000']
 
 # Aplikasi yang digunakan dalam proyek
 INSTALLED_APPS = [
@@ -38,6 +44,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
 
 # Root routing URL
 ROOT_URLCONF = 'perpus.urls'
