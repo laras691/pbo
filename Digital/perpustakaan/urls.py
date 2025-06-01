@@ -35,7 +35,6 @@ urlpatterns = [
     path('verifikasi/', views.verifikasi_kode, name='verifikasi_kode'),
 
     path('admin-custom/', views.admin_custom, name='admin_custom'),
-    path('admin/', admin.site.urls),  # Default admin
     path('admin/dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('admin/laporan/', generate_laporan, name='admin_laporan'),
     path('cari-buku/', views.cari_buku, name='cari_buku'),
