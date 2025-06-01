@@ -124,12 +124,12 @@ def admin_custom(request):
         if admin_id == 'admin' and password == 'admin123' and captcha == '123456':
             messages.success(request, 'Login berhasil!')
             # Redirect langsung ke halaman admin buku, bukan dashboard
-            return redirect(reverse('admin:perpustakaan_buku_changelist'))
+            return redirect(reverse('kelola_buku'))
         else:
             messages.error(request, 'ID, Password, atau Token salah.')
 
     return render(request, 'admin/admin_login.html')
-
+        
 #Admin - Generate Laporan
 def generate_laporan(request):
     # Fitur PDF di-nonaktifkan karena xhtml2pdf dihapus
@@ -160,7 +160,7 @@ def generate_laporan(request):
         return render(request, 'admin/laporan_html.html', context)
     
     context = {'section': 'laporan'}
-    return render(request, 'admin/custom_dashboard.html', context)
+    return render(request, 'admin/kelola_buku.html', context)
     
 # Admin – Kelola Buku
 def kelola_buku(request):
