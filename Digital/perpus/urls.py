@@ -3,6 +3,5 @@ from django.urls import path, include
 from perpustakaan import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', include('perpustakaan.urls')),
 ]

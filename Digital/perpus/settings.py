@@ -13,7 +13,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 LOGIN_URL = 'admin-login'  # Nama URL view login Anda
-LOGIN_REDIRECT_URL = 'admin-dashboard'  # Ini bisa menjadi fallbac
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
