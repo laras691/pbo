@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import PinjamBuku, Pengunjung, Buku  # pastikan model Buku sudah ada
+from .models import Buku, Peminjaman, Pengunjung, Admin, Laporan, PinjamBuku
 from .forms import LoginForm, RegisterForm
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
@@ -7,8 +7,6 @@ from django.db import IntegrityError
 from django.core.mail import send_mail
 import random
 from django.contrib.auth import authenticate, login
-from .models import Buku, Peminjaman, Pengunjung, Admin, Laporan
-from django.urls import reverse
 from django.http import HttpResponse
 from django.template.loader import get_template
 
@@ -174,11 +172,7 @@ def admin_dashboard(request):
 
 #Admin - Generate Laporan
 def generate_laporan(request):
-    try:
-        from xhtml2pdf import pisa
-    except ImportError:
-        return HttpResponse('xhtml2pdf belum terinstall. Jalankan: pip install xhtml2pdf')
-
+    # Fitur PDF di-nonaktifkan karena xhtml2pdf dihapus
     if request.method == 'POST':
         jenis_laporan = request.POST.get('jenis_laporan')
         tanggal_mulai = request.POST.get('tanggal_mulai')
@@ -202,17 +196,8 @@ def generate_laporan(request):
             'tanggal_selesai': tanggal_selesai,
             'section': 'laporan',
         }
-        
-        template = get_template('admin/laporan_pdf.html')
-        html = template.render(context)
-        
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="laporan_{jenis_laporan}.pdf"'
-        
-        pisa_status = pisa.CreatePDF(html, dest=response)
-        if pisa_status.err:
-            return HttpResponse('Error generating PDF')
-        return response
+        # Render ke halaman HTML biasa, bukan PDF
+        return render(request, 'admin/laporan_html.html', context)
     
     context = {'section': 'laporan'}
     return render(request, 'admin/custom_dashboard.html', context)
