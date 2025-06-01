@@ -96,42 +96,91 @@
 <body>
     <div class="container">
         <h2>Cari Buku</h2>
-        <form method="get" action="">
-            <input type="text" name="q" placeholder="Masukkan judul, penulis, atau kategori..." value="{{ request.GET.q }}">
+        <form id="form-cari" onsubmit="return false;">
+            <input type="text" id="input-cari" placeholder="Masukkan judul, penulis, atau kategori...">
             <button type="submit">Cari</button>
         </form>
-        <table class="result-table">
-            <tr>
-                <th>No</th>
-                <th>Sampul</th>
-                <th>Judul Buku</th>
-                <th>Penulis</th>
-                <th>Kategori</th>
-                <th>Tahun</th>
-            </tr>
-            {% if hasil %}
-                {% for buku in hasil %}
+        <table class="result-table" id="tabel-buku">
+            <thead>
                 <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>
-                        {% if buku.cover_url %}
-                            <img src="{{ buku.cover_url }}" alt="{{ buku.judul }}" class="cover-img">
-                        {% else %}
-                            <div class="cover-img" style="display:flex;align-items:center;justify-content:center;color:#b0c9e4;">-</div>
-                        {% endif %}
-                    </td>
-                    <td>{{ buku.judul }}</td>
-                    <td>{{ buku.penulis }}</td>
-                    <td>{{ buku.kategori }}</td>
-                    <td>{{ buku.tahun }}</td>
+                    <th>No</th>
+                    <th>Sampul</th>
+                    <th>Judul Buku</th>
+                    <th>Penulis</th>
+                    <th>Kategori</th>
+                    <th>Tahun</th>
                 </tr>
-                {% endfor %}
-            {% else %}
-                <tr>
-                    <td colspan="6" class="kosong">Tidak ada hasil ditemukan.</td>
-                </tr>
-            {% endif %}
+            </thead>
+            <tbody id="hasil-buku">
+                <!-- Hasil pencarian akan muncul di sini -->
+            </tbody>
         </table>
     </div>
+    <script>
+    // Daftar 20 buku statis
+    const daftarBuku = [
+        {judul: "Bumi Manusia", penulis: "Pramoedya Ananta Toer", kategori: "Fiksi", tahun: "1980"},
+        {judul: "Harimau! Harimau!", penulis: "Mochtar Lubis", kategori: "Fiksi", tahun: "1975"},
+        {judul: "Laut Bercerita", penulis: "Leila S. Chudori", kategori: "Sosial", tahun: "2017"},
+        {judul: "Ronggeng Dukuh Paruk", penulis: "Ahmad Tohari", kategori: "Sosial", tahun: "1982"},
+        {judul: "Revolusi: Indonesia dan Lahirnya Dunia Modern", penulis: "David Van Reybrouck", kategori: "Sejarah", tahun: "2020"},
+        {judul: "Sejarah Film 1900–1950", penulis: "Misbach Yusa Biran", kategori: "Sejarah", tahun: "2009"},
+        {judul: "Ayat-Ayat Cinta", penulis: "Habiburrahman El Shirazy", kategori: "Agama", tahun: "2004"},
+        {judul: "Tafsir al-Mishbah", penulis: "M. Quraish Shihab", kategori: "Agama", tahun: "2001"},
+        {judul: "Kamus Besar Bahasa Indonesia (KBBI)", penulis: "Tim Badan Pengembangan dan Pembinaan Bahasa", kategori: "Bahasa", tahun: "1988"},
+        {judul: "Tata Bahasa Baku Bahasa Indonesia", penulis: "Hasan Alwi dkk.", kategori: "Bahasa", tahun: "1998"},
+        {judul: "Pengantar Fisika", penulis: "Halliday & Resnick", kategori: "Sains", tahun: "1988"},
+        {judul: "Biologi Umum", penulis: "Campbell & Reece", kategori: "Sains", tahun: "2002"},
+        {judul: "Dasar-Dasar Teknik Elektro", penulis: "J. David Irwin", kategori: "Teknologi", tahun: "2002"},
+        {judul: "Pemrograman Python untuk Pemula", penulis: "Zed A. Shaw", kategori: "Teknologi", tahun: "2010"},
+        {judul: "Pengantar Ilmu Ekonomi", penulis: "Sadono Sukirno", kategori: "Ekonomi", tahun: "2000"},
+        {judul: "Ekonomi Mikro", penulis: "N. Gregory Mankiw", kategori: "Ekonomi", tahun: "2004"},
+        {judul: "Ilmu Kesehatan Masyarakat", penulis: "Azrul Azwar", kategori: "Kesehatan", tahun: "1996"},
+        {judul: "Dasar-Dasar Keperawatan", penulis: "Kozier & Erb", kategori: "Kesehatan", tahun: "2004"},
+        {judul: "Ensiklopedia Indonesia", penulis: "Hassan Shadily", kategori: "Referensi", tahun: "1980"},
+        {judul: "Ensiklopedia Islam", penulis: "Tim Ensiklopedia Islam", kategori: "Referensi", tahun: "1992"},
+    ];
+
+    function tampilkanBuku(list) {
+        const tbody = document.getElementById('hasil-buku');
+        tbody.innerHTML = "";
+        if (list.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="kosong">Tidak ada hasil ditemukan.</td></tr>`;
+            return;
+        }
+        list.forEach((buku, i) => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${i+1}</td>
+                    <td><div class="cover-img" style="display:flex;align-items:center;justify-content:center;color:#b0c9e4;">-</div></td>
+                    <td>${buku.judul}</td>
+                    <td>${buku.penulis}</td>
+                    <td>${buku.kategori}</td>
+                    <td>${buku.tahun}</td>
+                </tr>
+            `;
+        });
+    }
+
+    // Tampilkan semua buku saat pertama kali
+    tampilkanBuku(daftarBuku);
+
+    // Fungsi pencarian
+    document.getElementById('form-cari').onsubmit = function() {
+        const q = document.getElementById('input-cari').value.trim().toLowerCase();
+        if (!q) {
+            tampilkanBuku(daftarBuku);
+            return false;
+        }
+        const hasil = daftarBuku.filter(buku =>
+            buku.judul.toLowerCase().includes(q) ||
+            buku.penulis.toLowerCase().includes(q) ||
+            buku.kategori.toLowerCase().includes(q) ||
+            buku.tahun.includes(q)
+        );
+        tampilkanBuku(hasil);
+        return false;
+    };
+    </script>
 </body>
 </html>

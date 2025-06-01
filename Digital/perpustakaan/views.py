@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import PinjamBuku, Pengunjung, Buku  # pastikan model Buku sudah ada
+from .models import Buku, Peminjaman, Pengunjung, Admin, Laporan, PinjamBuku
 from .forms import LoginForm, RegisterForm
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
@@ -7,12 +7,8 @@ from django.db import IntegrityError
 from django.core.mail import send_mail
 import random
 from django.contrib.auth import authenticate, login
-from .models import Buku, Peminjaman,   Pengunjung, Admin, Laporan
-from django.urls import reverse
 from django.http import HttpResponse
 from django.template.loader import get_template
-from xhtml2pdf import pisa
-
 
 # Halaman utama
 def daftar_buku(request):
@@ -176,6 +172,7 @@ def admin_dashboard(request):
 
 #Admin - Generate Laporan
 def generate_laporan(request):
+    # Fitur PDF di-nonaktifkan karena xhtml2pdf dihapus
     if request.method == 'POST':
         jenis_laporan = request.POST.get('jenis_laporan')
         tanggal_mulai = request.POST.get('tanggal_mulai')
@@ -199,17 +196,8 @@ def generate_laporan(request):
             'tanggal_selesai': tanggal_selesai,
             'section': 'laporan',
         }
-        
-        template = get_template('admin/laporan_pdf.html')
-        html = template.render(context)
-        
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename="laporan_{jenis_laporan}.pdf"'
-        
-        pisa_status = pisa.CreatePDF(html, dest=response)
-        if pisa_status.err:
-            return HttpResponse('Error generating PDF')
-        return response
+        # Render ke halaman HTML biasa, bukan PDF
+        return render(request, 'admin/laporan_html.html', context)
     
     context = {'section': 'laporan'}
     return render(request, 'admin/custom_dashboard.html', context)
@@ -306,10 +294,59 @@ def pinjam_buku(request):
     return render(request, 'pengunjung/pinjamBuku.html')
 
 def kembalikan_buku(request):
-    return render(request, 'pengunjung/kembalikanBuku.html')
+    pengunjung_id = request.session.get('pengunjung_id')
+    if not pengunjung_id:
+        return redirect('login_pengunjung')
+    pengunjung = Pengunjung.objects.get(id=pengunjung_id)
+    daftar_pinjam = Peminjaman.objects.filter(pengunjung=pengunjung, status='Belum Kembali')
+
+    notifikasi_error = None
+
+    if request.method == 'POST':
+        judul_buku = request.POST.get('buku')
+        # Validasi: cek apakah ada riwayat peminjaman buku ini yang belum dikembalikan
+        peminjaman = Peminjaman.objects.filter(
+            pengunjung=pengunjung,
+            buku__judul=judul_buku,
+            status='Belum Kembali'
+        ).first()
+        if peminjaman:
+            # Proses pengembalian (misal update status dan tanggal kembali)
+            peminjaman.status = 'Kembali'
+            from django.utils import timezone
+            peminjaman.tanggal_kembali = timezone.now()
+            peminjaman.save()
+            return render(request, 'pengunjung/kembalikanBuku.html', {
+                'daftar_pinjam': daftar_pinjam,
+                'sukses': True,
+                'judul_buku': judul_buku
+            })
+        else:
+            notifikasi_error = "Anda tidak memiliki riwayat peminjaman buku tersebut."
+
+    return render(request, 'pengunjung/kembalikanBuku.html', {
+        'daftar_pinjam': daftar_pinjam,
+        'notifikasi_error': notifikasi_error
+    })
 
 def lihat_riwayat(request):
-    return render(request, 'pengunjung/lihatRiwayat.html')
+    pengunjung_id = request.session.get('pengunjung_id')
+    if not pengunjung_id:
+        return redirect('login_pengunjung')
+    pengunjung = Pengunjung.objects.get(id=pengunjung_id)
+    daftar_pinjam = Peminjaman.objects.filter(pengunjung=pengunjung)
+
+    # Buat list riwayat: jika tanggal_kembali kosong, tampilkan "-", jika ada tampilkan tanggalnya
+    riwayat = []
+    for pinjam in daftar_pinjam:
+        riwayat.append({
+            'judul': pinjam.buku.judul,
+            'tanggal_pinjam': pinjam.tanggal_pinjam,
+            'tanggal_kembali': pinjam.tanggal_kembali if pinjam.tanggal_kembali else "-",
+            'status': "Kembali" if pinjam.tanggal_kembali else "Belum Kembali"
+        })
+
+    return render(request, 'pengunjung/lihatRiwayat.html', {'riwayat': riwayat})
 
 def logout(request):
     request.session.flush()
