@@ -9,10 +9,10 @@ import random
 from django.contrib.auth import authenticate, login
 from .models import Buku, Peminjaman,   Pengunjung, Admin, Laporan
 from django.urls import reverse
-from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth.views import LoginView
-from django.urls import reverse_lazy
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
 
 # Halaman utama
 def daftar_buku(request):
@@ -133,22 +133,86 @@ def admin_custom(request):
 
     return render(request, 'admin/admin_login.html')
 
-#dashboard Admin
-def dashboardAdmin (request):
-    context = {'title': 'Admin Dashboard'}
-    return render(request, 'admin/dashboardAdmin.html', context)
+# Admin - Dashboard
+def admin_dashboard(request):
+    # Hitung statistik
+    total_buku = Buku.objects.count()
+    buku_dipinjam = Peminjaman.objects.filter(status='Dipinjam').count()
+    
+    # Data untuk chart (contoh: peminjaman 7 hari terakhir)
+    from django.db.models.functions import TruncDay
+    from django.db.models import Count
+    from datetime import datetime, timedelta
+    
+    hari_ini = datetime.now().date()
+    tujuh_hari_lalu = hari_ini - timedelta(days=7)
+    
+    peminjaman_harian = (
+        Peminjaman.objects
+        .filter(tanggal_pinjam__gte=tujuh_hari_lalu)
+        .annotate(hari=TruncDay('tanggal_pinjam'))
+        .values('hari')
+        .annotate(jumlah=Count('id'))
+        .order_by('hari')
+    )
+    
+    buku_labels = [entry['hari'].strftime('%d %b') for entry in peminjaman_harian]
+    buku_data = [entry['jumlah'] for entry in peminjaman_harian]
+    
+    # Data lainnya
+    buku_terbaru = Buku.objects.order_by('-tanggal_ditambahkan')[:5]
+    pengunjung_terakhir = Pengunjung.objects.order_by('-terakhir_login')[:5]
+    
+    context = {
+        'total_buku': total_buku,
+        'buku_dipinjam': buku_dipinjam,
+        'buku_labels': buku_labels,
+        'buku_data': buku_data,
+        'buku_terbaru': buku_terbaru,
+        'pengunjung_terakhir': pengunjung_terakhir,
+        'section': 'dashboard',
+    }
+    return render(request, 'admin/custom_dashboard.html', context)
 
-class AdminLoginView(UserPassesTestMixin, LoginView):
-    template_name = 'admin/login.html'
+#Admin - Generate Laporan
+def generate_laporan(request):
+    if request.method == 'POST':
+        jenis_laporan = request.POST.get('jenis_laporan')
+        tanggal_mulai = request.POST.get('tanggal_mulai')
+        tanggal_selesai = request.POST.get('tanggal_selesai')
+        
+        # Sesuaikan dengan model Anda
+        if jenis_laporan == 'peminjaman':
+            data = Peminjaman.objects.filter(
+                tanggal_pinjam__gte=tanggal_mulai,
+                tanggal_pinjam__lte=tanggal_selesai
+            )
+        elif jenis_laporan == 'buku':
+            data = Buku.objects.all()
+        else:  # pengunjung
+            data = Pengunjung.objects.all()
+        
+        context = {
+            'data': data,
+            'jenis_laporan': jenis_laporan,
+            'tanggal_mulai': tanggal_mulai,
+            'tanggal_selesai': tanggal_selesai,
+            'section': 'laporan',
+        }
+        
+        template = get_template('admin/laporan_pdf.html')
+        html = template.render(context)
+        
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="laporan_{jenis_laporan}.pdf"'
+        
+        pisa_status = pisa.CreatePDF(html, dest=response)
+        if pisa_status.err:
+            return HttpResponse('Error generating PDF')
+        return response
     
-    def test_func(self):
-        return self.request.user.is_staff
-    
-    def get_success_url(self):
-        return reverse_lazy('admin-dashboard')  # Pastikan nama URL ini sesuai
-    
-    def handle_no_permission(self):
-        return redirect('admin:index') 
+    context = {'section': 'laporan'}
+    return render(request, 'admin/custom_dashboard.html', context)
     
 # Admin – Kelola Buku
 def kelola_buku(request):
