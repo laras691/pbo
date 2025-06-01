@@ -51,21 +51,50 @@
             font-weight: bold;
             letter-spacing: 1px;
         }
-        .profile-box {
-            margin-right: 32px;
-            background-color: #b0c9e4;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
+        .profile-container {
+            display: flex;
+            align-items: center;
+            background: #e6eef6;
+            border-radius: 18px;
+            padding: 0 10px 0 10px;
+            height: 44px;
+            margin-right: 8px;
+            margin-left: 8px;
             box-shadow: 0 0 12px rgba(176,201,228,0.13);
+            border: 2px solid #b0c9e4;
+            cursor: pointer;
+            min-width: 80px;
+            max-width: 160px;
+            transition: box-shadow 0.2s;
+        }
+        .profile-container:hover {
+            box-shadow: 0 4px 18px rgba(0,81,168,0.13);
+        }
+        .profile-name {
+            color: #0051a8;
+            font-weight: 600;
+            font-size: 1.02rem;
+            margin-right: 8px;
+            white-space: nowrap;
+            max-width: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .profile-box {
+            background-color: #b0c9e4;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            box-shadow: none;
             color: #3a5fa8;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             border: 2px solid #e6eef6;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
             padding: 0;
+            margin-right: 0;
         }
 
         .sidebar {
@@ -320,9 +349,22 @@
             .topbar {
                 padding: 0 10px;
             }
+            .profile-container {
+                margin-right: 4px;
+                margin-left: 4px;
+                padding: 0 6px;
+                min-width: 60px;
+                max-width: 100px;
+                height: 36px;
+            }
+            .profile-name {
+                font-size: 0.92rem;
+                max-width: 40px;
+            }
             .profile-box {
-                margin-right: 10px;
-                padding: 8px 12px;
+                width: 24px;
+                height: 24px;
+                font-size: 0.92rem;
             }
             .content {
                 padding: 20px 8px;
@@ -368,8 +410,16 @@
             <span></span>
         </div>
         <span class="topbar-title">📚 Litera.id</span>
-        <div class="profile-box">
-            👤 {{ user.username }}
+        <div class="profile-container" id="profileMenuBtn">
+            <span class="profile-name">{{ user.nama }}</span>
+            <div class="profile-box">👤</div>
+        </div>
+        <div id="profile-dropdown" style="display:none; position:absolute; right:32px; top:60px; background:#fff; border-radius:10px; box-shadow:0 4px 18px rgba(0,81,168,0.13); min-width:220px; z-index:2000;">
+            <a href="{% url 'lihat_profil' %}" style="display:block; padding:14px 22px; color:#0051a8; text-decoration:none;">Lihat Profil</a>
+            <a href="{% url 'edit_profil' %}" style="display:block; padding:14px 22px; color:#0051a8; text-decoration:none;">Edit Profil</a>
+            <a href="{% url 'ganti_password' %}" style="display:block; padding:14px 22px; color:#0051a8; text-decoration:none;">Ganti Password</a>
+            <a href="{% url 'hapus_akun' %}" style="display:block; padding:14px 22px; color:#c00; text-decoration:none;">Hapus Akun</a>
+            <a href="{% url 'logout' %}" style="display:block; padding:14px 22px; color:#0051a8; text-decoration:none;">Keluar</a>
         </div>
     </div>
 
@@ -477,6 +527,15 @@
 
         logoutNo.addEventListener('click', function() {
             logoutModal.style.display = 'none';
+        });
+
+        document.getElementById('profileMenuBtn').onclick = function(e) {
+            e.stopPropagation();
+            var menu = document.getElementById('profile-dropdown');
+            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+        };
+        document.addEventListener('click', function() {
+            document.getElementById('profile-dropdown').style.display = 'none';
         });
     </script>
 </body>

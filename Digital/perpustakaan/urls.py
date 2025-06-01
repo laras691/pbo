@@ -46,4 +46,9 @@ urlpatterns = [
     path('riwayat/', views.lihat_riwayat, name='lihat_riwayat'),
     path('logout/', views.logout, name='logout'),
     path('daftar-buku/', views.lihat_daftar_buku, name='lihat_daftar_buku'),
+
+    path('profil/', views.lihat_profil, name='lihat_profil'),
+    path('profil/edit/', views.edit_profil, name='edit_profil'),
+    path('profil/ganti-password/', views.ganti_password, name='ganti_password'),
+    path('profil/hapus/', views.hapus_akun, name='hapus_akun'),
 ]
