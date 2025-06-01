@@ -126,8 +126,8 @@ def admin_custom(request):
         # Contoh data admin statis (sebaiknya dari database)
         if admin_id == 'admin' and password == 'admin123' and captcha == '123456':
             messages.success(request, 'Login berhasil!')
-            # Redirect ke halaman admin dashboard, misal:
-            return redirect('/admin/dashboard/')
+            # Redirect ke halaman admin dashboard
+            return redirect('admin_dashboard')
         else:
             messages.error(request, 'ID, Password, atau Token salah.')
 
