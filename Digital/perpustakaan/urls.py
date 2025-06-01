@@ -4,7 +4,6 @@ from . import views
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LogoutView
 from .views import admin_custom_login
-from .views import AdminLoginView
 from django.views.generic import TemplateView
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.views import LoginView
