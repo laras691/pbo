@@ -219,6 +219,16 @@ def daftar_laporan(request):
     return render(request, 'admin/daftar_laporan.html', {'daftar': daftar})
 
 #admin - cetak & edit laporan
+def tambah_laporan(request):
+    if request.method == 'POST':
+        form = LaporanForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('daftar-laporan')
+    else:
+        form = LaporanForm()
+    return render(request, 'admin/tambah_laporan.html', {'form': form})
+
 def cetak_laporan(request, id_laporan):
     laporan = get_object_or_404(Laporan, id_laporan=id_laporan)
     # Render ke template khusus cetak, atau gunakan template yang sama

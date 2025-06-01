@@ -23,17 +23,16 @@ class BukuForm(forms.ModelForm):
 class LaporanForm(forms.ModelForm):
     class Meta:
         model = Laporan
-        fields = ['id_laporan', 'tanggal_dibuat','jenis', 'isi']
+        fields = ['id_laporan', 'tanggal_dibuat', 'jenis', 'isi']
         widgets = {
-            'id_laporan': forms.Textarea(attrs={
+            'id_laporan': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Masukkan id laporan',
-                'rows': 5
+                'placeholder': 'Masukkan ID laporan',
             }),
-            'tanggal_dibuat': forms.Textarea(attrs={
+            'tanggal_dibuat': forms.DateInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Masukkan tanggal dibuat laporan',
-                'rows': 5
+                'type': 'date',
             }),
             'jenis': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -46,11 +45,8 @@ class LaporanForm(forms.ModelForm):
             }),
         }
         labels = {
-            'id_laporan' :'ID Laporan',
+            'id_laporan': 'ID Laporan',
             'tanggal_dibuat': 'Tanggal Dibuat',
             'jenis': 'Jenis Laporan',
             'isi': 'Isi Laporan'
         }
-
-    def __init__(self, *args, **kwargs):
-        super(LaporanForm, self).__init__(*args, **kwargs)

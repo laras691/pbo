@@ -6,182 +6,364 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Kelola Pengunjung</title>
     <style>
+        :root {
+            --primary-color: #0051a8;
+            --secondary-color: #b0c9e4;
+            --light-bg: #e6eef6;
+            --lighter-bg: #f5faff;
+            --danger-color: #f44336;
+            --text-dark: #333;
+            --text-light: #888;
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(120deg, #e6eef6 0%, #b0c9e4 100%);
+            background: linear-gradient(120deg, var(--light-bg) 0%, var(--secondary-color) 100%);
             margin: 0;
             padding: 0;
             min-height: 100vh;
+            color: var(--text-dark);
         }
+        
+        /* Topbar Styling */
+        .topbar {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            height: 60px;
+            box-sizing: border-box;
+        }
+        
+        .topbar-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .profile-box {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            height: 32px;
+        }
+        
+        .profile-box:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Main Container */
         .container {
             max-width: 1200px;
-            margin: 60px auto;
+            margin: 80px auto 40px;
             background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 4px 24px rgba(176,201,228,0.18);
-            padding: 36px 32px 32px 32px;
-        }
-        h1 {
-            color: #0051a8;
-            text-align: center;
-            margin-bottom: 28px;
-            letter-spacing: 1px;
-        }
-        .form-container {
-            background: #e6eef6;
-            padding: 24px;
             border-radius: 12px;
-            margin-bottom: 32px;
+            box-shadow: 0 4px 24px rgba(176, 201, 228, 0.18);
+            padding: 28px;
+            box-sizing: border-box;
         }
+        
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin: 0 0 24px 0;
+            font-size: 1.75rem;
+            font-weight: 600;
+        }
+        
+        /* Form Styling */
+        .form-container {
+            background: var(--light-bg);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 28px;
+        }
+        
         .form-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 16px;
             margin-bottom: 16px;
         }
+        
         .form-group {
             flex: 1;
-            min-width: 0; /* Perubahan penting */
+            min-width: 0;
         }
+        
         .form-group-large {
             flex: 2;
             min-width: 0;
         }
+        
         label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #0051a8;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--primary-color);
+            font-size: 0.9rem;
         }
+        
         input, select {
             width: 100%;
-            padding: 12px 14px;
-            border-radius: 12px;
-            border: 2px solid #b0c9e4;
-            font-size: 1rem;
-            background: #f5faff;
-            color: #0051a8;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 2px solid var(--secondary-color);
+            font-size: 0.95rem;
+            background: var(--lighter-bg);
+            color: var(--primary-color);
             font-family: inherit;
-            box-sizing: border-box; /* Perubahan penting */
+            box-sizing: border-box;
+            height: 40px;
         }
+        
+        /* Button Styling */
         .button-group {
             display: flex;
             gap: 12px;
             margin-top: 20px;
         }
-        button {
-            padding: 12px 24px;
+        
+        button, a.btn {
+            padding: 10px 20px;
             border: none;
-            border-radius: 10px;
-            font-size: 1rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
             font-family: inherit;
-            font-weight: bold;
+            font-weight: 500;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            box-sizing: border-box;
         }
+        
         .btn-primary {
-            background: #0051a8;
+            background: var(--primary-color);
             color: white;
         }
+        
         .btn-primary:hover {
             background: #3a5fa8;
+            transform: translateY(-1px);
         }
+        
         .btn-secondary {
-            background: #888;
+            background: var(--text-light);
             color: white;
         }
+        
         .btn-secondary:hover {
             background: #666;
+            transform: translateY(-1px);
         }
+        
         .btn-danger {
-            background: #f44336;
+            background: var(--danger-color);
             color: white;
         }
+        
         .btn-danger:hover {
             background: #da190b;
+            transform: translateY(-1px);
         }
+        
+        /* Table Styling */
         table {
             width: 100%;
             border-collapse: collapse;
-            background: #e6eef6;
-            border-radius: 12px;
+            background: var(--light-bg);
+            border-radius: 10px;
             overflow: hidden;
-            margin-top: 28px;
+            margin-top: 24px;
         }
+        
         th, td {
             padding: 12px 16px;
             text-align: left;
             border-bottom: 1px solid #d0ddee;
         }
+        
         th {
-            background: #b0c9e4;
-            color: #0051a8;
-            font-weight: bold;
+            background: var(--secondary-color);
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.95rem;
         }
+        
         tr:nth-child(even) {
-            background: #f5faff;
+            background: var(--lighter-bg);
         }
+        
         tr:nth-child(odd) {
-            background: #e6eef6;
+            background: var(--light-bg);
         }
+        
         .action-buttons {
             display: flex;
             gap: 8px;
         }
+        
+        /* Search and Filter */
         .search-filter {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
             gap: 12px;
         }
+        
         .search-box {
-            padding: 12px 14px;
-            border-radius: 12px;
-            border: 2px solid #b0c9e4;
-            font-size: 1rem;
-            background: #f5faff;
-            color: #0051a8;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 2px solid var(--secondary-color);
+            font-size: 0.95rem;
+            background: var(--lighter-bg);
+            color: var(--primary-color);
             font-family: inherit;
+            height: 40px;
+            box-sizing: border-box;
         }
+        
         #search-input {
             min-width: 250px;
             flex: 1;
         }
+        
         #filter-purpose {
             min-width: 200px;
         }
+        
+        /* Empty State */
         .kosong {
             text-align: center;
-            color: #888;
+            color: var(--text-light);
             padding: 32px 0;
+            font-size: 0.95rem;
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 24px;
+            gap: 8px;
+        }
+        
+        .page-item {
+            list-style: none;
+        }
+        
+        .page-link {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 2px solid var(--secondary-color);
+            background: var(--lighter-bg);
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        
+        .page-link:hover {
+            background: #d0ddee;
+        }
+        
+        .page-item.active .page-link {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
         }
         
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .container {
-                margin: 20px auto;
-                padding: 20px 16px;
+                margin: 70px auto 20px;
+                padding: 16px;
             }
+            
+            .topbar {
+                padding: 10px 16px;
+                height: 50px;
+            }
+            
+            .topbar-title {
+                font-size: 1.1rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+            
             .form-row {
                 flex-direction: column;
-                gap: 16px;
+                gap: 12px;
             }
+            
             .form-group, .form-group-large {
                 flex: 1 1 100%;
             }
+            
             .search-filter {
                 flex-direction: column;
             }
+            
             #search-input, #filter-purpose {
                 width: 100%;
+            }
+            
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+            
+            button, a.btn {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+            
+            th, td {
+                padding: 10px 12px;
+                font-size: 0.9rem;
             }
         }
     </style>
 </head>
 <body>
+    <div class="topbar">
+        <span class="topbar-title">📚 Litera.id - Admin</span>
+        <div class="profile-box" id="profileBtn">
+            👤 {{ user.username }}
+        </div>
+    </div>
+
     <div class="container">
         <h1>Kelola Data Pengunjung</h1>
+        
+        <!-- Navigation Button -->
+        <div class="button-group" style="margin-bottom: 20px;">
+            <a href="{% url 'dashboard_admin' %}" class="btn btn-secondary">Kembali ke Dashboard</a>
+        </div>
         
         <!-- Form Tambah/Ubah Pengunjung -->
         <div class="form-container">
@@ -263,6 +445,15 @@
                 <!-- Data pengunjung akan dimuat di sini -->
             </tbody>
         </table>
+
+        <!-- Pagination -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+            </ul>
+        </nav>
     </div>
 
     <script>
@@ -446,6 +637,12 @@
             }
             const filtered = visitors.filter(v => v.purpose === purpose);
             loadVisitors(filtered);
+        });
+
+        // Profile button functionality
+        document.getElementById('profileBtn').addEventListener('click', function() {
+            // Add your profile dropdown or logout functionality here
+            console.log('Profile clicked');
         });
 
         // Initial load

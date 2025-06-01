@@ -58,9 +58,17 @@
                <button onclick="window.print()" class="btn btn-primary">
                 <i class="fas fa-print"></i> Cetak Laporan
               </button>
-            <a href="{% url 'edit-laporan' laporan.id_laporan %}" class="btn btn-warning">
-              <i class="fas fa-print"></i> Edit Laporan
-               </button>
+            <div>
+    <button onclick="window.print()" class="btn btn-primary">
+        <i class="fas fa-print"></i> Cetak Laporan
+    </button>
+    {% if laporan.id_laporan %}
+      <a href="{% url 'edit-laporan' laporan.id_laporan %}" class="btn btn-warning">
+        <i class="fas fa-edit"></i> Edit Laporan
+      </a>
+    {% else %}
+      <span class="text-danger">ID Laporan tidak ditemukan</span>
+    {% endif %}
             </div>
         </div>
     </div>

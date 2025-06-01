@@ -42,6 +42,7 @@ urlpatterns = [
     path('admin/pengunjung/', views.kelola_pengunjung, name='kelola_pengunjung'),
     path('admin/laporan/', views.generate_laporan, name='admin_laporan'),
     path('admin/daftar-laporan/', views.daftar_laporan, name='daftar-laporan'),
+    path('admin/laporan/tambah/', views.tambah_laporan, name='tambah-laporan'),
     path('admin/laporan/cetak/<str:id_laporan>/', views.cetak_laporan, name='cetak-laporan'),
     path('admin/laporan/edit/<str:id_laporan>/', views.edit_laporan, name='edit-laporan'),
     path('cari-buku/', views.cari_buku, name='cari_buku'),
