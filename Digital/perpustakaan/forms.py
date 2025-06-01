@@ -16,7 +16,7 @@ class RegisterForm(forms.Form):
 class BukuForm(forms.ModelForm):
     class Meta:
         model = Buku
-        fields = ['id_buku', 'judul', 'penulis', 'stok', 'kategori', 'stok', 'cover_url']
+        fields = ['kode_buku', 'judul', 'penulis', 'stok', 'kategori', 'stok', 'cover_url']
         widgets = {
             'tahun_terbit': forms.NumberInput(attrs={'min': 1900, 'max': 2100}),
         }

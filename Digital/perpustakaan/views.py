@@ -7,12 +7,8 @@ from django.db import IntegrityError
 from django.core.mail import send_mail
 import random
 from django.http import HttpResponse
-from django.template.loader import get_template
-<<<<<<< HEAD
 from datetime import date
-=======
 from django.urls import path, reverse
->>>>>>> 023d0b5be556ede3684863a6690c82e9dfed28db
 
 # Halaman utama
 def daftar_buku(request):
@@ -116,10 +112,7 @@ def verifikasi_kode(request):
             messages.error(request, 'Kode verifikasi salah.')
     return render(request, 'pengunjung/verifikasi.html', {'email': email})
 
-<<<<<<< HEAD
-=======
-#ADmin - custom login
->>>>>>> 023d0b5be556ede3684863a6690c82e9dfed28db
+#Admin custom login
 def admin_custom(request):
     if request.method == 'POST':
         admin_id = request.POST.get('admin_id')
@@ -132,8 +125,6 @@ def admin_custom(request):
             return redirect(reverse('dashboard_admin'))
         else:
             messages.error(request, 'ID, Password, atau Token salah.')
-
-<<<<<<< HEAD
     return render(request, 'admin/admin.html')
 #Admin- dashboard
 def dashboard_admin(request):
@@ -176,10 +167,9 @@ def kelola_pengunjung(request):
     # Sementara hanya tampilkan halaman kosong
     return render(request, 'admin/kelola_pengunjung.html')
 
-=======
     return render(request, 'admin/admin_login.html')
-<<<<<<< HEAD
 
+#Admin dashboard
 def admin_dashboard(request):
     total_buku = Buku.objects.count()
     buku_dipinjam = Peminjaman.objects.filter(status='Dipinjam').count()
@@ -218,10 +208,6 @@ def admin_dashboard(request):
     }
     return render(request, 'admin/custom_dashboard.html', context)
 
-=======
-        
->>>>>>> 023d0b5be556ede3684863a6690c82e9dfed28db
->>>>>>> 603cf786516ecbf52bc981641fca00df7381688a
 #Admin - Generate Laporan
 def generate_laporan(request):
     # Fitur PDF di-nonaktifkan karena xhtml2pdf dihapus
@@ -271,12 +257,11 @@ def lupa_password(request):
             messages.error(request, 'Email tidak terdaftar.')
     return render(request, 'pengunjung/lupaPassword.html')
 
-<<<<<<< HEAD
-=======
+
+#Admin custom login
 def admin_custom_login(request):
     return render(request, 'admin/admin_login.html')
 
->>>>>>> 603cf786516ecbf52bc981641fca00df7381688a
 def lihat_daftar_buku(request):
     daftar_buku = Buku.objects.all()
     return render(request, 'pengunjung/lihatDaftarBuku.html', {'daftar_buku': daftar_buku})
