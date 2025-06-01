@@ -18,6 +18,9 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+# Hanya untuk development!
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000']
+
 # Aplikasi yang digunakan dalam proyek
 INSTALLED_APPS = [
     'django.contrib.admin',
