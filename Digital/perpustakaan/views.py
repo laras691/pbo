@@ -9,6 +9,7 @@ import random
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.template.loader import get_template
+from django.urls import path, reverse
 
 # Halaman utama
 def daftar_buku(request):
@@ -131,46 +132,9 @@ def admin_custom(request):
 
     return render(request, 'admin/admin_login.html')
 
-# Admin - Dashboard
 def admin_dashboard(request):
-    # Hitung statistik
-    total_buku = Buku.objects.count()
-    buku_dipinjam = Peminjaman.objects.filter(status='Dipinjam').count()
-    
-    # Data untuk chart (contoh: peminjaman 7 hari terakhir)
-    from django.db.models.functions import TruncDay
-    from django.db.models import Count
-    from datetime import datetime, timedelta
-    
-    hari_ini = datetime.now().date()
-    tujuh_hari_lalu = hari_ini - timedelta(days=7)
-    
-    peminjaman_harian = (
-        Peminjaman.objects
-        .filter(tanggal_pinjam__gte=tujuh_hari_lalu)
-        .annotate(hari=TruncDay('tanggal_pinjam'))
-        .values('hari')
-        .annotate(jumlah=Count('id'))
-        .order_by('hari')
-    )
-    
-    buku_labels = [entry['hari'].strftime('%d %b') for entry in peminjaman_harian]
-    buku_data = [entry['jumlah'] for entry in peminjaman_harian]
-    
-    # Data lainnya
-    buku_terbaru = Buku.objects.order_by('-tanggal_ditambahkan')[:5]
-    pengunjung_terakhir = Pengunjung.objects.order_by('-terakhir_login')[:5]
-    
-    context = {
-        'total_buku': total_buku,
-        'buku_dipinjam': buku_dipinjam,
-        'buku_labels': buku_labels,
-        'buku_data': buku_data,
-        'buku_terbaru': buku_terbaru,
-        'pengunjung_terakhir': pengunjung_terakhir,
-        'section': 'dashboard',
-    }
-    return render(request, 'admin/custom_dashboard.html', context)
+    # Redirect langsung ke halaman daftar buku di admin
+    return redirect(reverse('admin:perpustakaan_buku_changelist'))
 
 #Admin - Generate Laporan
 def generate_laporan(request):
