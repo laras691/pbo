@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Admin</title>
+    <style>
+        .menu { margin: 30px auto; max-width: 400px; }
+        .menu a { display: block; margin: 10px 0; padding: 12px; background: #007bff; color: #fff; text-decoration: none; border-radius: 5px; text-align: center; }
+        .menu a:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h2>Dashboard Admin</h2>
+    <div class="menu">
+        <a href="{% url 'kelola_buku' %}">Kelola Buku</a>
+        <a href="{% url 'kelola_kategori' %}">Kelola Kategori</a>
+        <a href="{% url 'kelola_pengunjung' %}">Kelola Pengunjung</a>
+        <a href="{% url 'admin_laporan' %}">Generate Laporan</a> <!-- perbaikan di sini -->
+    </div>
+</body>
+</html>
