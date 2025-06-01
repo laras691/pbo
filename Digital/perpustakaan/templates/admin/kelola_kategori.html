@@ -5,27 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Kelola Kategori</title>
     <style>
+        /* Reset dan Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(120deg, #e6eef6 0%, #b0c9e4 100%);
             margin: 0;
             padding: 0;
             min-height: 100vh;
+            color: #333;
         }
+
+        /* Topbar Styles */
+        .topbar {
+            background-color: #0051a8;
+            color: white;
+            padding: 0 24px;
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .topbar-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-box {
+            background-color: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .profile-box:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+
+        /* Main Container */
         .container {
             max-width: 1000px;
-            margin: 60px auto;
+            margin: 80px auto 40px;
             background: #fff;
             border-radius: 18px;
             box-shadow: 0 4px 24px rgba(176,201,228,0.18);
             padding: 36px 32px 32px 32px;
         }
+
         h1 {
             color: #0051a8;
             text-align: center;
             margin-bottom: 28px;
             letter-spacing: 1px;
         }
+
+        /* Form Styles */
         .form-container {
             background: #f5faff;
             padding: 24px;
@@ -33,15 +85,18 @@
             margin-bottom: 28px;
             border: 2px solid #d0ddee;
         }
+
         .form-group {
             margin-bottom: 20px;
         }
+
         label {
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
             color: #0051a8;
         }
+
         input[type="text"] {
             width: calc(100% - 32px);
             padding: 12px 16px;
@@ -53,16 +108,20 @@
             font-family: inherit;
             transition: border-color 0.2s;
         }
+
         input[type="text"]:focus {
             outline: none;
             border-color: #0051a8;
             box-shadow: 0 0 0 2px rgba(0,81,168,0.2);
         }
+
+        /* Button Styles */
         .button-group {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
         }
+
         button {
             color: #fff;
             border: none;
@@ -75,34 +134,44 @@
             transition: all 0.2s;
             white-space: nowrap;
         }
+
         .btn-save {
             background: #0051a8;
         }
+
         .btn-save:hover {
             background: #3a5fa8;
             transform: translateY(-1px);
         }
+
         .btn-edit {
             background: #2196F3;
         }
+
         .btn-edit:hover {
             background: #0b7dda;
             transform: translateY(-1px);
         }
+
         .btn-delete {
             background: #f44336;
         }
+
         .btn-delete:hover {
             background: #da190b;
             transform: translateY(-1px);
         }
+
         .btn-cancel {
             background: #888;
         }
+
         .btn-cancel:hover {
             background: #666;
             transform: translateY(-1px);
         }
+
+        /* Table Styles */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -111,32 +180,39 @@
             overflow: hidden;
             margin-top: 28px;
         }
+
         th, td {
             padding: 12px 16px;
             text-align: left;
             border-bottom: 1px solid #d0ddee;
         }
+
         th {
             background: #b0c9e4;
             color: #0051a8;
             font-weight: bold;
         }
+
         tr:nth-child(even) {
             background: #f5faff;
         }
+
         tr:nth-child(odd) {
             background: #e6eef6;
         }
+
         .kosong {
             text-align: center;
             color: #888;
             padding: 32px 0;
         }
+
         .action-cell {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
         }
+
         .category-name-cell {
             max-width: 300px;
             word-wrap: break-word;
@@ -144,33 +220,86 @@
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
+            .topbar {
+                padding: 0 16px;
+                height: 50px;
+            }
+            
+            .topbar-title {
+                font-size: 1.2rem;
+            }
+            
+            .profile-box {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+
             .container {
-                margin: 20px;
-                padding: 20px;
+                margin: 70px 20px 30px;
+                padding: 24px 16px;
                 max-width: calc(100% - 40px);
             }
+
             .form-container {
                 padding: 16px;
             }
+
             input[type="text"] {
                 width: calc(100% - 24px);
                 padding: 10px 12px;
             }
+
             button {
                 padding: 10px 16px;
                 font-size: 0.9rem;
             }
+
             th, td {
                 padding: 10px 12px;
                 font-size: 0.9rem;
             }
+
             .category-name-cell {
                 max-width: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .topbar-title {
+                font-size: 1rem;
+            }
+            
+            .container {
+                margin: 60px 12px 20px;
+                padding: 16px 12px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+            
+            .action-cell {
+                gap: 4px;
+            }
+            
+            .action-cell button {
+                padding: 8px 12px;
+                font-size: 0.8rem;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Top Navigation Bar -->
+    <div class="topbar">
+        <span class="topbar-title">📚 Litera.id - Admin</span>
+        <div class="profile-box" id="profileBtn">
+            👤 {{ user.username }}
+        </div>
+    </div>
+
+    <!-- Main Content -->
     <div class="container">
         <h1>Kelola Kategori</h1>
         
@@ -218,6 +347,7 @@
         const saveBtn = document.getElementById('save-btn');
         const cancelBtn = document.getElementById('cancel-btn');
         const categoryList = document.getElementById('category-list');
+        const profileBtn = document.getElementById('profileBtn');
 
         // Load categories to table
         function loadCategories() {
@@ -297,6 +427,12 @@
                 loadCategories();
             }
         };
+
+        // Profile Button Click
+        profileBtn.addEventListener('click', () => {
+            // Tambahkan fungsi untuk menangani klik profil
+            alert('Menu profil akan ditampilkan di sini');
+        });
 
         // Initial load
         loadCategories();
