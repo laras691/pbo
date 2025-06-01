@@ -113,16 +113,18 @@ def verifikasi_kode(request):
     return render(request, 'pengunjung/verifikasi.html', {'email': email})
 
 #Admin - perbaikan ID 
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
 def admin_custom(request):
     if request.method == 'POST':
         admin_id = request.POST.get('admin_id')
         password = request.POST.get('password')
         captcha = request.POST.get('captcha')
 
-        # Contoh data admin statis (sebaiknya dari database)
+        # Contoh validasi statis
         if admin_id == 'admin' and password == 'admin123' and captcha == '123456':
             messages.success(request, 'Login berhasil!')
-            # Redirect ke halaman admin dashboard
             return redirect('admin_dashboard')
         else:
             messages.error(request, 'ID, Password, atau Token salah.')
