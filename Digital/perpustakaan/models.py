@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.hashers import make_password, check_password
 
 class Kategori(models.Model):
     id_kategori = models.CharField(max_length=20, primary_key=True)
@@ -11,6 +12,10 @@ class Kategori(models.Model):
 class Buku(models.Model):
     id_buku = models.CharField(max_length=10, unique=True, default='0000')
     judul = models.CharField(max_length=255)
+    kode_buku = models.CharField(max_length=20, primary_key=True)
+    judul = models.CharField(max_length=200)
+    penulis = models.CharField(max_length=100, blank=True, null=True)
+
     stok = models.PositiveIntegerField(default=0)
    
     def __str__(self):
@@ -29,6 +34,18 @@ class Pengunjung(models.Model):
 
     def __str__(self):
         return self.nama
+
+    def editProfil(self, nama, email):
+        self.nama = nama
+        self.email = email
+        self.save()
+
+    def gantiPassword(self, passLama, passBaru):
+        if check_password(passLama, self.password):
+            self.password = make_password(passBaru)
+            self.save()
+            return True
+        return False
 
 class Peminjaman(models.Model):
     buku = models.ForeignKey(Buku, on_delete=models.CASCADE)

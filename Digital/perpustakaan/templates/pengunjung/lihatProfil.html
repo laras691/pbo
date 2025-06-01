@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Lihat Profil</title>
+</head>
+<body>
+    <h2>Profil Pengunjung</h2>
+    <table>
+        <tr><td>Nama</td><td>: {{ pengunjung.nama }}</td></tr>
+        <tr><td>Email</td><td>: {{ pengunjung.email }}</td></tr>
+        <tr><td>Nomor Anggota</td><td>: {{ pengunjung.nomor_anggota }}</td></tr>
+    </table>
+    <a href="{% url 'edit_profil' %}">Edit Profil</a> |
+    <a href="{% url 'ganti_password' %}">Ganti Password</a> |
+    <a href="{% url 'hapus_akun' %}">Hapus Akun</a> |
+    <a href="{% url 'beranda_pengunjung' %}">Kembali</a>
+</body>
+</html>
