@@ -1,10 +1,12 @@
 from django.contrib import admin
+from .models import Buku
 from .models import (
     Pengunjung, Admin, PinjamBuku, KembalikanBuku,
     GagalPinjam, NotifikasiBerhasil,
     Kategori, Peminjaman, Laporan
 )
 
+admin.site.register(Buku)
 admin.site.register(Pengunjung)
 admin.site.register(Admin)
 admin.site.register(PinjamBuku)

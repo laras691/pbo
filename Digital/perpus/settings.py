@@ -97,6 +97,8 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
+SESSION_COOKIE_SAMESITE = 'Lax'
+
 # File upload/media jika diperlukan
 # MEDIA_URL = '/media/'
 # MEDIA_ROOT = BASE_DIR / 'media'
