@@ -9,8 +9,8 @@ class Kategori(models.Model):
         return self.nama
 
 class Buku(models.Model):
-    id_buku = models.CharField(max_length=20, primary_key=True)
-    judul = models.CharField(max_length=200)
+    kode_buku = models.CharField(max_length=10, unique=True, default='0000')
+    judul = models.CharField(max_length=255)
     penulis = models.CharField(max_length=100, blank=True, null=True)
     stok = models.PositiveIntegerField(default=0)
     kategori = models.ForeignKey(Kategori, on_delete=models.SET_NULL, null=True, blank=True)
@@ -34,15 +34,14 @@ class Pengunjung(models.Model):
         return self.nama
 
 class Peminjaman(models.Model):
-    pengunjung = models.ForeignKey(Pengunjung, on_delete=models.CASCADE)
     buku = models.ForeignKey(Buku, on_delete=models.CASCADE)
-    tanggal_pinjam = models.DateField(auto_now_add=True)
-    tanggal_kembali = models.DateField(null=True, blank=True)
+    pengunjung = models.ForeignKey(Pengunjung, on_delete=models.CASCADE)
     status = models.CharField(max_length=20, choices=[
-        ('dipinjam', 'Dipinjam'),
-        ('dikembalikan', 'Dikembalikan'),
-        ('gagal', 'Gagal'),
+        ('Belum Kembali', 'Belum Kembali'),
+        ('Kembali', 'Kembali')
     ])
+    tanggal_pinjam = models.DateField()
+    tanggal_kembali = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.pengunjung.nama} - {self.buku.judul} ({self.status})"
