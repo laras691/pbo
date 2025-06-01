@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Status Peminjaman</title>
+</head>
+<body>
+    <h1>Update Status Peminjaman</h1>
+    <form method="post" action="{% url 'update_status_peminjaman' peminjaman.id %}">
+        {% csrf_token %}
+        <p>
+            <strong>Nama Peminjam:</strong> {{ peminjaman.nama_peminjam }}
+        </p>
+        <p>
+            <strong>Judul Buku:</strong> {{ peminjaman.judul_buku }}
+        </p>
+        <p>
+            <label for="status">Status:</label>
+            <select name="status" id="status">
+                <option value="Dipinjam" {% if peminjaman.status == "Dipinjam" %}selected{% endif %}>Dipinjam</option>
+                <option value="Dikembalikan" {% if peminjaman.status == "Dikembalikan" %}selected{% endif %}>Dikembalikan</option>
+                <option value="Terlambat" {% if peminjaman.status == "Terlambat" %}selected{% endif %}>Terlambat</option>
+            </select>
+        </p>
+        <button type="submit">Update</button>
+    </form>
+    <p>
+        <a href="{% url 'pinjamBuku' %}">Pinjam Buku</a> |
+        <a href="{% url 'kembalikanBuku' %}">Kembalikan Buku</a>
+    </p>
+</body>
+</html>
