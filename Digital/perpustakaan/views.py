@@ -113,10 +113,7 @@ def verifikasi_kode(request):
             messages.error(request, 'Kode verifikasi salah.')
     return render(request, 'pengunjung/verifikasi.html', {'email': email})
 
-#Admin - perbaikan ID 
-from django.shortcuts import render, redirect
-from django.contrib import messages
-
+#ADmin - custom login
 def admin_custom(request):
     if request.method == 'POST':
         admin_id = request.POST.get('admin_id')
@@ -126,15 +123,12 @@ def admin_custom(request):
         # Contoh validasi statis
         if admin_id == 'admin' and password == 'admin123' and captcha == '123456':
             messages.success(request, 'Login berhasil!')
-            return redirect('admin_dashboard')
+            # Redirect langsung ke halaman admin buku, bukan dashboard
+            return redirect(reverse('admin:perpustakaan_buku_changelist'))
         else:
             messages.error(request, 'ID, Password, atau Token salah.')
 
     return render(request, 'admin/admin_login.html')
-
-def admin_dashboard(request):
-    # Redirect langsung ke halaman daftar buku di admin
-    return redirect(reverse('admin:perpustakaan_buku_changelist'))
 
 #Admin - Generate Laporan
 def generate_laporan(request):
