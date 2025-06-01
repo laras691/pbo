@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Kelola Buku</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #888; padding: 8px; text-align: left; }
+        th { background: #f0f0f0; }
+        .btn { padding: 4px 10px; background: #007bff; color: #fff; text-decoration: none; border-radius: 3px; }
+        .btn-danger { background: #dc3545; }
+    </style>
+</head>
+<body>
+    <h2>Kelola Buku</h2>
+    <a href="{% url 'tambah_buku' %}" class="btn">Tambah Buku</a>
+    <br><br>
+    <table>
+        <tr>
+            <th>Judul</th>
+            <th>Stok</th>
+            <th>Aksi</th>
+        </tr>
+        {% for buku in daftar_buku %}
+        <tr>
+            <td>{{ buku.judul }}</td>
+            <td>{{ buku.stok }}</td>
+            <td>
+                <a href="{% url 'edit_buku' buku.id_buku %}" class="btn">Edit</a>
+                <a href="{% url 'hapus_buku' buku.id_buku %}" class="btn btn-danger">Hapus</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">Tidak ada buku.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

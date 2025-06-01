@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Buku, Peminjaman, Pengunjung, Admin, Laporan, PinjamBuku
+from .models import Buku, Peminjaman, Pengunjung, Admin, Laporan, PinjamBuku, Kategori
 from .forms import LoginForm, RegisterForm
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 from django.db import IntegrityError
 from django.core.mail import send_mail
 import random
-from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.template.loader import get_template
 from datetime import date
@@ -114,19 +113,64 @@ def verifikasi_kode(request):
             messages.error(request, 'Kode verifikasi salah.')
     return render(request, 'pengunjung/verifikasi.html', {'email': email})
 
+#ADmin - custom login
 def admin_custom(request):
     if request.method == 'POST':
         admin_id = request.POST.get('admin_id')
         password = request.POST.get('password')
         captcha = request.POST.get('captcha')
 
-        if admin_id == 'admin' and password == 'admin123' and captcha == '123456':
-            messages.success(request, 'Login berhasil!')
-            return redirect(reverse('kelola_buku'))
-        else:
-            messages.error(request, 'ID, Password, atau Token salah.')
+    if admin_id == 'admin' and password == 'admin123' and captcha == '123456':
+        messages.success(request, 'Login berhasil!')
+        # Redirect langsung ke halaman dashboard admin
+        return redirect(reverse('dashboard_admin'))
+    else:
+        messages.error(request, 'ID, Password, atau Token salah.')
+    return render(request, 'admin/admin.html')
+#Admin- dashboard
+def dashboard_admin(request):
+    return render(request, 'admin/dashboard_admin.html') 
 
-    return render(request, 'admin/admin_login.html')
+# Admin – Kelola Buku
+def kelola_buku(request):
+    daftar_buku = PinjamBuku.objects.all()
+    return render(request, 'admin/kelola_buku.html', {'daftar_buku': daftar_buku})
+
+def tambah_buku(request):
+    if request.method == 'POST':
+        judul = request.POST['judul']
+        stok = int(request.POST['stok'])
+        id_buku = judul.lower().replace(' ', '-')[:10]
+        PinjamBuku.objects.create(id_buku=id_buku, judul=judul, stok=stok)
+        return redirect('kelola_buku')
+    return render(request, 'admin/kelola_buku.html')
+
+def edit_buku(request, id_buku):
+    buku = get_object_or_404(PinjamBuku, id_buku=id_buku)
+    if request.method == 'POST':
+        buku.judul = request.POST['judul']
+        buku.stok = int(request.POST['stok'])
+        buku.save()
+        return redirect('kelola_buku')
+    return render(request, 'admin/kelola_buku.html', {'buku': buku})
+
+def hapus_buku(request, id_buku):
+    buku = get_object_or_404(PinjamBuku, id_buku=id_buku)
+    buku.delete()
+    return redirect('kelola_buku')
+
+# Admin - kelola kategori
+def kelola_kategori(request):
+    daftar_kategori = Kategori.objects.all()
+    return render(request, 'admin/kelola_kategori.html', {'daftar_kategori': daftar_kategori})
+#kelola_pengunjung
+def kelola_pengunjung(request):
+    # Sementara hanya tampilkan halaman kosong
+    return render(request, 'admin/kelola_pengunjung.html')
+
+# return render(request, 'admin/admin_login.html')  # Removed because it was outside any function
+
+#Admin dashboard
 def admin_dashboard(request):
     total_buku = Buku.objects.count()
     buku_dipinjam = Peminjaman.objects.filter(status='Dipinjam').count()
@@ -194,34 +238,6 @@ def generate_laporan(request):
     
     context = {'section': 'laporan'}
     return render(request, 'admin/kelola_buku.html', context)
-    
-# Admin – Kelola Buku
-def kelola_buku(request):
-    daftar_buku = PinjamBuku.objects.all()
-    return render(request, 'admin/kelola_buku.html', {'daftar_buku': daftar_buku})
-
-def tambah_buku(request):
-    if request.method == 'POST':
-        judul = request.POST['judul']
-        stok = int(request.POST['stok'])
-        id_buku = judul.lower().replace(' ', '-')[:10]
-        PinjamBuku.objects.create(id_buku=id_buku, judul=judul, stok=stok)
-        return redirect('kelola_buku')
-    return render(request, 'admin/kelola_buku.html')
-
-def edit_buku(request, id_buku):
-    buku = get_object_or_404(PinjamBuku, id_buku=id_buku)
-    if request.method == 'POST':
-        buku.judul = request.POST['judul']
-        buku.stok = int(request.POST['stok'])
-        buku.save()
-        return redirect('kelola_buku')
-    return render(request, 'admin/kelola_buku.html', {'buku': buku})
-
-def hapus_buku(request, id_buku):
-    buku = get_object_or_404(PinjamBuku, id_buku=id_buku)
-    buku.delete()
-    return redirect('kelola_buku')
 
 def lupa_password(request):
     if request.method == 'POST':
@@ -240,6 +256,8 @@ def lupa_password(request):
             messages.error(request, 'Email tidak terdaftar.')
     return render(request, 'pengunjung/lupaPassword.html')
 
+
+#Admin custom login
 def admin_custom_login(request):
     return render(request, 'admin/admin_login.html')
 
