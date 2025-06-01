@@ -252,6 +252,10 @@ def lupa_password(request):
 def admin_custom_login(request):
     
     return render(request, 'admin/admin_login.html')
+
+def admin_dashboard(request):
+    print("Dashboard admin dipanggil")
+    ...
     
 
 def lihat_daftar_buku(request):
