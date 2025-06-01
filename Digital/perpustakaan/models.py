@@ -9,13 +9,10 @@ class Kategori(models.Model):
         return self.nama
 
 class Buku(models.Model):
-    kode_buku = models.CharField(max_length=10, unique=True, default='0000')
+    id_buku = models.CharField(max_length=10, unique=True, default='0000')
     judul = models.CharField(max_length=255)
-    penulis = models.CharField(max_length=100, blank=True, null=True)
     stok = models.PositiveIntegerField(default=0)
-    kategori = models.ForeignKey(Kategori, on_delete=models.SET_NULL, null=True, blank=True)
-    cover_url = models.URLField(default='https://via.placeholder.com/150', blank=True)
-
+   
     def __str__(self):
         return self.judul
 
@@ -55,7 +52,7 @@ class Admin(models.Model):
 
 class Laporan(models.Model):
     id_laporan = models.CharField(max_length=20, primary_key=True)
-    tanggal_dibuat = models.DateField(auto_now_add=True)
+    tanggal_dibuat = models.DateField(null=True, blank=True)
     jenis = models.CharField(max_length=100)
     isi = models.TextField()
 

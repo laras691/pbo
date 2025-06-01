@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Buku, Peminjaman, Pengunjung, Admin, Laporan, PinjamBuku, Kategori
-from .forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm, LaporanForm
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 from django.db import IntegrityError
@@ -126,6 +126,7 @@ def admin_custom(request):
         else:
             messages.error(request, 'ID, Password, atau Token salah.')
     return render(request, 'admin/admin.html')
+
 #Admin- dashboard
 def dashboard_admin(request):
     return render(request, 'admin/dashboard_admin.html') 
@@ -142,7 +143,9 @@ def tambah_buku(request):
         id_buku = judul.lower().replace(' ', '-')[:10]
         PinjamBuku.objects.create(id_buku=id_buku, judul=judul, stok=stok)
         return redirect('kelola_buku')
-    return render(request, 'admin/kelola_buku.html')
+    # Perbaikan di sini: form didefinisikan untuk GET
+    form = None  # Atau buat form manual jika ingin pakai Django Form
+    return render(request, 'admin/tambah_buku.html', {'form': form})
 
 def edit_buku(request, id_buku):
     buku = get_object_or_404(PinjamBuku, id_buku=id_buku)
@@ -162,6 +165,7 @@ def hapus_buku(request, id_buku):
 def kelola_kategori(request):
     daftar_kategori = Kategori.objects.all()
     return render(request, 'admin/kelola_kategori.html', {'daftar_kategori': daftar_kategori})
+
 #kelola_pengunjung
 def kelola_pengunjung(request):
     # Sementara hanya tampilkan halaman kosong
@@ -208,6 +212,28 @@ def admin_dashboard(request):
     }
     return render(request, 'admin/custom_dashboard.html', context)
 
+#admin-daftar laporan 
+def daftar_laporan(request):
+    daftar = Laporan.objects.all()
+    return render(request, 'admin/daftar_laporan.html', {'daftar': daftar})
+
+#admin - cetak & edit laporan
+def cetak_laporan(request, id_laporan):
+    laporan = get_object_or_404(Laporan, id_laporan=id_laporan)
+    # Render ke template khusus cetak, atau gunakan template yang sama
+    return render(request, 'admin/laporan_pdf.html', {'laporan': laporan})
+
+def edit_laporan(request, id_laporan):
+    laporan = get_object_or_404(Laporan, id_laporan=id_laporan)
+    if request.method == 'POST':
+        form = LaporanForm(request.POST, instance=laporan)
+        if form.is_valid():
+            form.save()
+            return redirect('daftar-laporan')
+    else:
+        form = LaporanForm(instance=laporan)
+    return render(request, 'admin/edit_laporan.html', {'form': form, 'laporan': laporan})
+
 #Admin - Generate Laporan
 def generate_laporan(request):
     # Fitur PDF di-nonaktifkan karena xhtml2pdf dihapus
@@ -235,10 +261,10 @@ def generate_laporan(request):
             'section': 'laporan',
         }
         # Render ke halaman HTML biasa, bukan PDF
-        return render(request, 'admin/laporan_html.html', context)
+        return render(request, 'admin/laporan_pdf.html', context)
     
     context = {'section': 'laporan'}
-    return render(request, 'admin/kelola_buku.html', context)
+    return render(request, 'admin/laporan_pdf.html', context)  # << PERBAIKAN DI SINI
 
 def lupa_password(request):
     if request.method == 'POST':

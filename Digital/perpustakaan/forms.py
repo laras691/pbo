@@ -1,6 +1,5 @@
 from django import forms
-from .models import Pengunjung
-from .models import Buku
+from .models import Pengunjung, Buku, Laporan
 
 class LoginForm(forms.Form):
     email = forms.EmailField(label='Email')
@@ -16,7 +15,42 @@ class RegisterForm(forms.Form):
 class BukuForm(forms.ModelForm):
     class Meta:
         model = Buku
-        fields = ['kode_buku', 'judul', 'penulis', 'stok', 'kategori', 'stok', 'cover_url']
+        fields = ['id_buku', 'judul',  'stok']
         widgets = {
             'tahun_terbit': forms.NumberInput(attrs={'min': 1900, 'max': 2100}),
         }
+
+class LaporanForm(forms.ModelForm):
+    class Meta:
+        model = Laporan
+        fields = ['id_laporan', 'tanggal_dibuat','jenis', 'isi']
+        widgets = {
+            'id_laporan': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Masukkan id laporan',
+                'rows': 5
+            }),
+            'tanggal_dibuat': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Masukkan tanggal dibuat laporan',
+                'rows': 5
+            }),
+            'jenis': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Masukkan jenis laporan'
+            }),
+            'isi': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Masukkan isi laporan',
+                'rows': 5
+            }),
+        }
+        labels = {
+            'id_laporan' :'ID Laporan',
+            'tanggal_dibuat': 'Tanggal Dibuat',
+            'jenis': 'Jenis Laporan',
+            'isi': 'Isi Laporan'
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(LaporanForm, self).__init__(*args, **kwargs)

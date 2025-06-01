@@ -1,21 +1,263 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Admin</title>
+    <title>Dashboard Admin - Litera.id</title>
     <style>
-        .menu { margin: 30px auto; max-width: 400px; }
-        .menu a { display: block; margin: 10px 0; padding: 12px; background: #007bff; color: #fff; text-decoration: none; border-radius: 5px; text-align: center; }
-        .menu a:hover { background: #0056b3; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(120deg, #e6eef6 0%, #b0c9e4 100%);
+            min-height: 100vh;
+        }
+
+        .topbar {
+            width: 100vw;
+            background: #0051a8;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            height: 60px;
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .topbar-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .profile-box {
+            margin-right: 32px;
+            background-color: #b0c9e4;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            box-shadow: 0 0 12px rgba(176,201,228,0.13);
+            color: #3a5fa8;
+            font-size: 1.1rem;
+            border: 2px solid #e6eef6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 0;
+        }
+
+        .content {
+            margin-top: 80px;
+            padding: 30px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .admin-title {
+            font-size: 28px;
+            color: #3a5fa8;
+            margin-bottom: 30px;
+            text-align: center;
+            text-shadow: 1px 1px 0 #b0c9e4;
+        }
+
+        .admin-menu {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .menu-card {
+            background: #fff;
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(176,201,228,0.18);
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 2px solid #b0c9e4;
+            cursor: pointer;
+            text-decoration: none;
+            color: #0051a8;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(176,201,228,0.22);
+            background: #e6eef6;
+        }
+
+        .menu-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+            color: #3a5fa8;
+        }
+
+        .menu-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .menu-desc {
+            font-size: 14px;
+            color: #5a7bbd;
+        }
+
+        @media (max-width: 700px) {
+            .admin-menu {
+                grid-template-columns: 1fr;
+            }
+            
+            .topbar {
+                padding: 0 16px;
+            }
+            
+            .profile-box {
+                margin-right: 16px;
+                width: 40px;
+                height: 40px;
+                font-size: 0.9rem;
+            }
+            
+            .content {
+                padding: 20px 16px;
+            }
+        }
+
+        #logout-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.25);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px 28px;
+            box-shadow: 0 4px 24px rgba(0,81,168,0.18);
+            text-align: center;
+            min-width: 300px;
+        }
+
+        .modal-title {
+            color: #0051a8;
+            margin-bottom: 18px;
+        }
+
+        .modal-buttons {
+            margin-top: 24px;
+        }
+
+        .modal-btn {
+            padding: 10px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 0 6px;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #0051a8;
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: #b0c9e4;
+            color: #0051a8;
+        }
     </style>
 </head>
 <body>
-    <h2>Dashboard Admin</h2>
-    <div class="menu">
-        <a href="{% url 'kelola_buku' %}">Kelola Buku</a>
-        <a href="{% url 'kelola_kategori' %}">Kelola Kategori</a>
-        <a href="{% url 'kelola_pengunjung' %}">Kelola Pengunjung</a>
-        <a href="{% url 'admin_laporan' %}">Generate Laporan</a> <!-- perbaikan di sini -->
+    <div class="topbar">
+        <span class="topbar-title">📚 Litera.id - Admin</span>
+        <div class="profile-box" id="profileBtn">
+            👤 {{ user.username }}
+        </div>
     </div>
+
+    <div class="content">
+        <h1 class="admin-title">Dashboard Administrator</h1>
+        
+        <div class="admin-menu">
+            <a href="{% url 'kelola_buku' %}" class="menu-card">
+                <div class="menu-icon">📖</div>
+                <h3 class="menu-title">Kelola Buku</h3>
+                <p class="menu-desc">Manajemen koleksi buku perpustakaan</p>
+            </a>
+            
+            <a href="{% url 'kelola_kategori' %}" class="menu-card">
+                <div class="menu-icon">🏷️</div>
+                <h3 class="menu-title">Kelola Kategori</h3>
+                <p class="menu-desc">Kelola kategori dan klasifikasi buku</p>
+            </a>
+            
+            <a href="{% url 'kelola_pengunjung' %}" class="menu-card">
+                <div class="menu-icon">👥</div>
+                <h3 class="menu-title">Kelola Pengunjung</h3>
+                <p class="menu-desc">Manajemen data anggota perpustakaan</p>
+            </a>
+            
+            <a href="{% url 'admin_laporan' %}" class="menu-card">
+                <div class="menu-icon">📊</div>
+                <h3 class="menu-title">Generate Laporan</h3>
+                <p class="menu-desc">Buat laporan aktivitas perpustakaan</p>
+            </a>
+        </div>
+    </div>
+
+    <div id="logout-modal">
+        <div class="modal-content">
+            <h3 class="modal-title">Konfirmasi Keluar</h3>
+            <p>Apakah Anda yakin ingin keluar dari sistem?</p>
+            <div class="modal-buttons">
+                <button id="logout-yes" class="modal-btn btn-primary">Ya</button>
+                <button id="logout-no" class="modal-btn btn-secondary">Tidak</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Logout modal logic
+        const profileBtn = document.getElementById('profileBtn');
+        const logoutModal = document.getElementById('logout-modal');
+        const logoutYes = document.getElementById('logout-yes');
+        const logoutNo = document.getElementById('logout-no');
+
+        profileBtn.addEventListener('click', function() {
+            logoutModal.style.display = 'flex';
+        });
+
+        logoutYes.addEventListener('click', function() {
+            window.location.href = "{% url 'logout' %}";
+        });
+
+        logoutNo.addEventListener('click', function() {
+            logoutModal.style.display = 'none';
+        });
+
+        // Close modal when clicking outside
+        logoutModal.addEventListener('click', function(e) {
+            if (e.target === logoutModal) {
+                logoutModal.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
