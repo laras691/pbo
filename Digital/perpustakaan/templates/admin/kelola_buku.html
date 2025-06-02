@@ -413,11 +413,13 @@
         </div>
 
         <table class="table">
-            <thead>
+            <thead> 
                 <tr>
                     <th>Id_buku</th>
                     <th>Judul</th>
+                    <th>Kategori</th> <!-- Tambahan -->
                     <th>Stok</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -425,6 +427,7 @@
                 <tr>
                     <td>{{ buku.id_buku }}</td>
                     <td>{{ buku.judul }}</td>
+                    <td>{{ buku.kategori }}</td> <!-- Tambahan -->
                     <td>{{ buku.stok }}</td>
                     <td class="action-buttons">
                         <a href="{% url 'edit-buku' buku.id %}" class="btn btn-warning action-btn">Edit</a>
@@ -434,7 +437,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="4" class="kosong">Tidak ada data buku</td>
+                    <td colspan="5" class="kosong">Tidak ada data buku</td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -10,6 +10,7 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from datetime import date
 from django.urls import path, reverse
+from perpustakaan.models import Kategori
 
 # Halaman utama
 def daftar_buku(request):
@@ -138,13 +139,28 @@ def kelola_buku(request):
     return render(request, 'admin/kelola_buku.html', {'daftar_buku': daftar_buku})
 
 def tambah_buku(request):
+    from .models import Kategori
+    daftar_kategori = Kategori.objects.all()
     if request.method == 'POST':
-        id_buku = request.POST['id_buku']  # Pastikan baris ini ada!
-        judul = request.POST['judul']
-        stok = int(request.POST['stok'])
-        PinjamBuku.objects.create(id_buku=id_buku, judul=judul, stok=stok)
+        id_buku = request.POST.get('id_buku')
+        judul = request.POST.get('judul')
+        kategori_id = request.POST.get('kategori')
+        stok = request.POST.get('stok')
+
+        try:
+            kategori_obj = Kategori.objects.get(id_kategori=kategori_id)
+        except Kategori.DoesNotExist:
+            messages.error(request, "Kategori tidak ditemukan.")
+            return render(request, 'admin/tambah_buku.html', {'daftar_kategori': daftar_kategori})
+
+        Buku.objects.create(
+            id_buku=id_buku,
+            judul=judul,
+            kategori=kategori_obj,
+            stok=stok
+        )
         return redirect('kelola_buku')
-    return render(request, 'admin/tambah_buku.html')
+    return render(request, 'admin/tambah_buku.html', {'daftar_kategori': daftar_kategori})
 
 def edit_buku(request, id_buku):
     buku = get_object_or_404(PinjamBuku, id_buku=id_buku)
@@ -537,3 +553,13 @@ def edit_profil_pengunjung(request):
         pengunjung.save()
         return redirect('lihat_profil')
     return render(request, 'pengunjung/editProfil.html', {'pengunjung': pengunjung})
+
+print(Kategori.objects.all())
+# Admin - kelola kategori
+def kelola_kategori(request):
+    daftar_kategori = Kategori.objects.all()
+    return render(request, 'admin/kelola_kategori.html', {'daftar_kategori': daftar_kategori})
+
+#kelola_pengunjung
+def kelola(request):
+    pass
