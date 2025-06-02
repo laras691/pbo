@@ -271,6 +271,7 @@ def lupa_password(request):
 
 #lihat Profil
 def lihat_profil(request):
+
     # Jika ingin menampilkan data admin, ambil dari session atau model Admin
     # admin = get_object_or_404(Admin, id_admin=request.session.get('admin_id'))
     # return render(request, 'admin/profil.html', {'admin': admin})
