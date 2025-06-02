@@ -270,14 +270,21 @@ def lupa_password(request):
     return render(request, 'pengunjung/lupaPassword.html')
 
 #lihat Profil
-#lihat Profil
 def lihat_profil(request):
+<<<<<<< HEAD
     return render(request, 'pengunjung/lihatProfil.html')
     return render(request, 'pengunjung/lihatProfil.html')
+=======
+
+    # Jika ingin menampilkan data admin, ambil dari session atau model Admin
+    # admin = get_object_or_404(Admin, id_admin=request.session.get('admin_id'))
+    # return render(request, 'admin/profil.html', {'admin': admin})
+    
+>>>>>>> 7255b224e626b2b13f10e21350ed263b08026d84
     return render(request, 'admin/lihat_profil.html')
 
 def edit_profil(request):
-    return render(request, 'pengunjung/editProfil.html')
+    return render(request, 'admin/edit_profil.html')
 
 def ganti_password(request):
     if request.method == 'POST':
