@@ -1,5 +1,6 @@
 from django.urls import path
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Pengunjung
 from . import views
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LogoutView
@@ -60,4 +61,5 @@ urlpatterns = [
     path('profil/edit/', views.edit_profil, name='edit_profil'),
     path('profil/ganti-password/', views.ganti_password, name='ganti_password'),
     path('profil/hapus/', views.hapus_akun, name='hapus_akun'),
+    path('edit-profil/', views.edit_profil_pengunjung, name='edit_profil')
 ]
