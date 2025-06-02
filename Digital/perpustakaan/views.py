@@ -274,6 +274,7 @@ def lihat_profil(request):
     pengunjung_id = request.session.get('pengunjung_id')
     pengunjung = Pengunjung.objects.get(id=pengunjung_id)
     return render(request, 'pengunjung/lihatProfil.html', {'pengunjung': pengunjung})
+    return render(request, 'admin/lihat_profil.html')
 
 def edit_profil(request):
     return render(request, 'pengunjung/editProfil.html')
