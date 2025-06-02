@@ -22,7 +22,7 @@
             line-height: 1.6;
         }
 
-        /* Topbar Styles (now exactly matching the first design) */
+        /* Topbar Styles */
         .topbar {
             background-color: #0051a8;
             color: white;
@@ -46,6 +46,7 @@
             gap: 10px;
         }
 
+        /* Improved Profile Section */
         .profile-box {
             background-color: rgba(255,255,255,0.2);
             padding: 8px 16px;
@@ -59,6 +60,32 @@
 
         .profile-box:hover {
             background-color: rgba(255,255,255,0.3);
+        }
+
+        .profile-content {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-links {
+            display: flex;
+            margin-left: 12px;
+            padding-left: 12px;
+            border-left: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .profile-links a {
+            color: #c2d6f0;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            margin: 0 6px;
+            white-space: nowrap;
+        }
+
+        .profile-links a:hover {
+            color: #fff;
+            text-decoration: underline;
         }
 
         /* Main Content */
@@ -201,7 +228,11 @@
             
             .profile-box {
                 padding: 6px 12px;
-                font-size: 0.9rem;
+            }
+
+            .profile-links a {
+                font-size: 0.85rem;
+                margin: 0 4px;
             }
 
             .content {
@@ -223,6 +254,34 @@
         @media (max-width: 480px) {
             .topbar-title {
                 font-size: 1rem;
+            }
+            
+            .profile-box {
+                flex-direction: column;
+                align-items: flex-end;
+                padding: 6px 8px;
+            }
+            
+            .profile-content {
+                flex-direction: column;
+                align-items: flex-end;
+            }
+            
+            .profile-links {
+                border-left: none;
+                border-top: 1px solid rgba(255,255,255,0.3);
+                margin-left: 0;
+                padding-left: 0;
+                padding-top: 4px;
+                margin-top: 4px;
+                flex-direction: column;
+                align-items: flex-end;
+            }
+            
+            .profile-links a {
+                font-size: 0.75rem;
+                line-height: 1.4;
+                margin: 2px 0;
             }
             
             .content {
@@ -248,14 +307,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Top Navigation Bar (now exactly matching the first design) -->
+    <!-- Top Navigation Bar -->
     <div class="topbar">
         <span class="topbar-title">📚 Litera.id - Admin</span>
         <div class="profile-box" id="profileBtn">
-            👤 {{ user.username }}
+            <div class="profile-content">
+                <span>👤 {{ admin_id }}</span>
+                <div class="profile-links">
+                    <a href="{% url 'lihat-profil' %}">Lihat Profil</a>
+                    <a href="{% url 'edit-profil' %}">Edit Profil</a>
+                </div>
+            </div>
         </div>
     </div>
-       
+    
     <div class="content">
         <h1 class="admin-title">Dashboard Administrator</h1>
         
