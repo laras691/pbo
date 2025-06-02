@@ -5,53 +5,63 @@
     <meta charset="UTF-8">
     <title>Dashboard Admin - Litera.id</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        /* Reset dan Base Styles */
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(120deg, #e6eef6 0%, #b0c9e4 100%);
+            margin: 0;
+            padding: 0;
             min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
         }
 
+        /* Topbar Styles (now exactly matching the first design) */
         .topbar {
-            width: 100vw;
-            background: #0051a8;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 32px;
+            background-color: #0051a8;
+            color: white;
+            padding: 0 24px;
             height: 60px;
-            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: fixed;
+            width: 100%;
             top: 0;
-            left: 0;
             z-index: 1000;
         }
 
         .topbar-title {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: bold;
-            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .profile-box {
-            margin-right: 32px;
-            background-color: #b0c9e4;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            box-shadow: 0 0 12px rgba(176,201,228,0.13);
-            color: #3a5fa8;
-            font-size: 1.1rem;
-            border: 2px solid #e6eef6;
+            background-color: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            padding: 0;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
+        .profile-box:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+
+        /* Main Content */
         .content {
             margin-top: 80px;
             padding: 30px 40px;
@@ -62,10 +72,10 @@
 
         .admin-title {
             font-size: 28px;
-            color: #3a5fa8;
+            color: #0051a8;
             margin-bottom: 30px;
             text-align: center;
-            text-shadow: 1px 1px 0 #b0c9e4;
+            letter-spacing: 0.5px;
         }
 
         .admin-menu {
@@ -83,7 +93,7 @@
             box-shadow: 0 4px 12px rgba(176,201,228,0.18);
             text-align: center;
             transition: transform 0.2s, box-shadow 0.2s;
-            border: 2px solid #b0c9e4;
+            border: 2px solid #d0ddee;
             cursor: pointer;
             text-decoration: none;
             color: #0051a8;
@@ -92,13 +102,13 @@
         .menu-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 24px rgba(176,201,228,0.22);
-            background: #e6eef6;
+            background: #f5faff;
         }
 
         .menu-icon {
             font-size: 36px;
             margin-bottom: 12px;
-            color: #3a5fa8;
+            color: #0051a8;
         }
 
         .menu-title {
@@ -112,27 +122,7 @@
             color: #5a7bbd;
         }
 
-        @media (max-width: 700px) {
-            .admin-menu {
-                grid-template-columns: 1fr;
-            }
-            
-            .topbar {
-                padding: 0 16px;
-            }
-            
-            .profile-box {
-                margin-right: 16px;
-                width: 40px;
-                height: 40px;
-                font-size: 0.9rem;
-            }
-            
-            .content {
-                padding: 20px 16px;
-            }
-        }
-
+        /* Modal Styles */
         #logout-modal {
             display: none;
             position: fixed;
@@ -153,24 +143,30 @@
             box-shadow: 0 4px 24px rgba(0,81,168,0.18);
             text-align: center;
             min-width: 300px;
+            max-width: 90%;
         }
 
         .modal-title {
             color: #0051a8;
             margin-bottom: 18px;
+            font-size: 1.3rem;
         }
 
         .modal-buttons {
             margin-top: 24px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
         }
 
         .modal-btn {
-            padding: 10px 28px;
+            padding: 10px 24px;
             border-radius: 8px;
             font-size: 1rem;
             cursor: pointer;
-            margin: 0 6px;
             border: none;
+            font-weight: bold;
+            transition: all 0.2s ease;
         }
 
         .btn-primary {
@@ -178,57 +174,130 @@
             color: #fff;
         }
 
+        .btn-primary:hover {
+            background: #003d7a;
+        }
+
         .btn-secondary {
-            background: #b0c9e4;
+            background: #e6eef6;
             color: #0051a8;
+            border: 1px solid #d0ddee;
+        }
+
+        .btn-secondary:hover {
+            background: #d0ddee;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .topbar {
+                padding: 0 16px;
+                height: 50px;
+            }
+            
+            .topbar-title {
+                font-size: 1.2rem;
+            }
+            
+            .profile-box {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+
+            .content {
+                margin-top: 70px;
+                padding: 20px 16px;
+            }
+            
+            .admin-menu {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .admin-title {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .topbar-title {
+                font-size: 1rem;
+            }
+            
+            .content {
+                margin-top: 60px;
+                padding: 16px 12px;
+            }
+            
+            .menu-card {
+                padding: 20px 16px;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .modal-btn {
+                width: 100%;
+            }
         }
     </style>
+    <!-- Font Awesome untuk icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- Top Navigation Bar (now exactly matching the first design) -->
     <div class="topbar">
         <span class="topbar-title">📚 Litera.id - Admin</span>
         <div class="profile-box" id="profileBtn">
             👤 {{ user.username }}
         </div>
     </div>
-
+       
     <div class="content">
         <h1 class="admin-title">Dashboard Administrator</h1>
         
         <div class="admin-menu">
             <a href="{% url 'kelola_buku' %}" class="menu-card">
-                <div class="menu-icon">📖</div>
+                <div class="menu-icon"><i class="fas fa-book"></i></div>
                 <h3 class="menu-title">Kelola Buku</h3>
                 <p class="menu-desc">Manajemen koleksi buku perpustakaan</p>
             </a>
             
             <a href="{% url 'kelola_kategori' %}" class="menu-card">
-                <div class="menu-icon">🏷️</div>
+                <div class="menu-icon"><i class="fas fa-tags"></i></div>
                 <h3 class="menu-title">Kelola Kategori</h3>
                 <p class="menu-desc">Kelola kategori dan klasifikasi buku</p>
             </a>
             
             <a href="{% url 'kelola_pengunjung' %}" class="menu-card">
-                <div class="menu-icon">👥</div>
+                <div class="menu-icon"><i class="fas fa-users"></i></div>
                 <h3 class="menu-title">Kelola Pengunjung</h3>
                 <p class="menu-desc">Manajemen data anggota perpustakaan</p>
             </a>
             
             <a href="{% url 'admin_laporan' %}" class="menu-card">
-                <div class="menu-icon">📊</div>
+                <div class="menu-icon"><i class="fas fa-chart-bar"></i></div>
                 <h3 class="menu-title">Generate Laporan</h3>
                 <p class="menu-desc">Buat laporan aktivitas perpustakaan</p>
             </a>
         </div>
     </div>
 
+    <!-- Logout Modal -->
     <div id="logout-modal">
         <div class="modal-content">
             <h3 class="modal-title">Konfirmasi Keluar</h3>
             <p>Apakah Anda yakin ingin keluar dari sistem?</p>
             <div class="modal-buttons">
-                <button id="logout-yes" class="modal-btn btn-primary">Ya</button>
-                <button id="logout-no" class="modal-btn btn-secondary">Tidak</button>
+                <button id="logout-no" class="modal-btn btn-secondary">
+                    <i class="fas fa-times"></i> Tidak
+                </button>
+                <button id="logout-yes" class="modal-btn btn-primary">
+                    <i class="fas fa-sign-out-alt"></i> Ya, Keluar
+                </button>
             </div>
         </div>
     </div>

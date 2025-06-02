@@ -75,6 +75,7 @@ class Laporan(models.Model):
 
     def __str__(self):
         return f"{self.jenis} ({self.tanggal_dibuat})"
+        
 
 class KembalikanBuku(models.Model):
     pengunjung = models.ForeignKey(Pengunjung, on_delete=models.CASCADE)

@@ -1,366 +1,334 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Generate Laporan</title>
-  <style>
-    body {
-        background: url("{% static 'image/bgLogin.png' %}") no-repeat center center fixed;
-        background-size: cover;
-        font-family: 'Segoe UI', Arial, sans-serif;
-    }
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      background: white;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    }
-    h1 {
-      text-align: center;
-      color: #2c3e50;
-      margin-bottom: 30px;
-    }
-    .report-controls {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-    .filter-group {
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
-    .form-group {
-      min-width: 200px;
-    }
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #34495e;
-    }
-    input, select {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #bdc3c7;
-      border-radius: 4px;
-      font-size: 14px;
-    }
-    button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s;
-    }
-    .btn-generate {
-      background-color: #3498db;
-      color: white;
-    }
-    .btn-generate:hover {
-      background-color: #2980b9;
-    }
-    .btn-print {
-      background-color: #2ecc71;
-      color: white;
-    }
-    .btn-print:hover {
-      background-color: #27ae60;
-    }
-    .btn-download {
-      background-color: #9b59b6;
-      color: white;
-    }
-    .btn-download:hover {
-      background-color: #8e44ad;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      padding: 12px 15px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-    th {
-      background-color: #3498db;
-      color: white;
-      font-weight: 600;
-    }
-    tr:hover {
-      background-color: #f5f5f5;
-    }
-    .report-summary {
-      margin-top: 30px;
-      padding: 20px;
-      background-color: #ecf0f1;
-      border-radius: 8px;
-    }
-    .summary-item {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-    .summary-value {
-      font-weight: bold;
-    }
-    @media print {
-      .no-print {
-        display: none !important;
-      }
-      body {
-        background: white;
-        padding: 0;
-      }
-      .container {
-        box-shadow: none;
-        padding: 0;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Generate Laporan | Litera.id</title>
+    <style>
+        /* Reset dan Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(120deg, #e6eef6 0%, #b0c9e4 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Topbar Styles */
+        .topbar {
+            background-color: #0051a8;
+            color: white;
+            padding: 0 24px;
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .topbar-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-box {
+            background-color: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .profile-box:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 80px auto 40px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(176,201,228,0.18);
+            padding: 36px 32px;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: #0051a8;
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .page-header h1 {
+            color: white;
+            margin: 0;
+            font-size: 1.8rem;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        /* Button Styles */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .btn {
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-add {
+            background: #4CAF50;
+        }
+
+        .btn-add:hover {
+            background: #3e8e41;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(76,175,80,0.2);
+        }
+
+        .btn-print {
+            background: #2196F3;
+        }
+
+        .btn-print:hover {
+            background: #0b7dda;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(33,150,243,0.2);
+        }
+
+        .btn-edit {
+            background: #0051a8;
+        }
+
+        .btn-edit:hover {
+            background: #003d7a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,81,168,0.2);
+        }
+
+        /* Table Styles */
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 16px rgba(176,201,228,0.15);
+            margin-top: 24px;
+        }
+
+        .report-table th, 
+        .report-table td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid #e0e9f2;
+        }
+
+        .report-table th {
+            background: #f5faff;
+            color: #0051a8;
+            font-weight: bold;
+            border-bottom: 2px solid #d0ddee;
+        }
+
+        .report-table tr:hover {
+            background-color: #f5faff;
+        }
+
+        .action-cell {
+            display: flex;
+            gap: 8px;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+            font-size: 1.1rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .topbar {
+                padding: 0 16px;
+                height: 50px;
+            }
+            
+            .topbar-title {
+                font-size: 1.2rem;
+            }
+            
+            .profile-box {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+
+            .container {
+                margin: 70px 20px 30px;
+                padding: 24px 16px;
+                max-width: calc(100% - 40px);
+            }
+
+            .report-table th, 
+            .report-table td {
+                padding: 12px 14px;
+                font-size: 0.9rem;
+            }
+
+            .action-cell {
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .btn {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .topbar-title {
+                font-size: 1rem;
+            }
+            
+            .container {
+                margin: 60px 12px 20px;
+                padding: 16px 12px;
+            }
+            
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .report-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .empty-message {
+                padding: 24px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+    <!-- Font Awesome untuk icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Generate Laporan Pengunjung</h1>
-    
-    <!-- Kontrol Laporan -->
-    <div class="report-controls no-print">
-      <div class="filter-group">
-        <div class="form-group">
-          <label for="report-type">Jenis Laporan</label>
-          <select id="report-type">
-            <option value="all">Semua Data</option>
-            <option value="daily">Harian</option>
-            <option value="weekly">Mingguan</option>
-            <option value="monthly">Bulanan</option>
-            <option value="range">Rentang Tanggal</option>
-          </select>
+    <!-- Top Navigation Bar -->
+    <div class="topbar">
+        <span class="topbar-title">📚 Litera.id - Admin</span>
+        <div class="profile-box" id="profileBtn">
+            👤 {{ user.username }}
         </div>
-        
-        <div class="form-group" id="date-range-group" style="display: none;">
-          <label for="start-date">Dari Tanggal</label>
-          <input type="date" id="start-date">
-        </div>
-        
-        <div class="form-group" id="end-date-group" style="display: none;">
-          <label for="end-date">Sampai Tanggal</label>
-          <input type="date" id="end-date">
-        </div>
-        
-        <div class="form-group">
-          <label for="report-format">Format</label>
-          <select id="report-format">
-            <option value="html">HTML</option>
-            <option value="pdf">PDF</option>
-            <option value="excel">Excel</option>
-          </select>
-        </div>
-      </div>
-      
-      <div class="action-buttons">
-        <button id="generate-btn" class="btn-generate">Generate Laporan</button>
-        <button id="print-btn" class="btn-print">Cetak Laporan</button>
-        <button id="download-btn" class="btn-download">Download</button>
-      </div>
     </div>
-    
-    <!-- Preview Laporan -->
-    <div id="report-preview">
-      <h2>Laporan Data Pengunjung <span id="report-title"></span></h2>
-      <p id="report-period"></p>
-      
-      <table id="report-table">
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Nama</th>
-            <th>Email</th>
-            <th>Telepon</th>
-            <th>Tanggal</th>
-            <th>Tujuan</th>
-          </tr>
-        </thead>
-        <tbody id="report-data">
-          <!-- Data laporan akan dimuat di sini -->
-        </tbody>
-      </table>
-      
-      <div class="report-summary">
-        <h3>Ringkasan Laporan</h3>
-        <div class="summary-item">
-          <span>Total Pengunjung:</span>
-          <span class="summary-value" id="total-visitors">0</span>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Generate Laporan</h1>
         </div>
-        <div class="summary-item">
-          <span>Periode Laporan:</span>
-          <span class="summary-value" id="summary-period">-</span>
+        
+        <!-- Action Buttons -->
+        <div class="button-group">
+            <a href="{% url 'tambah-laporan' %}" class="btn btn-add">
+                <i class="fas fa-plus"></i> Tambah Laporan
+            </a>
         </div>
-        <div class="summary-item">
-          <span>Dibuat Pada:</span>
-          <span class="summary-value" id="created-at">-</span>
-        </div>
-      </div>
+        
+        <!-- Report Table -->
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th style="width: 60px;">No</th>
+                    <th>ID Laporan</th>
+                    <th>Jenis</th>
+                    <th>Tanggal</th>
+                    <th>Isi</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for laporan in daftar_laporan %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ laporan.id_laporan }}</td>
+                    <td>{{ laporan.jenis }}</td>
+                    <td>{{ laporan.tanggal_dibuat|date:"d M Y" }}</td>
+                    <td>{{ laporan.isi|truncatewords:10 }}</td>
+                    <td class="action-cell">
+                        <a href="{% url 'cetak-laporan' laporan.id_laporan %}" class="btn btn-print">
+                            <i class="fas fa-print"></i> Cetak
+                        </a>
+                        <a href="{% url 'edit-laporan' laporan.id_laporan %}" class="btn btn-edit">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="empty-message">Tidak ada laporan tersedia</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-  </div>
 
-  <script>
-    // Data contoh pengunjung
-    const visitors = [
-      { id: 1, name: "John Doe", email: "john@example.com", phone: "08123456789", date: "2023-10-01", purpose: "Meeting" },
-      { id: 2, name: "Jane Smith", email: "jane@example.com", phone: "08234567890", date: "2023-10-02", purpose: "Kunjungan Bisnis" },
-      { id: 3, name: "Robert Johnson", email: "robert@example.com", phone: "08345678901", date: "2023-10-02", purpose: "Interview" },
-      { id: 4, name: "Emily Davis", email: "emily@example.com", phone: "08456789012", date: "2023-10-03", purpose: "Meeting" },
-      { id: 5, name: "Michael Wilson", email: "michael@example.com", phone: "08567890123", date: "2023-10-05", purpose: "Lainnya" }
-    ];
-
-    // DOM Elements
-    const reportType = document.getElementById('report-type');
-    const dateRangeGroup = document.getElementById('date-range-group');
-    const endDateGroup = document.getElementById('end-date-group');
-    const generateBtn = document.getElementById('generate-btn');
-    const printBtn = document.getElementById('print-btn');
-    const downloadBtn = document.getElementById('download-btn');
-    const reportData = document.getElementById('report-data');
-    const reportTitle = document.getElementById('report-title');
-    const reportPeriod = document.getElementById('report-period');
-    const totalVisitors = document.getElementById('total-visitors');
-    const summaryPeriod = document.getElementById('summary-period');
-    const createdAt = document.getElementById('created-at');
-
-    // Toggle date range visibility
-    reportType.addEventListener('change', () => {
-      if (reportType.value === 'range') {
-        dateRangeGroup.style.display = 'block';
-        endDateGroup.style.display = 'block';
-      } else if (reportType.value === 'daily' || reportType.value === 'weekly' || reportType.value === 'monthly') {
-        dateRangeGroup.style.display = 'block';
-        endDateGroup.style.display = 'none';
-      } else {
-        dateRangeGroup.style.display = 'none';
-        endDateGroup.style.display = 'none';
-      }
-    });
-
-    // Format tanggal
-    function formatDate(dateString) {
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      return new Date(dateString).toLocaleDateString('id-ID', options);
-    }
-
-    // Generate report
-    function generateReport() {
-      let filteredData = [...visitors];
-      const today = new Date().toISOString().split('T')[0];
-      const startDate = document.getElementById('start-date')?.value;
-      const endDate = document.getElementById('end-date')?.value;
-      
-      // Filter data berdasarkan jenis laporan
-      switch(reportType.value) {
-        case 'daily':
-          filteredData = visitors.filter(v => v.date === (startDate || today));
-          reportTitle.textContent = '(Harian)';
-          reportPeriod.textContent = `Tanggal: ${formatDate(startDate || today)}`;
-          summaryPeriod.textContent = formatDate(startDate || today);
-          break;
-          
-        case 'weekly':
-          // Contoh sederhana - dalam implementasi nyata perlu logika perhitungan mingguan
-          filteredData = visitors.filter(v => {
-            const visitDate = new Date(v.date);
-            const start = new Date(startDate || today);
-            const end = new Date(start);
-            end.setDate(start.getDate() + 7);
-            return visitDate >= start && visitDate <= end;
-          });
-          reportTitle.textContent = '(Mingguan)';
-          reportPeriod.textContent = `Minggu: ${formatDate(startDate || today)}`;
-          summaryPeriod.textContent = `Minggu ${formatDate(startDate || today)}`;
-          break;
-          
-        case 'monthly':
-          // Filter berdasarkan bulan
-          const month = startDate ? startDate.substr(0, 7) : today.substr(0, 7);
-          filteredData = visitors.filter(v => v.date.startsWith(month));
-          reportTitle.textContent = '(Bulanan)';
-          const monthName = new Date(month + '-01').toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
-          reportPeriod.textContent = `Bulan: ${monthName}`;
-          summaryPeriod.textContent = monthName;
-          break;
-          
-        case 'range':
-          if (startDate && endDate) {
-            filteredData = visitors.filter(v => v.date >= startDate && v.date <= endDate);
-            reportTitle.textContent = '(Rentang Tanggal)';
-            reportPeriod.textContent = `Periode: ${formatDate(startDate)} - ${formatDate(endDate)}`;
-            summaryPeriod.textContent = `${formatDate(startDate)} - ${formatDate(endDate)}`;
-          }
-          break;
-          
-        default:
-          reportTitle.textContent = '(Semua Data)';
-          reportPeriod.textContent = 'Semua data pengunjung';
-          summaryPeriod.textContent = 'Semua Data';
-      }
-      
-      // Render data ke tabel
-      reportData.innerHTML = '';
-      filteredData.forEach((visitor, index) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${index + 1}</td>
-          <td>${visitor.name}</td>
-          <td>${visitor.email}</td>
-          <td>${visitor.phone}</td>
-          <td>${formatDate(visitor.date)}</td>
-          <td>${visitor.purpose}</td>
-        `;
-        reportData.appendChild(row);
-      });
-      
-      // Update summary
-      totalVisitors.textContent = filteredData.length;
-      createdAt.textContent = new Date().toLocaleString('id-ID');
-    }
-
-    // Print report
-    printBtn.addEventListener('click', () => {
-      window.print();
-    });
-
-    // Download report
-    downloadBtn.addEventListener('click', () => {
-      const format = document.getElementById('report-format').value;
-      alert(`Fitur download ${format} akan diimplementasikan sesuai backend\nContoh: Generate PDF menggunakan library seperti jsPDF atau window.print()`);
-      
-      // Contoh implementasi download HTML:
-      if (format === 'html') {
-        const htmlContent = document.getElementById('report-preview').outerHTML;
-        const blob = new Blob([htmlContent], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `laporan-pengunjung-${new Date().toISOString().split('T')[0]}.html`;
-        a.click();
-      }
-    });
-
-    // Generate report on load
-    generateBtn.addEventListener('click', generateReport);
-    
-    // Set default date values
-    document.getElementById('start-date').value = new Date().toISOString().split('T')[0];
-    document.getElementById('end-date').value = new Date().toISOString().split('T')[0];
-    
-    // Generate initial report
-    generateReport();
-  </script>
+    <script>
+        // Profile Button Click
+        document.getElementById('profileBtn').addEventListener('click', () => {
+            // Tambahkan fungsi untuk menangani klik profil
+            alert('Menu profil akan ditampilkan di sini');
+        });
+    </script>
 </body>
 </html>

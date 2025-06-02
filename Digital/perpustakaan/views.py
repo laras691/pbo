@@ -139,12 +139,12 @@ def kelola_buku(request):
 
 def tambah_buku(request):
     if request.method == 'POST':
+        id_buku = request.POST['id_buku']  # Pastikan baris ini ada!
         judul = request.POST['judul']
         stok = int(request.POST['stok'])
-        id_buku = judul.lower().replace(' ', '-')[:10]
         PinjamBuku.objects.create(id_buku=id_buku, judul=judul, stok=stok)
         return redirect('kelola_buku')
-    return render(request, 'admin/kelola_buku.html')
+    return render(request, 'admin/tambah_buku.html')
 
 def edit_buku(request, id_buku):
     buku = get_object_or_404(PinjamBuku, id_buku=id_buku)
@@ -213,6 +213,7 @@ def admin_dashboard(request):
 def daftar_laporan(request):
     daftar = Laporan.objects.all()
     return render(request, 'admin/daftar_laporan.html', {'daftar': daftar})
+
 #admin - tambah laporan
 def tambah_laporan(request):
     if request.method == 'POST':
@@ -247,35 +248,8 @@ def edit_laporan(request, id_laporan):
 
 #Admin - Generate Laporan
 def generate_laporan(request):
-    # Fitur PDF di-nonaktifkan karena xhtml2pdf dihapus
-    if request.method == 'POST':
-        jenis_laporan = request.POST.get('jenis_laporan')
-        tanggal_mulai = request.POST.get('tanggal_mulai')
-        tanggal_selesai = request.POST.get('tanggal_selesai')
-        
-        # Sesuaikan dengan model Anda
-        if jenis_laporan == 'peminjaman':
-            data = Peminjaman.objects.filter(
-                tanggal_pinjam__gte=tanggal_mulai,
-                tanggal_pinjam__lte=tanggal_selesai
-            )
-        elif jenis_laporan == 'buku':
-            data = Buku.objects.all()
-        else:  # pengunjung
-            data = Pengunjung.objects.all()
-        
-        context = {
-            'data': data,
-            'jenis_laporan': jenis_laporan,
-            'tanggal_mulai': tanggal_mulai,
-            'tanggal_selesai': tanggal_selesai,
-            'section': 'laporan',
-        }
-        # Render ke halaman HTML biasa, bukan PDF
-        return render(request, 'admin/laporan_pdf.html', context)
-    
-    context = {'section': 'laporan'}
-    return render(request, 'admin/laporan_pdf.html', context)
+    daftar_laporan = Laporan.objects.all()
+    return render(request, 'admin/generate_laporan.html', {'daftar_laporan': daftar_laporan})
 
 def lupa_password(request):
     if request.method == 'POST':
@@ -299,7 +273,7 @@ def lihat_profil(request):
     # Jika ingin menampilkan data admin, ambil dari session atau model Admin
     # admin = get_object_or_404(Admin, id_admin=request.session.get('admin_id'))
     # return render(request, 'admin/profil.html', {'admin': admin})
-    return render(request, 'admin/profil.html')
+    return render(request, 'admin/lihat_profil.html')
 
 def edit_profil(request):
     # Contoh sederhana, silakan sesuaikan dengan model Admin Anda

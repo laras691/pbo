@@ -1,0 +1,14 @@
+<!-- filepath: c:\Users\ARSYANDA\Documents\pbo-1\Digital\perpustakaan\templates\admin\edit_profil.html -->
+<!DOCTYPE html>
+<html>
+<head><title>Edit Profil</title></head>
+<body>
+    <h2>Edit Profil</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Simpan</button>
+    </form>
+    <a href="{% url 'lihat-profil' %}">Kembali ke Profil</a>
+</body>
+</html>

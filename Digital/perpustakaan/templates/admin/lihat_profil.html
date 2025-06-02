@@ -1,0 +1,14 @@
+<!-- filepath: c:\Users\ARSYANDA\Documents\pbo-1\Digital\perpustakaan\templates\admin\profil.html -->
+<!DOCTYPE html>
+<html>
+<head><title>Profil Admin</title></head>
+<body>
+    <h2>Profil Admin</h2>
+    <p>Nama: {{ admin.nama }}</p>
+    <p>Email: {{ admin.email }}</p>
+    <!-- Tambahkan field lain sesuai kebutuhan -->
+    <a href="{% url 'edit-profil' %}">Edit Profil</a> |
+    <a href="{% url 'ganti-password' %}">Ganti Password</a> |
+    <a href="{% url 'hapus-akun' admin.id_admin %}" onclick="return confirm('Yakin hapus akun?')">Hapus Akun</a>
+</body>
+</html>
