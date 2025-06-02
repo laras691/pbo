@@ -121,7 +121,6 @@ def admin_custom(request):
         captcha = request.POST.get('captcha')
 
         if admin_id == 'admin' and password == 'admin123' and captcha == '123456':
-            request.session['admin_id'] = admin_id  # Simpan ke session
             messages.success(request, 'Login berhasil!')
             # Redirect langsung ke halaman admin buku, bukan dashboard
             return redirect(reverse('dashboard_admin'))
