@@ -272,48 +272,52 @@ def lupa_password(request):
 
 #lihat Profil
 def lihat_profil(request):
+
+    return render(request, 'pengunjung/lihatProfil.html')
+
     # Jika ingin menampilkan data admin, ambil dari session atau model Admin
     # admin = get_object_or_404(Admin, id_admin=request.session.get('admin_id'))
     # return render(request, 'admin/profil.html', {'admin': admin})
     return render(request, 'admin/lihat_profil.html')
 
 def edit_profil(request):
-    # Contoh sederhana, silakan sesuaikan dengan model Admin Anda
-    # admin = get_object_or_404(Admin, id_admin=request.session.get('admin_id'))
-    if request.method == 'POST':
-        # Proses update profil di sini
-        # admin.nama = request.POST.get('nama')
-        # admin.save()
-        return redirect('lihat-profil')
-    # return render(request, 'admin/edit_profil.html', {'admin': admin})
-    return render(request, 'admin/edit_profil.html')
+    return render(request, 'pengunjung/editProfil.html')
 
-# filepath: [views.py](http://_vscodecontentref_/0)
 def ganti_password(request):
-    # Contoh sederhana, silakan sesuaikan dengan model Admin atau User Anda
     if request.method == 'POST':
-        # Ambil password lama dan baru dari form
         password_lama = request.POST.get('password_lama')
         password_baru = request.POST.get('password_baru')
-        # Contoh: ambil admin dari session
-        # admin = get_object_or_404(Admin, id_admin=request.session.get('admin_id'))
-        # if check_password(password_lama, admin.password):
-        #     admin.password = make_password(password_baru)
-        #     admin.save()
-        #     messages.success(request, "Password berhasil diganti.")
-        # else:
-        #     messages.error(request, "Password lama salah.")
-        return redirect('lihat-profil')
-    return render(request, 'admin/ganti_password.html')
+        
+        # Proses ganti password
+        pengunjung_id = request.session.get('pengunjung_id')
+        pengunjung = get_object_or_404(Pengunjung, id=pengunjung_id)
+        
+        # Cek password lama
+        if check_password(password_lama, pengunjung.password):
+            # Ganti dengan password baru
+            pengunjung.password = make_password(password_baru)
+            pengunjung.save()
+            
+            # Setelah password berhasil diganti:
+            messages.success(request, "Password berhasil diganti!")
+            return redirect('beranda_pengunjung')
+        else:
+            messages.error(request, "Password lama salah.")
+    
+    return render(request, 'pengunjung/gantiPassword.html')
 
-# filepath: [views.py](http://_vscodecontentref_/0)
 from django.shortcuts import redirect, get_object_or_404
 
-def hapus_akun(request, id_admin):
-    # Contoh: hapus akun admin berdasarkan id_admin
-    admin = get_object_or_404(Admin, id_admin=id_admin)
-    admin.delete()
-    return redirect('lihat-profil')  # Atau redirect ke halaman login/admin lain
+def hapus_akun(request):
+    pengunjung_id = request.session.get('pengunjung_id')
+    if request.method == 'POST':
+        if pengunjung_id:
+            pengunjung = get_object_or_404(Pengunjung, id=pengunjung_id)
+            pengunjung.delete()
+            request.session.flush()
+            messages.success(request, 'Akun Anda berhasil dihapus.')
+            return redirect('login_pengunjung')
+    return render(request, 'pengunjung/hapusAkun.html')
 
 #Admin custom login
 def admin_custom_login(request):

@@ -12,7 +12,7 @@ class Kategori(models.Model):
 class Buku(models.Model):
     id_buku = models.CharField(max_length=10, unique=True, default='0000')
     judul = models.CharField(max_length=255)
-    kode_buku = models.CharField(max_length=20, primary_key=True)
+    kode_buku = models.CharField(max_length=20, default="0000")
     judul = models.CharField(max_length=200)
     penulis = models.CharField(max_length=100, blank=True, null=True)
 
