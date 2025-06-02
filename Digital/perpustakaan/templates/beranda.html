@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Litera.id - Beranda</title>
+    <!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -212,7 +214,6 @@
             align-items: flex-start;
         }
 
-        /* Hapus/override efek geser jika sidebar aktif */
         .sidebar.active ~ .content {
             margin-left: 0 !important;
         }
@@ -225,21 +226,19 @@
             text-shadow: 1px 1px 0 #b0c9e4;
         }
 
-        /* Ganti definisi .book-row */
         .book-row {
             display: flex;
-            flex-wrap: wrap;      /* Supaya baris baru setelah 4 buku */
+            flex-wrap: wrap;
             gap: 24px;
             padding-bottom: 10px;
-            justify-content: flex-start; /* pastikan tetap rata kiri */
-            width: 100%; /* tambahkan agar tidak shrink di layar kecil */
+            justify-content: flex-start; 
+            width: 100%; 
         }
 
-        /* Atur lebar .book-card agar muat 4 per baris */
         .book-card {
             background: #fff;
             border-radius: 18px;
-            width: calc(25% - 18px); /* 4 per baris, dikurangi gap */
+            width: calc(25% - 18px);
             min-width: 160px;
             max-width: 220px;
             padding: 14px 10px 10px 10px;
@@ -311,7 +310,7 @@
         .search-box {
             width: 100%;
             max-width: 480px;
-            margin: 0 0 32px 0; /* Hapus auto agar rata kiri */
+            margin: 0 0 32px 0;
             display: flex;
             background: #0051a8;
             border-radius: 18px;
@@ -443,7 +442,7 @@
         }
         #buku-tbody strong {
             display: block;
-            min-height: 38px; /* agar judul pendek tetap rata */
+            min-height: 38px;
             font-size: 15px;
             font-weight: 600;
             color: #3a5fa8;
@@ -486,13 +485,14 @@
             <span class="profile-name">Profil</span>
             <div class="profile-box">👤</div>
         </div>
-        <div id="profile-dropdown" style="display:none; position:absolute; right:32px; top:60px; background:#fff; border-radius:10px; box-shadow:0 4px 18px rgba(0,81,168,0.13); min-width:220px; z-index:2000;">
-            <a href="{% url 'lihat_profil' %}" style="display:block; padding:14px 22px; color:#0051a8; text-decoration:none;">Lihat Profil</a>
-            <a href="{% url 'edit_profil' %}" style="display:block; padding:14px 22px; color:#0051a8; text-decoration:none;">Edit Profil</a>
-            <a href="{% url 'ganti_password' %}" style="display:block; padding:14px 22px; color:#0051a8; text-decoration:none;">Ganti Password</a>
-            <a href="{% url 'hapus_akun' %}" style="display:block; padding:14px 22px; color:#c00; text-decoration:none;">Hapus Akun</a>
-            <a href="{% url 'logout' %}" style="display:block; padding:14px 22px; color:#0051a8; text-decoration:none;">Keluar</a>
-        </div>
+        <!-- Dropdown profil -->
+<div id="profile-dropdown" style="display:none; position:absolute; right:32px; top:60px; background:#fff; border-radius:10px; box-shadow:0 4px 18px rgba(0,81,168,0.13); min-width:220px; z-index:2000;">
+    <a href="{% url 'lihat_profil' %}" style="display:block; padding:14px 22px; color:#0051a8; text-decoration:none;">Lihat Profil</a>
+    <a href="{% url 'edit_profil' %}" style="display:block; padding:14px 22px; color:#0051a8; text-decoration:none;">Edit Profil</a>
+    <a href="{% url 'ganti_password' %}" style="display:block; padding:14px 22px; color:#0051a8; text-decoration:none;">Ganti Password</a>
+    <a href="#" id="hapus-akun-link" style="display:block; padding:14px 22px; color:#c00; text-decoration:none;">Hapus Akun</a>
+    <a href="#" id="logout-link-profile" style="display:block; padding:14px 22px; color:#0051a8; text-decoration:none;">Keluar</a>
+</div>
     </div>
     
     <div class="sidebar" id="sidebar">
@@ -505,12 +505,19 @@
             <li><a href="{% url 'lihat_daftar_buku' %}">Lihat Daftar Buku</a></li>
             <li><a href="{% url 'pinjam_buku' %}">Pinjam Buku</a></li>
             <li><a href="{% url 'kembalikan_buku' %}">Kembalikan Buku</a></li>
-            <li><a href="{% url 'lihat_riwayat' %}">Lihat Riwayat</a></li>
+            <li><a href="{% url 'lihat_riwayat' %}">Lihat Riwayat</a></li>         
             <li><a href="#" id="logout-link">Keluar</a></li>
         </ul>
     </div>
 
     <div class="content">
+        {% if messages %}
+  {% for message in messages %}
+    <div style="background:#0051a8; color:#fff; padding:14px 24px; border-radius:8px; margin:20px auto; max-width:400px; text-align:center; font-size:1.1rem; box-shadow:0 2px 8px rgba(0,81,168,0.13);">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 5px;">
             <form action="{% url 'cari_buku' %}" method="get" class="search-box" style="width:100%; max-width:1320px;">
                 <input type="text" name="q" placeholder="Cari buku..." class="search-input" style="min-width:1120px; font-size:1.2rem;" />
@@ -583,8 +590,35 @@
             <button id="logout-no" style="background:#b0c9e4; color:#0051a8; border:none; border-radius:8px; padding:10px 28px; font-size:1rem; cursor:pointer;">Tidak</button>
         </div>
     </div>
+
+<!-- Modal Konfirmasi Hapus Akun (Custom, bukan Bootstrap) -->
+<div id="hapus-akun-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.25); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:16px; padding:32px 28px; box-shadow:0 4px 24px rgba(0,81,168,0.18); text-align:center; min-width:300px;">
+        <h3 style="color:#c00; margin-bottom:18px;">Konfirmasi Hapus Akun</h3>
+        <p style="margin-bottom:24px;">Apakah Anda yakin ingin menghapus akun Anda? Tindakan ini tidak dapat dibatalkan.</p>
+        <form method="post" action="{% url 'hapus_akun' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" style="background:#c00; color:#fff; border:none; border-radius:8px; padding:10px 28px; font-size:1rem; margin-right:12px; cursor:pointer;">Ya</button>
+        </form>
+        <button id="hapus-akun-no" style="background:#b0c9e4; color:#0051a8; border:none; border-radius:8px; padding:10px 28px; font-size:1rem; cursor:pointer;">Tidak</button>
+    </div>
+</div>
+
+<!-- Modal Ganti Password -->
+<div id="ganti-password-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.25); z-index:9999; align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:16px; padding:32px 28px; box-shadow:0 4px 24px rgba(0,81,168,0.18); text-align:center; min-width:320px;">
+    <h3 style="color:#0051a8; margin-bottom:18px;">Ganti Password</h3>
+    <form method="post" action="{% url 'ganti_password' %}">
+      {% csrf_token %}
+      <input type="password" name="password_lama" placeholder="Password Lama" required style="margin-bottom:10px; width:90%;"><br>
+      <input type="password" name="password_baru" placeholder="Password Baru" required style="margin-bottom:10px; width:90%;"><br>
+      <input type="password" name="konfirmasi_password" placeholder="Konfirmasi Password Baru" required style="margin-bottom:18px; width:90%;"><br>
+      <button type="submit" style="background:#0051a8; color:#fff; border:none; border-radius:8px; padding:10px 28px; font-size:1rem; margin-right:12px; cursor:pointer;">Simpan</button>
+      <button type="button" id="ganti-password-batal" style="background:#b0c9e4; color:#0051a8; border:none; border-radius:8px; padding:10px 28px; font-size:1rem; cursor:pointer;">Batal</button>
+    </form>
+  </div>
+</div>
     <script>
-        // Sidebar menu logic agar bisa digeser
         const sidebar = document.getElementById('sidebar');
         const menuBtn = document.getElementById('menuBtn');
         const closeSidebar = document.getElementById('closeSidebar');
@@ -633,6 +667,27 @@
         document.addEventListener('click', function() {
             document.getElementById('profile-dropdown').style.display = 'none';
         });
+
+        // Modal hapus akun logic (custom)
+        const hapusAkunLink = document.getElementById('hapus-akun-link');
+        const hapusAkunModal = document.getElementById('hapus-akun-modal');
+        const hapusAkunNo = document.getElementById('hapus-akun-no');
+
+        hapusAkunLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            hapusAkunModal.style.display = 'flex';
+        });
+        hapusAkunNo.addEventListener('click', function() {
+            hapusAkunModal.style.display = 'none';
+        });
+
+        const logoutLinkProfile = document.getElementById('logout-link-profile');
+        if (logoutLinkProfile) {
+            logoutLinkProfile.addEventListener('click', function(e) {
+                e.preventDefault();
+                logoutModal.style.display = 'flex';
+            });
+        }
 
         const daftarBuku = [
     {
@@ -770,7 +825,6 @@ daftarBuku.forEach(buku => {
                         row = '';
                     }
                 }
-                // Ganti '#' dengan url detail buku sesuai backend Anda
                 row += `
                     <td style="cursor:pointer;" onclick="window.location.href='/buku/${encodeURIComponent(buku.judul)}/'">
                         <img class="cover-img" src="${buku.img}" alt="${buku.judul}"><br>
