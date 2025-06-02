@@ -1,0 +1,14 @@
+<!-- filepath: c:\Users\ARSYANDA\Documents\pbo-1\Digital\perpustakaan\templates\admin\hapus_akun.html -->
+<!DOCTYPE html>
+<html>
+<head><title>Hapus Akun</title></head>
+<body>
+    <h2>Konfirmasi Hapus Akun</h2>
+    <p>Apakah Anda yakin ingin menghapus akun ini?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Ya, Hapus</button>
+        <a href="{% url 'lihat-profil' %}">Batal</a>
+    </form>
+</body>
+</html>

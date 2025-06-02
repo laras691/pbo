@@ -5,156 +5,226 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola Buku - Admin</title>
     <style>
+        /* Reset dan Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(120deg, #e6eef6 0%, #b0c9e4 100%);
             margin: 0;
             padding: 0;
             min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
         }
+
+        /* Topbar Styles (matching previous designs) */
         .topbar {
             background-color: #0051a8;
             color: white;
-            padding: 15px 30px;
+            padding: 0 24px;
+            height: 60px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: fixed;
             width: 100%;
             top: 0;
-            left: 0;
             z-index: 1000;
         }
+
         .topbar-title {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
+
         .profile-box {
-            background-color: rgba(255, 255, 255, 0.2);
-            padding: 8px 15px;
+            background-color: rgba(255,255,255,0.2);
+            padding: 8px 16px;
             border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
         }
+
         .profile-box:hover {
-            background-color: rgba(255, 255, 255, 0.3);
+            background-color: rgba(255,255,255,0.3);
         }
+
+        /* Main Container */
         .container {
             max-width: 1200px;
-            margin: 100px auto 60px;
+            margin: 80px auto 40px;
             background: #fff;
             border-radius: 18px;
             box-shadow: 0 4px 24px rgba(176,201,228,0.18);
             padding: 36px 32px 32px 32px;
         }
+
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #b0c9e4;
+            border-bottom: 2px solid #d0ddee;
         }
+
         h1 {
             color: #0051a8;
             margin: 0;
             letter-spacing: 1px;
         }
+
         .button-group {
             display: flex;
             gap: 12px;
         }
+
         button, a.btn {
             padding: 12px 24px;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             font-size: 1rem;
             font-family: inherit;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s ease;
             text-decoration: none;
             display: inline-block;
             text-align: center;
         }
+
         .btn-primary {
             background: #0051a8;
             color: white;
         }
+
         .btn-primary:hover {
             background: #3a5fa8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,81,168,0.2);
         }
+
         .btn-secondary {
             background: #888;
             color: white;
         }
+
         .btn-secondary:hover {
             background: #666;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
+
         .btn-warning {
             background: #ff9800;
             color: white;
         }
+
         .btn-warning:hover {
             background: #e68a00;
+            transform: translateY(-1px);
         }
+
         .btn-danger {
             background: #f44336;
             color: white;
         }
+
         .btn-danger:hover {
             background: #da190b;
+            transform: translateY(-1px);
         }
+
         .btn-info {
             background: #2196F3;
             color: white;
         }
+
         .btn-info:hover {
             background: #0b7dda;
+            transform: translateY(-1px);
         }
+
+        /* Table Styles */
         .table {
             width: 100%;
             border-collapse: collapse;
-            background: #e6eef6;
+            background: #f5faff;
             border-radius: 12px;
             overflow: hidden;
             margin-top: 28px;
+            box-shadow: 0 2px 8px rgba(176,201,228,0.15);
         }
+
         th, td {
-            padding: 12px 16px;
+            padding: 16px 20px;
             text-align: left;
             border-bottom: 1px solid #d0ddee;
         }
+
         th {
             background: #b0c9e4;
             color: #0051a8;
             font-weight: bold;
+            font-size: 0.95rem;
         }
+
         tr:nth-child(even) {
             background: #f5faff;
         }
+
         tr:nth-child(odd) {
             background: #e6eef6;
         }
+
+        tr:hover {
+            background: #e0e9f4;
+        }
+
         .action-buttons {
             display: flex;
             gap: 8px;
         }
+
+        .action-btn {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
         .kosong {
             text-align: center;
             color: #888;
             padding: 32px 0;
+            background: #f5faff;
+            border-radius: 8px;
         }
+
+        /* Pagination Styles */
         .pagination {
             display: flex;
             justify-content: center;
             margin-top: 28px;
             gap: 8px;
         }
+
         .page-item {
             list-style: none;
         }
+
         .page-link {
             padding: 8px 16px;
             border-radius: 8px;
@@ -163,39 +233,168 @@
             color: #0051a8;
             text-decoration: none;
             font-weight: bold;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
+
         .page-link:hover {
             background: #d0ddee;
+            transform: translateY(-1px);
         }
+
         .page-item.active .page-link {
             background: #0051a8;
             color: white;
             border-color: #0051a8;
         }
-        
+
+        /* Modal Styles (for delete confirmation) */
+        #confirm-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.25);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px 28px;
+            box-shadow: 0 4px 24px rgba(0,81,168,0.18);
+            text-align: center;
+            min-width: 300px;
+            max-width: 90%;
+        }
+
+        .modal-title {
+            color: #0051a8;
+            margin-bottom: 18px;
+            font-size: 1.3rem;
+        }
+
+        .modal-buttons {
+            margin-top: 24px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .modal-btn {
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .btn-confirm {
+            background: #f44336;
+            color: #fff;
+        }
+
+        .btn-confirm:hover {
+            background: #da190b;
+            transform: translateY(-1px);
+        }
+
+        .btn-cancel {
+            background: #e6eef6;
+            color: #0051a8;
+            border: 1px solid #d0ddee;
+        }
+
+        .btn-cancel:hover {
+            background: #d0ddee;
+            transform: translateY(-1px);
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
-            .container {
-                margin: 100px auto 20px;
-                padding: 20px 16px;
+            .topbar {
+                padding: 0 16px;
+                height: 50px;
             }
+            
+            .topbar-title {
+                font-size: 1.2rem;
+            }
+            
+            .profile-box {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+
+            .container {
+                margin: 70px 20px 30px;
+                padding: 24px 16px;
+                max-width: calc(100% - 40px);
+            }
+
             .header {
                 flex-direction: column;
                 gap: 16px;
                 align-items: flex-start;
             }
-            .action-buttons {
-                flex-wrap: wrap;
+
+            .button-group {
+                width: 100%;
+                justify-content: flex-start;
             }
+
             .table {
                 display: block;
                 overflow-x: auto;
+            }
+
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .topbar-title {
+                font-size: 1rem;
+            }
+            
+            .container {
+                margin: 60px 12px 20px;
+                padding: 16px 12px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .btn, button {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+            
+            .action-btn {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .modal-btn {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Top Navigation Bar (consistent with other pages) -->
     <div class="topbar">
         <span class="topbar-title">📚 Litera.id - Admin</span>
         <div class="profile-box" id="profileBtn">
@@ -203,6 +402,7 @@
         </div>
     </div>
 
+    <!-- Main Content -->
     <div class="container">
         <div class="header">
             <h1>Kelola Buku</h1>
@@ -218,7 +418,6 @@
                     <th>Id_buku</th>
                     <th>Judul</th>
                     <th>Stok</th>
-                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -228,9 +427,9 @@
                     <td>{{ buku.judul }}</td>
                     <td>{{ buku.stok }}</td>
                     <td class="action-buttons">
-                        <a href="{% url 'edit-buku' buku.id %}" class="btn btn-warning">Edit</a>
-                        <a href="{% url 'hapus-buku' buku.id %}" class="btn btn-danger">Hapus</a>
-                        <a href="{% url 'detail-buku' buku.id %}" class="btn btn-info">Detail</a>
+                        <a href="{% url 'edit-buku' buku.id %}" class="btn btn-warning action-btn">Edit</a>
+                        <a href="#" class="btn btn-danger action-btn delete-btn" data-url="{% url 'hapus-buku' buku.id %}">Hapus</a>
+                        <a href="{% url 'detail-buku' buku.id %}" class="btn btn-info action-btn">Detail</a>
                     </td>
                 </tr>
                 {% empty %}
@@ -267,16 +466,50 @@
         {% endif %}
     </div>
 
+    <!-- Delete Confirmation Modal -->
+    <div id="confirm-modal">
+        <div class="modal-content">
+            <h3 class="modal-title">Konfirmasi Penghapusan</h3>
+            <p>Apakah Anda yakin ingin menghapus buku ini?</p>
+            <div class="modal-buttons">
+                <button id="cancel-delete" class="modal-btn btn-cancel">Batal</button>
+                <button id="confirm-delete" class="modal-btn btn-confirm">Hapus</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Konfirmasi sebelum menghapus
-        document.querySelectorAll('.btn-danger').forEach(button => {
+        // Delete confirmation modal
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+        const confirmModal = document.getElementById('confirm-modal');
+        const cancelDelete = document.getElementById('cancel-delete');
+        const confirmDelete = document.getElementById('confirm-delete');
+        
+        let deleteUrl = '';
+        
+        deleteButtons.forEach(button => {
             button.addEventListener('click', function(e) {
-                if (!confirm('Apakah Anda yakin ingin menghapus buku ini?')) {
-                    e.preventDefault();
-                }
+                e.preventDefault();
+                deleteUrl = this.getAttribute('data-url');
+                confirmModal.style.display = 'flex';
             });
         });
-
+        
+        cancelDelete.addEventListener('click', function() {
+            confirmModal.style.display = 'none';
+        });
+        
+        confirmDelete.addEventListener('click', function() {
+            window.location.href = deleteUrl;
+        });
+        
+        // Close modal when clicking outside
+        confirmModal.addEventListener('click', function(e) {
+            if (e.target === confirmModal) {
+                confirmModal.style.display = 'none';
+            }
+        });
+        
         // Profile button functionality
         document.getElementById('profileBtn').addEventListener('click', function() {
             // Add your profile dropdown or logout functionality here

@@ -1,6 +1,350 @@
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Simpan</button>
-</form>
-<a href="{% url 'daftar-laporan' %}">Kembali ke Daftar</a>
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - {% if form.instance.id_laporan %}Edit{% else %}Tambah{% endif %} Laporan</title>
+    <style>
+        /* Reset dan Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(120deg, #e6eef6 0%, #b0c9e4 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Topbar Styles */
+        .topbar {
+            background-color: #0051a8;
+            color: white;
+            padding: 0 24px;
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .topbar-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-box {
+            background-color: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .profile-box:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 800px;
+            margin: 80px auto 40px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(176,201,228,0.18);
+            padding: 36px 32px 32px 32px;
+        }
+
+        h1 {
+            color: #0051a8;
+            text-align: center;
+            margin-bottom: 28px;
+            letter-spacing: 1px;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: #f5faff;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 28px;
+            border: 2px solid #d0ddee;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #0051a8;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        select,
+        textarea {
+            width: calc(100% - 32px);
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 2px solid #b0c9e4;
+            font-size: 1rem;
+            background: #fff;
+            color: #333;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #0051a8;
+            box-shadow: 0 0 0 2px rgba(0,81,168,0.2);
+        }
+
+        /* Button Styles */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+
+        button, .btn {
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-save {
+            background: #0051a8;
+        }
+
+        .btn-save:hover {
+            background: #3a5fa8;
+            transform: translateY(-1px);
+        }
+
+        .btn-back {
+            background: #888;
+        }
+
+        .btn-back:hover {
+            background: #666;
+            transform: translateY(-1px);
+        }
+
+        /* Error Messages */
+        .errorlist {
+            color: #f44336;
+            margin-top: 5px;
+            padding-left: 20px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .topbar {
+                padding: 0 16px;
+                height: 50px;
+            }
+            
+            .topbar-title {
+                font-size: 1.2rem;
+            }
+            
+            .profile-box {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+
+            .container {
+                margin: 70px 20px 30px;
+                padding: 24px 16px;
+                max-width: calc(100% - 40px);
+            }
+
+            .form-container {
+                padding: 16px;
+            }
+
+            input[type="text"],
+            input[type="date"],
+            select,
+            textarea {
+                width: calc(100% - 24px);
+                padding: 10px 12px;
+            }
+
+            button, .btn {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .topbar-title {
+                font-size: 1rem;
+            }
+            
+            .container {
+                margin: 60px 12px 20px;
+                padding: 16px 12px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+            
+            textarea {
+                min-height: 120px;
+            }
+            
+            button, .btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <div class="topbar">
+        <span class="topbar-title">📚 Litera.id - Admin</span>
+        <div class="profile-box" id="profileBtn">
+            👤 {{ user.username }}
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>{% if form.instance.id_laporan %}Edit{% else %}Tambah{% endif %} Laporan</h1>
+        
+        <!-- Form Tambah/Edit Laporan -->
+        <div class="form-container">
+            <form method="post">
+                {% csrf_token %}
+                
+                {% if form.errors %}
+                    <div class="errorlist">
+                        {% for field in form %}
+                            {% for error in field.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
+                <div class="form-group">
+                    <label for="id_id_laporan">ID Laporan:</label>
+                    {{ form.id_laporan }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_tanggal_dibuat">Tanggal Dibuat:</label>
+                    {{ form.tanggal_dibuat }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_jenis">Jenis Laporan:</label>
+                    {{ form.jenis }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_isi">Isi Laporan:</label>
+                    {{ form.isi }}
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn-save">Simpan</button>
+                    <a href="{% url 'daftar-laporan' %}" class="btn-back">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 8px;">
+        <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+    </svg>
+    Kembali ke Daftar Laporan
+</a>
+
+<style>
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        background-color: #6c757d;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        border: none;
+        cursor: pointer;
+    }
+    
+    .btn-back:hover {
+        background-color: #5a6268;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .btn-back:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .btn-back {
+            padding: 10px 16px;
+            font-size: 0.9rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .btn-back {
+            padding: 8px 12px;
+            font-size: 0.8rem;
+        }
+        
+        .btn-back svg {
+            width: 14px;
+            height: 14px;
+            margin-right: 6px;
+        }
+    }
+</style>

@@ -6,350 +6,457 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Kelola Pengunjung</title>
     <style>
-        :root {
-            --primary-color: #0051a8;
-            --secondary-color: #b0c9e4;
-            --light-bg: #e6eef6;
-            --lighter-bg: #f5faff;
-            --danger-color: #f44336;
-            --text-dark: #333;
-            --text-light: #888;
+        /* Reset dan Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(120deg, var(--light-bg) 0%, var(--secondary-color) 100%);
+            background: linear-gradient(120deg, #e6eef6 0%, #b0c9e4 100%);
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            color: var(--text-dark);
+            color: #333;
+            line-height: 1.6;
         }
-        
-        /* Topbar Styling */
+
+        /* Topbar Styles (matching previous designs) */
         .topbar {
-            background-color: var(--primary-color);
+            background-color: #0051a8;
             color: white;
-            padding: 12px 24px;
+            padding: 0 24px;
+            height: 60px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: fixed;
             width: 100%;
             top: 0;
-            left: 0;
             z-index: 1000;
-            height: 60px;
-            box-sizing: border-box;
         }
-        
+
         .topbar-title {
-            font-size: 1.25rem;
-            font-weight: 600;
+            font-size: 1.4rem;
+            font-weight: bold;
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        
+
         .profile-box {
-            background-color: rgba(255, 255, 255, 0.2);
-            padding: 6px 12px;
+            background-color: rgba(255,255,255,0.2);
+            padding: 8px 16px;
             border-radius: 20px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            font-size: 0.9rem;
             display: flex;
             align-items: center;
-            gap: 6px;
-            height: 32px;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
-        
+
         .profile-box:hover {
-            background-color: rgba(255, 255, 255, 0.3);
+            background-color: rgba(255,255,255,0.3);
         }
-        
+
         /* Main Container */
         .container {
             max-width: 1200px;
             margin: 80px auto 40px;
             background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 24px rgba(176, 201, 228, 0.18);
-            padding: 28px;
-            box-sizing: border-box;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(176,201,228,0.18);
+            padding: 36px 32px 32px 32px;
         }
-        
+
         h1 {
-            color: var(--primary-color);
+            color: #0051a8;
+            margin: 0 0 28px 0;
+            letter-spacing: 1px;
             text-align: center;
-            margin: 0 0 24px 0;
-            font-size: 1.75rem;
-            font-weight: 600;
         }
-        
-        /* Form Styling */
+
+        /* Navigation Button */
+        .nav-button {
+            margin-bottom: 24px;
+        }
+
+        /* Form Container */
         .form-container {
-            background: var(--light-bg);
-            padding: 20px;
-            border-radius: 10px;
+            background: #f5faff;
+            padding: 24px;
+            border-radius: 12px;
             margin-bottom: 28px;
+            border-left: 4px solid #0051a8;
         }
-        
+
         .form-row {
             display: flex;
             flex-wrap: wrap;
             gap: 16px;
             margin-bottom: 16px;
         }
-        
+
         .form-group {
             flex: 1;
-            min-width: 0;
+            min-width: 200px;
         }
-        
-        .form-group-large {
-            flex: 2;
-            min-width: 0;
-        }
-        
+
         label {
             display: block;
-            margin-bottom: 6px;
-            font-weight: 500;
-            color: var(--primary-color);
-            font-size: 0.9rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #0051a8;
+            font-size: 0.95rem;
         }
-        
+
         input, select {
             width: 100%;
             padding: 10px 12px;
             border-radius: 8px;
-            border: 2px solid var(--secondary-color);
+            border: 2px solid #b0c9e4;
             font-size: 0.95rem;
-            background: var(--lighter-bg);
-            color: var(--primary-color);
-            font-family: inherit;
-            box-sizing: border-box;
-            height: 40px;
+            background: #fff;
+            transition: all 0.2s ease;
         }
-        
-        /* Button Styling */
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #0051a8;
+            box-shadow: 0 0 0 2px rgba(0,81,168,0.2);
+        }
+
+        /* Button Styles */
         .button-group {
             display: flex;
             gap: 12px;
             margin-top: 20px;
         }
-        
+
         button, a.btn {
             padding: 10px 20px;
             border: none;
             border-radius: 8px;
             font-size: 0.95rem;
             font-family: inherit;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            height: 40px;
-            box-sizing: border-box;
         }
-        
+
         .btn-primary {
-            background: var(--primary-color);
+            background: #0051a8;
             color: white;
         }
-        
+
         .btn-primary:hover {
             background: #3a5fa8;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,81,168,0.2);
         }
-        
+
         .btn-secondary {
-            background: var(--text-light);
+            background: #888;
             color: white;
         }
-        
+
         .btn-secondary:hover {
             background: #666;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        
+
         .btn-danger {
-            background: var(--danger-color);
+            background: #f44336;
             color: white;
         }
-        
+
         .btn-danger:hover {
             background: #da190b;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(244,67,54,0.2);
         }
-        
-        /* Table Styling */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--light-bg);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 24px;
-        }
-        
-        th, td {
-            padding: 12px 16px;
-            text-align: left;
-            border-bottom: 1px solid #d0ddee;
-        }
-        
-        th {
-            background: var(--secondary-color);
-            color: var(--primary-color);
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-        
-        tr:nth-child(even) {
-            background: var(--lighter-bg);
-        }
-        
-        tr:nth-child(odd) {
-            background: var(--light-bg);
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-        }
-        
+
         /* Search and Filter */
         .search-filter {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             flex-wrap: wrap;
             gap: 12px;
         }
-        
+
         .search-box {
-            padding: 10px 12px;
+            padding: 10px 16px;
             border-radius: 8px;
-            border: 2px solid var(--secondary-color);
+            border: 2px solid #b0c9e4;
             font-size: 0.95rem;
-            background: var(--lighter-bg);
-            color: var(--primary-color);
-            font-family: inherit;
+            background: #fff;
+            transition: all 0.2s ease;
             height: 40px;
-            box-sizing: border-box;
         }
-        
+
         #search-input {
             min-width: 250px;
             flex: 1;
         }
-        
+
         #filter-purpose {
             min-width: 200px;
         }
-        
+
+        /* Table Styles */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #f5faff;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 24px;
+            box-shadow: 0 2px 8px rgba(176,201,228,0.15);
+        }
+
+        th, td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid #d0ddee;
+        }
+
+        th {
+            background: #b0c9e4;
+            color: #0051a8;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        tr:nth-child(even) {
+            background: #f5faff;
+        }
+
+        tr:nth-child(odd) {
+            background: #e6eef6;
+        }
+
+        tr:hover {
+            background: #e0e9f4;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
         /* Empty State */
         .kosong {
             text-align: center;
-            color: var(--text-light);
+            color: #888;
             padding: 32px 0;
-            font-size: 0.95rem;
+            background: #f5faff;
+            border-radius: 8px;
         }
-        
+
         /* Pagination */
         .pagination {
             display: flex;
             justify-content: center;
-            margin-top: 24px;
+            margin-top: 28px;
             gap: 8px;
         }
-        
+
         .page-item {
             list-style: none;
         }
-        
+
         .page-link {
-            padding: 8px 14px;
+            padding: 8px 16px;
             border-radius: 8px;
-            border: 2px solid var(--secondary-color);
-            background: var(--lighter-bg);
-            color: var(--primary-color);
+            border: 2px solid #b0c9e4;
+            background: #f5faff;
+            color: #0051a8;
             text-decoration: none;
-            font-weight: 500;
-            transition: all 0.2s;
-            font-size: 0.9rem;
+            font-weight: bold;
+            transition: all 0.2s ease;
         }
-        
+
         .page-link:hover {
             background: #d0ddee;
+            transform: translateY(-1px);
         }
-        
+
         .page-item.active .page-link {
-            background: var(--primary-color);
+            background: #0051a8;
             color: white;
-            border-color: var(--primary-color);
+            border-color: #0051a8;
         }
-        
+
+        /* Modal Styles */
+        #confirm-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.25);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px 28px;
+            box-shadow: 0 4px 24px rgba(0,81,168,0.18);
+            text-align: center;
+            min-width: 300px;
+            max-width: 90%;
+        }
+
+        .modal-title {
+            color: #0051a8;
+            margin-bottom: 18px;
+            font-size: 1.3rem;
+        }
+
+        .modal-buttons {
+            margin-top: 24px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .modal-btn {
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .btn-confirm {
+            background: #f44336;
+            color: #fff;
+        }
+
+        .btn-confirm:hover {
+            background: #da190b;
+            transform: translateY(-1px);
+        }
+
+        .btn-cancel {
+            background: #e6eef6;
+            color: #0051a8;
+            border: 1px solid #d0ddee;
+        }
+
+        .btn-cancel:hover {
+            background: #d0ddee;
+            transform: translateY(-1px);
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
-            .container {
-                margin: 70px auto 20px;
-                padding: 16px;
-            }
-            
             .topbar {
-                padding: 10px 16px;
+                padding: 0 16px;
                 height: 50px;
             }
             
             .topbar-title {
-                font-size: 1.1rem;
+                font-size: 1.2rem;
             }
             
-            h1 {
-                font-size: 1.5rem;
-                margin-bottom: 20px;
+            .profile-box {
+                padding: 6px 12px;
+                font-size: 0.9rem;
             }
-            
+
+            .container {
+                margin: 70px 20px 30px;
+                padding: 24px 16px;
+                max-width: calc(100% - 40px);
+            }
+
             .form-row {
                 flex-direction: column;
                 gap: 12px;
             }
-            
-            .form-group, .form-group-large {
+
+            .form-group {
                 flex: 1 1 100%;
             }
-            
+
             .search-filter {
                 flex-direction: column;
             }
-            
+
             #search-input, #filter-purpose {
                 width: 100%;
             }
-            
+
             .action-buttons {
                 flex-wrap: wrap;
             }
-            
+
             button, a.btn {
                 padding: 8px 16px;
                 font-size: 0.9rem;
             }
-            
+
             th, td {
-                padding: 10px 12px;
+                padding: 12px 16px;
                 font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .topbar-title {
+                font-size: 1rem;
+            }
+            
+            .container {
+                margin: 60px 12px 20px;
+                padding: 16px 12px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .action-btn {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .modal-btn {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Top Navigation Bar (consistent with other pages) -->
     <div class="topbar">
         <span class="topbar-title">📚 Litera.id - Admin</span>
         <div class="profile-box" id="profileBtn">
@@ -357,11 +464,12 @@
         </div>
     </div>
 
+    <!-- Main Content -->
     <div class="container">
         <h1>Kelola Data Pengunjung</h1>
         
         <!-- Navigation Button -->
-        <div class="button-group" style="margin-bottom: 20px;">
+        <div class="nav-button">
             <a href="{% url 'dashboard_admin' %}" class="btn btn-secondary">Kembali ke Dashboard</a>
         </div>
         
@@ -394,7 +502,7 @@
             </div>
             
             <div class="form-row">
-                <div class="form-group-large">
+                <div class="form-group">
                     <label for="visitor-address">Alamat</label>
                     <input type="text" id="visitor-address" placeholder="Masukkan alamat lengkap">
                 </div>
@@ -411,8 +519,8 @@
             </div>
             
             <div class="button-group">
-                <button id="save-btn" class="btn-primary">Simpan Data</button>
-                <button id="cancel-btn" class="btn-secondary" style="display: none;">Batal</button>
+                <button id="save-btn" class="btn btn-primary">Simpan Data</button>
+                <button id="cancel-btn" class="btn btn-secondary" style="display: none;">Batal</button>
             </div>
         </div>
         
@@ -429,7 +537,7 @@
         </div>
         
         <!-- Tabel Daftar Pengunjung -->
-        <table id="visitor-table">
+        <table class="table" id="visitor-table">
             <thead>
                 <tr>
                     <th>No</th>
@@ -454,6 +562,18 @@
                 <li class="page-item"><a class="page-link" href="#">3</a></li>
             </ul>
         </nav>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="confirm-modal">
+        <div class="modal-content">
+            <h3 class="modal-title">Konfirmasi Penghapusan</h3>
+            <p>Apakah Anda yakin ingin menghapus data pengunjung ini?</p>
+            <div class="modal-buttons">
+                <button id="cancel-delete" class="modal-btn btn-cancel">Batal</button>
+                <button id="confirm-delete" class="modal-btn btn-confirm">Hapus</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -493,6 +613,11 @@
         const visitorList = document.getElementById('visitor-list');
         const searchInput = document.getElementById('search-input');
         const filterPurpose = document.getElementById('filter-purpose');
+        const confirmModal = document.getElementById('confirm-modal');
+        const cancelDelete = document.getElementById('cancel-delete');
+        const confirmDelete = document.getElementById('confirm-delete');
+        
+        let deleteUrl = '';
 
         // Load visitors to table
         function loadVisitors(filteredVisitors = null) {
@@ -514,8 +639,8 @@
                     <td>${visitor.gender}</td>
                     <td>${visitor.purpose}</td>
                     <td class="action-buttons">
-                        <button class="btn-primary" onclick="editVisitor(${visitor.id})">Edit</button>
-                        <button class="btn-danger" onclick="deleteVisitor(${visitor.id})">Hapus</button>
+                        <button class="btn btn-primary action-btn" onclick="editVisitor(${visitor.id})">Edit</button>
+                        <button class="btn btn-danger action-btn delete-btn" onclick="showDeleteModal(${visitor.id})">Hapus</button>
                     </td>
                 `;
                 visitorList.appendChild(row);
@@ -609,13 +734,30 @@
             }
         };
 
-        // Delete Visitor
-        window.deleteVisitor = (id) => {
-            if (confirm('Apakah Anda yakin ingin menghapus data pengunjung ini?')) {
-                visitors = visitors.filter(v => v.id !== id);
-                loadVisitors();
-            }
+        // Show Delete Confirmation Modal
+        window.showDeleteModal = (id) => {
+            deleteUrl = id;
+            confirmModal.style.display = 'flex';
         };
+
+        // Confirm Delete
+        confirmDelete.addEventListener('click', () => {
+            visitors = visitors.filter(v => v.id !== deleteUrl);
+            loadVisitors();
+            confirmModal.style.display = 'none';
+        });
+
+        // Cancel Delete
+        cancelDelete.addEventListener('click', () => {
+            confirmModal.style.display = 'none';
+        });
+
+        // Close modal when clicking outside
+        confirmModal.addEventListener('click', (e) => {
+            if (e.target === confirmModal) {
+                confirmModal.style.display = 'none';
+            }
+        });
 
         // Search functionality
         searchInput.addEventListener('input', () => {
