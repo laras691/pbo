@@ -607,16 +607,16 @@ const daftarBuku = [
             for (let i = mulai; i < akhir; i++) {
                 const buku = daftarBuku[i];
                 tbody.innerHTML += `
-                    <tr style="cursor:pointer;" onclick="window.location.href='/buku/${encodeURIComponent(buku.judul)}/'">
-                        <td>${i + 1}</td>
-                        <td><img class="cover-img" src="${buku.img}" alt="${buku.judul}"></td>
-                        <td>${buku.judul}</td>
-                        <td>${buku.penulis}</td>
-                        <td>${buku.tahun}</td>
-                        <td>${buku.kategori}</td>
-                        <td>${buku.kode_inventaris}</td>
-                    </tr>
-                `;
+        <tr>
+            <td>${i + 1}</td>
+            <td><img class="cover-img" src="${buku.img}" alt="${buku.judul}"></td>
+            <td>${buku.judul}</td>
+            <td>${buku.penulis}</td>
+            <td>${buku.tahun}</td>
+            <td>${buku.kategori}</td>
+            <td>${buku.kode_inventaris}</td>
+        </tr>
+    `;
             }
             document.getElementById('prevBtn').disabled = halaman === 1;
             document.getElementById('nextBtn').disabled = halaman === totalHalaman;
