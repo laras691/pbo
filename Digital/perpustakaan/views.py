@@ -135,8 +135,8 @@ def dashboard_admin(request):
 
 # Admin – Kelola Buku
 def kelola_buku(request):
-    daftar_buku = PinjamBuku.objects.all()
-    return render(request, 'admin/kelola_buku.html', {'daftar_buku': daftar_buku})
+    daftar_kategori = Kategori.objects.all()
+    return render(request, 'admin/kelola_buku.html', {'daftar_kategori': daftar_kategori})
 
 def tambah_buku(request):
     from .models import Kategori

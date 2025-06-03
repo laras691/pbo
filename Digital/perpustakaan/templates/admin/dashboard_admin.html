@@ -93,9 +93,9 @@
 
         .admin-menu {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 24px;
-            max-width: 800px;
+            max-width: 900px;
             width: 100%;
         }
 
@@ -229,6 +229,7 @@
             .admin-menu {
                 grid-template-columns: 1fr;
                 gap: 16px;
+                max-width: 500px;
             }
             
             .admin-title {
@@ -307,16 +308,10 @@
         <h1 class="admin-title">Dashboard Administrator</h1>
         
         <div class="admin-menu">
-            <a href="{% url 'kelola_buku' %}" class="menu-card">
-                <div class="menu-icon"><i class="fas fa-book"></i></div>
-                <h3 class="menu-title">Kelola Buku</h3>
-                <p class="menu-desc">Manajemen koleksi buku perpustakaan</p>
-            </a>
-            
             <a href="{% url 'kelola_kategori' %}" class="menu-card">
-                <div class="menu-icon"><i class="fas fa-tags"></i></div>
-                <h3 class="menu-title">Kelola Kategori</h3>
-                <p class="menu-desc">Kelola kategori dan klasifikasi buku</p>
+                <div class="menu-icon"><i class="fas fa-book"></i></div>
+                <h3 class="menu-title">Kelola Buku & Kategori</h3>
+                <p class="menu-desc">Manajemen koleksi buku dan kategori perpustakaan</p>
             </a>
             
             <a href="{% url 'kelola_pengunjung' %}" class="menu-card">
