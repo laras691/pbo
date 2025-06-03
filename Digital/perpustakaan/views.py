@@ -10,6 +10,7 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from datetime import date
 from django.urls import path, reverse
+from perpustakaan.models import Kategori
 
 # Halaman utama
 def daftar_buku(request):
@@ -138,13 +139,28 @@ def kelola_buku(request):
     return render(request, 'admin/kelola_buku.html', {'daftar_buku': daftar_buku})
 
 def tambah_buku(request):
+    from .models import Kategori
+    daftar_kategori = Kategori.objects.all()
     if request.method == 'POST':
-        id_buku = request.POST['id_buku']  # Pastikan baris ini ada!
-        judul = request.POST['judul']
-        stok = int(request.POST['stok'])
-        PinjamBuku.objects.create(id_buku=id_buku, judul=judul, stok=stok)
+        id_buku = request.POST.get('id_buku')
+        judul = request.POST.get('judul')
+        kategori_id = request.POST.get('kategori')
+        stok = request.POST.get('stok')
+
+        try:
+            kategori_obj = Kategori.objects.get(id_kategori=kategori_id)
+        except Kategori.DoesNotExist:
+            messages.error(request, "Kategori tidak ditemukan.")
+            return render(request, 'admin/tambah_buku.html', {'daftar_kategori': daftar_kategori})
+
+        Buku.objects.create(
+            id_buku=id_buku,
+            judul=judul,
+            kategori=kategori_obj,
+            stok=stok
+        )
         return redirect('kelola_buku')
-    return render(request, 'admin/tambah_buku.html')
+    return render(request, 'admin/tambah_buku.html', {'daftar_kategori': daftar_kategori})
 
 def edit_buku(request, id_buku):
     buku = get_object_or_404(PinjamBuku, id_buku=id_buku)
@@ -271,34 +287,121 @@ def lupa_password(request):
 
 #lihat Profil
 def lihat_profil(request):
-
-    # Jika ingin menampilkan data admin, ambil dari session atau model Admin
-    # admin = get_object_or_404(Admin, id_admin=request.session.get('admin_id'))
-    # return render(request, 'admin/profil.html', {'admin': admin})
-    
+    pengunjung_id = request.session.get('pengunjung_id')
+    pengunjung = Pengunjung.objects.get(id=pengunjung_id)
+    return render(request, 'pengunjung/lihatProfil.html', {'pengunjung': pengunjung})
     return render(request, 'admin/lihat_profil.html')
 
 def edit_profil(request):
-    return render(request, 'admin/edit_profil.html')
+    return render(request, 'pengunjung/editProfil.html')
+from django.shortcuts import render, redirect
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def ganti_password_view(request):
+    if request.method == 'POST':
+        # Menggunakan form bawaan Django untuk ganti password lebih aman dan mudah
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Penting untuk menjaga sesi setelah ganti password
+            messages.success(request, 'Password Anda berhasil diganti!')
+            return redirect('beranda_pengunjung') # Ganti dengan nama URL yang sesuai
+        else:
+            # Form tidak valid, pesan error akan otomatis ditambahkan ke form.errors
+            # Anda bisa menambahkan pesan error umum jika perlu
+            messages.error(request, 'Terjadi kesalahan saat mengganti password. Mohon periksa kembali.')
+    else:
+        form = PasswordChangeForm(request.user)
+
+    # Render template dengan form (baik form kosong atau form dengan error)
+    return render(request, 'pengunjung/gantiPassword.html', {'form': form})
+
+from django.shortcuts import render, redirect
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def ganti_password_view(request):
+    if request.method == 'POST':
+        # Menggunakan form bawaan Django untuk ganti password lebih aman dan mudah
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Penting untuk menjaga sesi setelah ganti password
+            messages.success(request, 'Password Anda berhasil diganti!')
+            return redirect('beranda_pengunjung') # Ganti dengan nama URL yang sesuai
+        else:
+            # Form tidak valid, pesan error akan otomatis ditambahkan ke form.errors
+            # Anda bisa menambahkan pesan error umum jika perlu
+            messages.error(request, 'Terjadi kesalahan saat mengganti password. Mohon periksa kembali.')
+    else:
+        form = PasswordChangeForm(request.user)
+
+    # Render template dengan form (baik form kosong atau form dengan error)
+    return render(request, 'pengunjung/gantiPassword.html', {'form': form})
+
+# Jika Anda tidak ingin menggunakan PasswordChangeForm bawaan Django
+# (Kurang disarankan karena PasswordChangeForm sudah menangani banyak validasi keamanan)
+# Maka logikanya akan seperti ini:
+
+# @login_required
+# def ganti_password_manual_view(request):
+#     if request.method == 'POST':
+#         pass_lama = request.POST.get('pass_lama')
+#         pass_baru = request.POST.get('pass_baru')
+#         # Sebaiknya tambahkan input konfirmasi password di HTML
+#         # pass_konfirmasi = request.POST.get('pass_konfirmasi')
+
+#         user = request.user
+
+#         # 1. Verifikasi password lama
+#         if user.check_password(pass_lama):
+#             # 2. Validasi password baru (contoh: minimal panjang)
+#             if len(pass_baru) >= 8: # Contoh validasi
+#                 # 3. Bandingkan dengan password konfirmasi (jika ada)
+#                 # if pass_baru == pass_konfirmasi:
+#                 user.set_password(pass_baru)
+#                 user.save()
+#                 update_session_auth_hash(request, user)
+#                 messages.success(request, 'Password Anda berhasil diganti!')
+#                 return redirect('beranda_pengunjung') # Ganti dengan nama URL yang sesuai
+#                 # else:
+#                 #     messages.error(request, 'Password baru dan konfirmasi password tidak cocok.')
+#             else:
+#                 messages.error(request, 'Password baru terlalu pendek. Minimal 8 karakter.')
+#         else:
+#             messages.error(request, 'Password lama salah.')
+
+#     # Render template (Anda mungkin perlu meneruskan form atau data lain jika tidak pakai PasswordChangeForm)
+#     return render(request, 'pengunjung/gantiPassword.html')
+
+# File: perpustakaan/views.py
+
+# ... (kode import dan fungsi lainnya) ...
 
 def ganti_password(request):
     if request.method == 'POST':
-        password_lama = request.POST.get('password_lama')
-        password_baru = request.POST.get('password_baru')
+        pass_lama = request.POST.get('pass_lama')
+        pass_baru = request.POST.get('pass_baru')
         
-        # Proses ganti password
         pengunjung_id = request.session.get('pengunjung_id')
         pengunjung = get_object_or_404(Pengunjung, id=pengunjung_id)
         
         # Cek password lama
-        if check_password(password_lama, pengunjung.password):
-            # Ganti dengan password baru
-            pengunjung.password = make_password(password_baru)
+        if check_password(pass_lama, pengunjung.password):
+            if len(pass_baru) < 8:
+                messages.error(request, "Password baru minimal 8 karakter.")
+                return redirect('ganti_password')
+            pengunjung.password = make_password(pass_baru)
             pengunjung.save()
-            
-            # Setelah password berhasil diganti:
             messages.success(request, "Password berhasil diganti!")
-            return redirect('beranda_pengunjung')
+            return redirect('ganti_password')
         else:
             messages.error(request, "Password lama salah.")
     
@@ -440,3 +543,23 @@ def lihat_riwayat(request):
 def logout(request):
     request.session.flush()
     return redirect('login_pengunjung')
+
+def edit_profil_pengunjung(request):
+    pengunjung_id = request.session.get('pengunjung_id')
+    pengunjung = get_object_or_404(Pengunjung, id=pengunjung_id)
+    if request.method == 'POST':
+        pengunjung.nama = request.POST.get('nama')
+        pengunjung.email = request.POST.get('email')
+        pengunjung.save()
+        return redirect('lihat_profil')
+    return render(request, 'pengunjung/editProfil.html', {'pengunjung': pengunjung})
+
+print(Kategori.objects.all())
+# Admin - kelola kategori
+def kelola_kategori(request):
+    daftar_kategori = Kategori.objects.all()
+    return render(request, 'admin/kelola_kategori.html', {'daftar_kategori': daftar_kategori})
+
+#kelola_pengunjung
+def kelola(request):
+    pass

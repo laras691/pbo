@@ -519,38 +519,38 @@
   {% endfor %}
 {% endif %}
         <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 5px;">
-            <form action="{% url 'cari_buku' %}" method="get" class="search-box" style="width:100%; max-width:1320px;">
-                <input type="text" name="q" placeholder="Cari buku..." class="search-input" style="min-width:1120px; font-size:1.2rem;" />
-                <button type="submit" class="search-btn">Cari</button>
+            <form id="form-cari" class="search-box" autocomplete="off" style="width:100%; max-width:1320px;">
+                <input type="text" id="input-cari" name="q" placeholder="Cari buku..." class="search-input" style="min-width:1120px; font-size:1.2rem;" />
+                <button type="submit" class="search-btn" id="btn-cari">Cari</button>
             </form>
         </div>
 
-        <h2 class="section-title">Rekomendasi</h2>
-        <div class="book-row">
-            <div class="book-card" style="cursor:pointer;" onclick="window.location.href='/buku/Bumi%20Manusia/'">
+        <h2 class="section-title" id="rekomendasi-title">Rekomendasi</h2>
+        <div class="book-row" id="rekomendasi-row">
+            <div class="book-card">
                 <img src="{% static 'image/buku1.png' %}" alt="Bumi Manusia">
                 <div class="book-title">Bumi Manusia</div>
                 <div class="book-author">Pramoedya Ananta Toer</div>
             </div>
-            <div class="book-card" style="cursor:pointer;" onclick="window.location.href='/buku/Laut%20Bercerita/'">
+            <div class="book-card">
                 <img src="{% static 'image/buku3.png' %}" alt="Laut Bercerita">
                 <div class="book-title">Laut Bercerita</div>
                 <div class="book-author">Leila S. Chudori</div>
             </div>
-            <div class="book-card" style="cursor:pointer;" onclick="window.location.href='/buku/Dasar-Dasar%20Teknik%20Informatika/'">
+            <div class="book-card">
                 <img src="{% static 'image/buku13.png' %}" alt="Dasar-Dasar Teknik Informatika">
                 <div class="book-title">Dasar-Dasar Teknik Informatika</div>
                 <div class="book-author">Novega Pratama Adiputra</div>
             </div>
-            <div class="book-card" style="cursor:pointer;" onclick="window.location.href='/buku/Dongeng%20Lengkap%20Kancil/'">
+            <div class="book-card">
                 <img src="{% static 'image/buku20.png' %}" alt="Dongeng Lengkap Kancil">
                 <div class="book-title">Dongeng Lengkap Kancil</div>
                 <div class="book-author">Kak Thifa</div>
             </div>
         </div>
 
-        <h2 class="section-title">Kategori</h2>
-        <div class="category-filters">
+        <h2 class="section-title" id="kategori-title">Kategori</h2>
+        <div class="category-filters" id="kategori-filters">
             <div class="filter-btn" data-kategori="Semua">Semua</div>
             <div class="filter-btn" data-kategori="Fiksi">Fiksi</div>
             <div class="filter-btn" data-kategori="Sosial">Sosial</div>
@@ -565,13 +565,13 @@
         </div>
         <div class="book-row">
             {% for buku in kategori %}
-            <div class="book-card">
-                <img src="{{ buku.cover_url }}" alt="{{ buku.judul }}">
-                <div class="book-title">{{ buku.judul }}</div>
-                <div class="book-author">{{ buku.penulis }}</div>
-            </div>
-            {% endfor %}
-        </div>
+    <div class="book-card">
+        <img src="{{ buku.cover_url }}" alt="{{ buku.judul }}">
+        <div class="book-title">{{ buku.judul }}</div>
+        <div class="book-author">{{ buku.penulis }}</div>
+    </div>
+    {% endfor %}
+</div>
 
         <table style="width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden; margin-bottom:16px;">
             <tbody id="buku-tbody">
@@ -693,102 +693,122 @@
     {
         img: "{% static 'image/buku1.png' %}",
         judul: "Bumi Manusia",
-        kategori: "Fiksi"
+        kategori: "Fiksi",
+        penulis: "Pramoedya Ananta Toer"
     },
     {
         img: "{% static 'image/buku2.png' %}",
         judul: "Harimau! Harimau!",
-        kategori: "Fiksi"
+        kategori: "Fiksi",
+        penulis: "Mochtar Lubis"
     },
     {
         img: "{% static 'image/buku3.png' %}",
         judul: "Laut Bercerita",
-        kategori: "Sosial"
+        kategori: "Sosial",
+        penulis: "Leila S. Chudori"
     },
     {
         img: "{% static 'image/buku4.png' %}",
         judul: "Ronggeng Dukuh Paruk",
-        kategori: "Fiksi"
+        kategori: "Fiksi",
+        penulis: "Ahmad Tohari"
     },
     {
         img: "{% static 'image/buku5.png' %}",
         judul: "Revolusi: Indonesia and the Birth of the Modern World",
-        kategori: "Sejarah"
+        kategori: "Sejarah",
+        penulis: "David Van Reybrouck"
     },
     {
         img: "{% static 'image/buku6.png' %}",
         judul: "Sejarah Film 1900–1950",
-        kategori: "Sejarah"
+        kategori: "Sejarah",
+        penulis: "Misbach Yusa Biran"
     },
     {
         img: "{% static 'image/buku7.png' %}",
         judul: "Ayat-Ayat Cinta",
-        kategori: "Agama"
+        kategori: "Agama",
+        penulis: "Habiburrahman El Shirazy"
     },
     {
         img: "{% static 'image/buku8.png' %}",
         judul: "Tafsir al-Mishbah",
-        kategori: "Agama"
+        kategori: "Agama",
+        penulis: "M. Quraish Shihab"
     },
     {
         img: "{% static 'image/buku9.png' %}",
         judul: "Kamus Besar Bahasa Indonesia",
-        kategori: "Bahasa"
+        kategori: "Bahasa",
+        penulis: "Tim KBBI"
     },
     {
         img: "{% static 'image/buku10.png' %}",
         judul: "Tata Bahasa Baku Bahasa Indonesia",
-        kategori: "Bahasa"
+        kategori: "Bahasa",
+        penulis: "Hasan Alwi"
     },
     {
         img: "{% static 'image/buku11.png' %}",
         judul: "Fisika Dasar",
-        kategori: "Sains"
+        kategori: "Sains",
+        penulis: "Halliday & Resnick"
     },
     {
         img: "{% static 'image/buku12.png' %}",
         judul: "Biologi Campbell",
-        kategori: "Sains"
+        kategori: "Sains",
+        penulis: "Neil A. Campbell"
     },
     {
         img: "{% static 'image/buku13.png' %}",
         judul: "Dasar-Dasar Teknik Informatika",
-        kategori: "Teknologi"
+        kategori: "Teknologi",
+        penulis: "Novega Pratama Adiputra"
     },
     {
         img: "{% static 'image/buku14.png' %}",
         judul: "Pengantar Teknologi Informasi",
-        kategori: "Teknologi"
+        kategori: "Teknologi",
+        penulis: "Riyanarto Sarno"
     },
     {
         img: "{% static 'image/buku15.png' %}",
         judul: "Pengantar Ilmu Ekonomi",
-        kategori: "Ekonomi"
+        kategori: "Ekonomi",
+        penulis: "Sadono Sukirno"
     },
     {
         img: "{% static 'image/buku16.png' %}",
         judul: "Ekonomi Mikro",
-        kategori: "Ekonomi"
+        kategori: "Ekonomi",
+        penulis: "Paul A. Samuelson"
     },
     {
         img: "{% static 'image/buku17.png' %}",
         judul: "Gen & Kesehatan Anda",
-        kategori: "Kesehatan"
+        kategori: "Kesehatan",
+        penulis: "Dr. Marcus T. Pembrey"
     },
     {
         img: "{% static 'image/buku18.png' %}",
         judul: "100 Tanya Jawab Mengenai Diabetes",
-        kategori: "Kesehatan"
+        kategori: "Kesehatan",
+        penulis: "Dr. Dante S. Harbuwono"
     },
     {
         img: "{% static 'image/buku19.png' %}",
         judul: "Bukan Cinta Monyet",
-        kategori: "Sastra"
+        kategori: "Sastra",
+        penulis: "Agus Noor"
     },
     {
         img: "{% static 'image/buku20.png' %}",
         judul: "Dongeng Lengkap Kancil",
-        kategori: "Sastra"
+        kategori: "Sastra",
+        penulis: "Kak Thifa"
     }
 ];
         const kategoriValid = [
@@ -802,6 +822,10 @@ daftarBuku.forEach(buku => {
         let halaman = 1;
         const perHalaman = 12;
         let kategoriAktif = "Semua";
+        const rekomendasiTitle = document.getElementById('rekomendasi-title');
+const rekomendasiRow = document.getElementById('rekomendasi-row');
+const kategoriTitle = document.getElementById('kategori-title');
+const kategoriFilters = document.getElementById('kategori-filters');
         function renderTabel() {
             const tbody = document.getElementById('buku-tbody');
             tbody.innerHTML = "";
@@ -826,12 +850,12 @@ daftarBuku.forEach(buku => {
                     }
                 }
                 row += `
-                    <td style="cursor:pointer;" onclick="window.location.href='/buku/${encodeURIComponent(buku.judul)}/'">
-                        <img class="cover-img" src="${buku.img}" alt="${buku.judul}"><br>
-                        <strong>${buku.judul}</strong>
-                        <div class="kategori" style="font-size:12px; color:#5a7bbd; margin-top:2px;">${buku.kategori}</div>
-                    </td>
-                `;
+        <td>
+            <img class="cover-img" src="${buku.img}" alt="${buku.judul}"><br>
+            <strong>${buku.judul}</strong>
+            <div class="kategori" style="font-size:12px; color:#5a7bbd; margin-top:2px;">${buku.kategori}</div>
+        </td>
+    `;
             }
             if (row) {
                 let sisa = 4 - ((akhir - mulai) % 4);
@@ -872,6 +896,69 @@ daftarBuku.forEach(buku => {
 
         // Inisialisasi
         renderTabel();
+
+    // Fungsi pencarian
+    document.getElementById('form-cari').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const q = document.getElementById('input-cari').value.trim().toLowerCase();
+        let hasil = [];
+        if (q === "") {
+            hasil = daftarBuku;
+            // Tampilkan rekomendasi & kategori
+            if (rekomendasiTitle) rekomendasiTitle.style.display = "";
+            if (rekomendasiRow) rekomendasiRow.style.display = "";
+            if (kategoriTitle) kategoriTitle.style.display = "";
+            if (kategoriFilters) kategoriFilters.style.display = "";
+        } else {
+            hasil = daftarBuku.filter(buku =>
+                buku.judul.toLowerCase().includes(q) ||
+                buku.kategori.toLowerCase().includes(q)
+            );
+            // Sembunyikan rekomendasi & kategori
+            if (rekomendasiTitle) rekomendasiTitle.style.display = "none";
+            if (rekomendasiRow) rekomendasiRow.style.display = "none";
+            if (kategoriTitle) kategoriTitle.style.display = "none";
+            if (kategoriFilters) kategoriFilters.style.display = "none";
+        }
+        const tbody = document.getElementById('buku-tbody');
+        tbody.innerHTML = "";
+        hasil.forEach(buku => {
+            tbody.innerHTML += `
+        <tr>
+            <td style="width:200px; text-align:center; vertical-align:top;">
+                <div style="background:#e6eef6; border-radius:18px; padding:18px 10px; box-shadow:0 2px 12px rgba(0,81,168,0.10); display:inline-block;">
+                    <img class="cover-img" src="${buku.img}" alt="${buku.judul}" style="width:180px; height:260px; object-fit:cover; border-radius:14px; border:2.5px solid #b0c9e4; background:#e6eef6; margin-bottom:14px;">
+                </div>
+            </td>
+            <td style="text-align:left; vertical-align:top;">
+                <div style="height:70px;"></div>
+                <div style="font-size:2.1rem; font-weight:800; color:#3a5fa8; margin-bottom:25px; letter-spacing:0.5px; margin-left:-120px;">${buku.judul}</div>
+                <div style="font-size:1.35rem; color:#5a7bbd; margin-bottom:10px; margin-left:-120px; font-weight:400;">Kategori: <b style="font-weight:400;">${buku.kategori}</b></div>
+                <div style="font-size:1.22rem; color:#0051a8; font-weight:400; margin-left:-120px;">Penulis: <span id="penulis-buku" style="font-weight:400;">${buku.penulis ? buku.penulis : '-'}</span></div>
+            </td>
+        </tr>
+    `;
+});
+if (hasil.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="2" style="text-align:center; color:#c00; font-size:1.1rem;">Buku tidak ditemukan.</td></tr>`;
+}
+// Nonaktifkan tombol pagination saat pencarian
+document.getElementById('prevBtn').disabled = true;
+document.getElementById('nextBtn').disabled = true;
+    });
+
+    // Reset tampilan jika input kosong
+    document.getElementById('input-cari').addEventListener('input', function() {
+        if (this.value.trim() === "") {
+            renderTabel();
+            document.getElementById('prevBtn').disabled = false;
+            document.getElementById('nextBtn').disabled = false;
+            if (rekomendasiTitle) rekomendasiTitle.style.display = "";
+            if (rekomendasiRow) rekomendasiRow.style.display = "";
+            if (kategoriTitle) kategoriTitle.style.display = "";
+            if (kategoriFilters) kategoriFilters.style.display = "";
+        }
+    });
     </script>
 </body>
 </html>
