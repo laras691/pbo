@@ -527,22 +527,22 @@
 
         <h2 class="section-title" id="rekomendasi-title">Rekomendasi</h2>
         <div class="book-row" id="rekomendasi-row">
-            <div class="book-card" style="cursor:pointer;" onclick="window.location.href='/buku/Bumi%20Manusia/'">
+            <div class="book-card">
                 <img src="{% static 'image/buku1.png' %}" alt="Bumi Manusia">
                 <div class="book-title">Bumi Manusia</div>
                 <div class="book-author">Pramoedya Ananta Toer</div>
             </div>
-            <div class="book-card" style="cursor:pointer;" onclick="window.location.href='/buku/Laut%20Bercerita/'">
+            <div class="book-card">
                 <img src="{% static 'image/buku3.png' %}" alt="Laut Bercerita">
                 <div class="book-title">Laut Bercerita</div>
                 <div class="book-author">Leila S. Chudori</div>
             </div>
-            <div class="book-card" style="cursor:pointer;" onclick="window.location.href='/buku/Dasar-Dasar%20Teknik%20Informatika/'">
+            <div class="book-card">
                 <img src="{% static 'image/buku13.png' %}" alt="Dasar-Dasar Teknik Informatika">
                 <div class="book-title">Dasar-Dasar Teknik Informatika</div>
                 <div class="book-author">Novega Pratama Adiputra</div>
             </div>
-            <div class="book-card" style="cursor:pointer;" onclick="window.location.href='/buku/Dongeng%20Lengkap%20Kancil/'">
+            <div class="book-card">
                 <img src="{% static 'image/buku20.png' %}" alt="Dongeng Lengkap Kancil">
                 <div class="book-title">Dongeng Lengkap Kancil</div>
                 <div class="book-author">Kak Thifa</div>
@@ -565,13 +565,13 @@
         </div>
         <div class="book-row">
             {% for buku in kategori %}
-            <div class="book-card">
-                <img src="{{ buku.cover_url }}" alt="{{ buku.judul }}">
-                <div class="book-title">{{ buku.judul }}</div>
-                <div class="book-author">{{ buku.penulis }}</div>
-            </div>
-            {% endfor %}
-        </div>
+    <div class="book-card">
+        <img src="{{ buku.cover_url }}" alt="{{ buku.judul }}">
+        <div class="book-title">{{ buku.judul }}</div>
+        <div class="book-author">{{ buku.penulis }}</div>
+    </div>
+    {% endfor %}
+</div>
 
         <table style="width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden; margin-bottom:16px;">
             <tbody id="buku-tbody">
@@ -850,12 +850,12 @@ const kategoriFilters = document.getElementById('kategori-filters');
                     }
                 }
                 row += `
-                    <td style="cursor:pointer;" onclick="window.location.href='/buku/${encodeURIComponent(buku.judul)}/'">
-                        <img class="cover-img" src="${buku.img}" alt="${buku.judul}"><br>
-                        <strong>${buku.judul}</strong>
-                        <div class="kategori" style="font-size:12px; color:#5a7bbd; margin-top:2px;">${buku.kategori}</div>
-                    </td>
-                `;
+        <td>
+            <img class="cover-img" src="${buku.img}" alt="${buku.judul}"><br>
+            <strong>${buku.judul}</strong>
+            <div class="kategori" style="font-size:12px; color:#5a7bbd; margin-top:2px;">${buku.kategori}</div>
+        </td>
+    `;
             }
             if (row) {
                 let sisa = 4 - ((akhir - mulai) % 4);
