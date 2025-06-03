@@ -67,25 +67,11 @@
             align-items: center;
         }
 
-        .profile-links {
-            display: flex;
-            margin-left: 12px;
-            padding-left: 12px;
-            border-left: 1px solid rgba(255,255,255,0.3);
-        }
-
-        .profile-links a {
-            color: #c2d6f0;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            font-size: 0.9rem;
-            margin: 0 6px;
-            white-space: nowrap;
-        }
-
+        /* Hapus CSS khusus link profil */
+        .profile-links,
+        .profile-links a,
         .profile-links a:hover {
-            color: #fff;
-            text-decoration: underline;
+            display: none !important;
         }
 
         /* Main Content */
@@ -313,10 +299,6 @@
         <div class="profile-box" id="profileBtn">
             <div class="profile-content">
                 <span>👤 {{ admin_id }}</span>
-                <div class="profile-links">
-                    <a href="{% url 'lihat-profil' %}">Lihat Profil</a>
-                    <a href="{% url 'edit-profil' %}">Edit Profil</a>
-                </div>
             </div>
         </div>
     </div>
@@ -386,7 +368,6 @@
             logoutModal.style.display = 'none';
         });
 
-        // Close modal when clicking outside
         logoutModal.addEventListener('click', function(e) {
             if (e.target === logoutModal) {
                 logoutModal.style.display = 'none';
